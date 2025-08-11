@@ -1,0 +1,10 @@
+^twbparser\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^tools$
+^^\\.lintr$$
+^doc$
+^Meta$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

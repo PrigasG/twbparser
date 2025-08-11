@@ -1,0 +1,188 @@
+#' Tableau Workbook Parser (R6)
+#'
+#' Create a parser for Tableau `.twb` / `.twbx` files. On initialization, the
+#' parser reads the XML and precomputes relationships, joins, fields, calculated
+#' fields, inferred relationships, and datasource details. For `.twbx`, it also
+#' extracts the largest `.twb` and records a manifest.
+#'
+#' @format An R6 class generator.
+#'
+#' @field path Path to the `.twb` file on disk.
+#' @field xml_doc The parsed `xml2` document of the workbook.
+#' @field twbx_path The original `.twbx` path if the workbook was packaged.
+#' @field twbx_dir Directory where the `.twbx` was extracted (if any).
+#' @field twbx_manifest Tibble of `.twbx` contents (from [twbx_list()]).
+#' @field relations Tibble of `<relation>` nodes (see [extract_relations()]).
+#' @field joins Tibble of join clauses (see [extract_joins()]).
+#' @field relationships Tibble of modern relationships (see [extract_relationships()]).
+#' @field inferred_relationships Tibble of inferred pairs by name/role.
+#' @field datasource_details List with `data_sources`, `parameters`, `all_sources`.
+#' @field fields Tibble of raw fields with table info.
+#' @field calculated_fields Tibble of calculated fields.
+#' @field last_validation Result from validate() (list with `ok`/`issues`).
+#'
+#' @section Methods:
+#' \describe{
+#'   \item{new(path)}{Create a parser from `.twb` or `.twbx`.}
+#'   \item{get_twbx_manifest()}{Return `.twbx` manifest tibble.}
+#'   \item{get_twbx_extracts()}{Return `.twbx` extract entries.}
+#'   \item{get_twbx_images()}{Return `.twbx` image entries.}
+#'   \item{extract_twbx_assets(types, pattern, files, exdir)}{Extract files from `.twbx`.}
+#'   \item{get_relations()}{Return relations tibble.}
+#'   \item{get_joins()}{Return joins tibble.}
+#'   \item{get_relationships()}{Return modern relationships tibble.}
+#'   \item{get_inferred_relationships()}{Return inferred relationship pairs.}
+#'   \item{get_datasources()}{Return datasource details tibble.}
+#'   \item{get_parameters()}{Return parameters tibble.}
+#'   \item{get_datasources_all()}{Return all sources tibble.}
+#'   \item{get_fields()}{Return raw fields tibble.}
+#'   \item{get_calculated_fields()}{Return calculated fields tibble.}
+#'   \item{validate(error = FALSE)}{Validate relationships (stop if `error = TRUE`).}
+#'   \item{summary()}{Print a brief summary to console.}
+#' }
+#'
+#' @export
+
+TwbParser <- R6::R6Class(
+  "TwbParser",
+  public = list(
+    # state
+    path = NULL,
+    xml_doc = NULL,
+
+    # twbx
+    twbx_path = NULL,
+    twbx_dir = NULL,
+    twbx_manifest = NULL,
+
+    # caches
+    relations = NULL,
+    joins = NULL,
+    relationships = NULL,
+    inferred_relationships = NULL,
+    datasource_details = NULL,
+    fields = NULL,
+    calculated_fields = NULL,
+    last_validation = NULL,
+
+    #' @description
+    #' Initialize the parser from a `.twb` or `.twbx` path.
+    #' @param path Path to a `.twb` or `.twbx` file.
+    initialize = function(path) {
+      if (!file.exists(path)) stop("File not found: ", path)
+
+      ext <- tolower(tools::file_ext(path))
+      if (ext == "twbx") {
+        info <- extract_twb_from_twbx(path, extract_all = FALSE)
+        path <- info$twb_path
+        self$twbx_dir <- info$exdir
+        self$twbx_path <- info$twbx_path
+        self$twbx_manifest <- info$manifest
+      } else if (ext != "twb") {
+        stop("Unsupported file type: ", ext)
+      }
+
+      self$path <- path
+      self$xml_doc <- xml2::read_xml(path)
+      message("TWB loaded: ", basename(path))
+
+      # caches (each safe-guarded)
+      self$relations <- safe_call(extract_relations(self$xml_doc), tibble::tibble())
+      self$joins <- safe_call(extract_joins(self$xml_doc), tibble::tibble())
+      self$relationships <- safe_call(extract_relationships(self$xml_doc), tibble::tibble())
+      self$fields <- safe_call(extract_columns_with_table_source(self$xml_doc), tibble::tibble())
+      self$inferred_relationships <- safe_call(infer_implicit_relationships(self$fields), tibble::tibble())
+      self$datasource_details <- safe_call(
+        extract_datasource_details(self$xml_doc),
+        list(
+          data_sources = tibble::tibble(),
+          parameters   = tibble::tibble(),
+          all_sources  = tibble::tibble()
+        )
+      )
+      self$calculated_fields <- safe_call(extract_calculated_fields(self$xml_doc), tibble::tibble())
+
+      message("TWB parsed and ready")
+    },
+
+    # --- TWBX helpers ---
+    #' @description Return the TWBX manifest (if available).
+    get_twbx_manifest = function() {
+      self$twbx_manifest %||% tibble::tibble()
+    },
+
+    #' @description Return TWBX extract entries.
+    get_twbx_extracts = function() {
+      man <- self$get_twbx_manifest()
+      if (nrow(man) == 0) {
+        return(man)
+      }
+      dplyr::filter(man, type == "extract")
+    },
+
+    #' @description Return TWBX image entries.
+    get_twbx_images = function() {
+      man <- self$get_twbx_manifest()
+      if (nrow(man) == 0) {
+        return(man)
+      }
+      dplyr::filter(man, type == "image")
+    },
+
+    #' @description Extract files from the TWBX to disk.
+    #' @param types Optional vector of types (e.g., `"image"`, `"extract"`).
+    #' @param pattern Optional regex to match archive paths.
+    #' @param files Optional explicit archive paths to extract.
+    #' @param exdir Output directory (defaults to parser's twbx dir or tempdir()).
+    extract_twbx_assets = function(types = NULL, pattern = NULL, files = NULL, exdir = NULL) {
+      if (is.null(self$twbx_path) || !file.exists(self$twbx_path)) {
+        stop("No TWBX path recorded. Re-open from a .twbx or call twbx_extract_files() with an explicit path.")
+      }
+      twbx_extract_files(
+        self$twbx_path,
+        files   = files,
+        pattern = pattern,
+        types   = types,
+        exdir   = exdir %||% self$twbx_dir %||% tempdir()
+      )
+    },
+
+    # --- accessors  ---
+    get_relations = function() self$relations,
+    get_joins = function() self$joins,
+    get_relationships = function() self$relationships,
+    get_inferred_relationships = function() self$inferred_relationships,
+    get_datasources = function() self$datasource_details$data_sources,
+    get_parameters = function() self$datasource_details$parameters,
+    get_datasources_all = function() self$datasource_details$all_sources,
+    get_fields = function() self$fields,
+    get_calculated_fields = function() self$calculated_fields,
+
+    # --- validator bridge ---
+    #' @description Validate relationships; optionally stop on failure.
+    #' @param error If `TRUE`, `stop()` when validation fails.
+    validate = function(error = FALSE) {
+      v <- validate_relationships(self) # lenient by default
+      self$last_validation <- v
+      if (isTRUE(error) && !v$ok) {
+        stop("Validation failed. See parser$last_validation$issues.", call. = FALSE)
+      }
+      invisible(v)
+    },
+
+    # --- summary ---
+    #' @description Print a one‑line summary of parsed content.
+    summary = function() {
+      cat("TWB PARSER SUMMARY\n")
+      cat("---------------------\n")
+      cat(sprintf("File: %s\n", basename(self$path)))
+      cat(sprintf("Datasources: %d\n", NROW(self$datasource_details$data_sources)))
+      cat(sprintf("Parameters:  %d\n", NROW(self$datasource_details$parameters)))
+      cat(sprintf("Relationships: %d\n", NROW(self$relationships)))
+      cat(sprintf("Calculated fields: %d\n", NROW(self$calculated_fields)))
+      cat(sprintf("Raw fields: %d\n", NROW(self$fields)))
+      cat(sprintf("Inferred joins: %d\n", NROW(self$inferred_relationships)))
+      invisible(NULL)
+    }
+  )
+)
