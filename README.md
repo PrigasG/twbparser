@@ -6,12 +6,12 @@ Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationshi
 
 ## Features
 
--   🧭 **TWB/TWBX**: open packaged workbooks and auto‑extract the largest `.twb`
--   🔗 **Relationships & joins**: parse legacy joins and modern (2020.2+) relationships
--   🧮 **Calculated fields / parameters**: list formulas, datatypes, roles, and parameter metadata
--   🗂️ **Datasources**: connection classes/targets, inferred locations, field counts
--   🧱 **Dependency graph**: build/plot field dependency DAGs
--   📦 **TWBX assets**: list/extract images, extracts, text files, etc.
+-   **TWB/TWBX**: open packaged workbooks and auto‑extract the largest `.twb`
+-   **Relationships & joins**: parse legacy joins and modern (2020.2+) relationships
+-   **Calculated fields / parameters**: list formulas, datatypes, roles, and parameter metadata
+-   **Datasources**: connection classes/targets, inferred locations, field counts
+-   **Dependency graph**: build/plot field dependency DAGs
+-   **TWBX assets**: list/extract images, extracts, text files, etc.
 
 ## Installation
 
