@@ -1,4 +1,36 @@
-url: ~
 template:
   bootstrap: 5
+  bslib:
+    primary: "#3366cc"
+    base_font: {google: "Inter"}
+    heading_font: {google: "Inter"}
 
+url: https://PrigasG.github.io/twbparser
+
+navbar:
+  structure:
+    left:  [reference, articles]
+    right: [search, github]
+  components:
+    github:
+      icon: fa-github
+      href: https://github.com/PrigasG/twbparser
+
+home:
+  title: "twbparser"
+  description: "Parse Tableau TWB/TWbx → tidy data + DAGs"
+
+articles:
+- title: Get Started
+  contents:
+  - getting-started-twbparser
+
+reference:
+  - title: Core
+    contents:
+      - TWBParser
+      - parse_twb
+      - get_calculated_fields
+      - get_field_dependencies
+      - generate_dag
+      - get_datasource_details
