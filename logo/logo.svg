@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="278" viewBox="0 0 240 278">
+  <!-- Hexagon background (standard R package shape) -->
+  <polygon points="120,30 210,80 210,180 120,230 30,180 30,80"
+           fill="#2E4057" stroke="#ffffff" stroke-width="3"/>
+
+  <!-- Circle of 9 plus signs representing Tableau -->
+  <g transform="translate(75,130)" fill="#ffffff">
+    <!-- Center plus -->
+    <g transform="translate(0,0)">
+      <rect x="-8" y="-2" width="16" height="4"/>
+      <rect x="-2" y="-8" width="4" height="16"/>
+    </g>
+
+    <!-- Top plus -->
+    <g transform="translate(0,-20)">
+      <rect x="-6" y="-1.5" width="12" height="3"/>
+      <rect x="-1.5" y="-6" width="3" height="12"/>
+    </g>
+
+    <!-- Top-right plus -->
+    <g transform="translate(14,-14)">
+      <rect x="-6" y="-1.5" width="12" height="3"/>
+      <rect x="-1.5" y="-6" width="3" height="12"/>
+    </g>
+
+    <!-- Right plus -->
+    <g transform="translate(20,0)">
+      <rect x="-6" y="-1.5" width="12" height="3"/>
+      <rect x="-1.5" y="-6" width="3" height="12"/>
+    </g>
+
+    <!-- Bottom-right plus -->
+    <g transform="translate(14,14)">
+      <rect x="-6" y="-1.5" width="12" height="3"/>
+      <rect x="-1.5" y="-6" width="3" height="12"/>
+    </g>
+
+    <!-- Bottom plus -->
+    <g transform="translate(0,20)">
+      <rect x="-6" y="-1.5" width="12" height="3"/>
+      <rect x="-1.5" y="-6" width="3" height="12"/>
+    </g>
+
+    <!-- Bottom-left plus -->
+    <g transform="translate(-14,14)">
+      <rect x="-6" y="-1.5" width="12" height="3"/>
+      <rect x="-1.5" y="-6" width="3" height="12"/>
+    </g>
+
+    <!-- Left plus -->
+    <g transform="translate(-20,0)">
+      <rect x="-6" y="-1.5" width="12" height="3"/>
+      <rect x="-1.5" y="-6" width="3" height="12"/>
+    </g>
+
+    <!-- Top-left plus -->
+    <g transform="translate(-14,-14)">
+      <rect x="-6" y="-1.5" width="12" height="3"/>
+      <rect x="-1.5" y="-6" width="3" height="12"/>
+    </g>
+  </g>
+
+  <!-- Arrow pointing right -->
+  <g transform="translate(115,130)" fill="#ffffff">
+    <polygon points="0,-5 12,-5 12,-7 18,0 12,7 12,5 0,5"/>
+  </g>
+
+  <!-- R symbol -->
+  <g transform="translate(165,135)" fill="#ffffff" font-family="serif" font-size="45" font-weight="bold">
+    <text x="-11" y="11" text-anchor="middle">R</text>
+  </g>
+
+  <!-- Package name -->
+  <text x="120" y="260" text-anchor="middle" fill="#2E4057"
+        font-family="Arial, sans-serif" font-size="16" font-weight="bold">
+    twbparser
+  </text>
+</svg>

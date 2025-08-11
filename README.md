@@ -1,4 +1,7 @@
-# twbparser <img src="https://img.shields.io/badge/Tableau-TWB/TWBX-blue" align="right"/>
+# twbparser <a href="https://PrigasG.github.io/twbparser/"><img src="man/figures/README-logo.png" alt="twbparser logo" align="right" height="120"></a>
+
+[![Tableau: TWB/TWBX](https://img.shields.io/badge/Tableau-TWB%2FTWBX-blue)](https://PrigasG.github.io/twbparser/)
+
 
 [![R-CMD-check](https://github.com/%3CUSER%3E/twbparser/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master)](https://github.com/%3CUSER%3E/twbparser/actions/workflows/R-CMD-check.yaml) [![pkgdown](https://github.com/%3CUSER%3E/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master)](https://%3CUSER%3E.github.io/twbparser/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md)
 
@@ -68,7 +71,6 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 -   R Shiny: Build an interactive dashboard showing calculations, filters, and DAG visualizations.
 -   Power BI: Export calculated field logic to replicate measures in DAX.
 -   Data lineage: Combine with DiagrammeR or visNetwork for workflow diagrams.
-
 
 ## Contributing
 
