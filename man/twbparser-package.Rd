@@ -9,8 +9,17 @@
 Tools to parse Tableau workbooks (relationships, joins, fields, datasources)
 and inspect TWBX assets.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://PrigasG.github.io/twbparser}
+  \item \url{https://github.com/PrigasG/twbparser}
+  \item Report bugs at \url{https://github.com/PrigasG/twbparser/issues}
+}
+
+}
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com}
+\strong{Maintainer}: George Arthur \email{you@example.com} (\href{https://orcid.org/0000-0002-1975-1459}{ORCID})
 
 }
 \keyword{internal}

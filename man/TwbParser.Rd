@@ -2,6 +2,7 @@
 % Please edit documentation in R/twb_parser.R
 \name{TwbParser}
 \alias{TwbParser}
+\alias{TWBParser}
 \title{Tableau Workbook Parser (R6)}
 \format{
 An R6 class generator.
@@ -43,32 +44,21 @@ extracts the largest \code{.twb} and records a manifest.
 \section{Fields}{
 
 \describe{
-\item{\code{path}}{Path to the \code{.twb} file on disk.}
-
-\item{\code{xml_doc}}{The parsed \code{xml2} document of the workbook.}
-
-\item{\code{twbx_path}}{The original \code{.twbx} path if the workbook was packaged.}
-
-\item{\code{twbx_dir}}{Directory where the \code{.twbx} was extracted (if any).}
-
-\item{\code{twbx_manifest}}{Tibble of \code{.twbx} contents (from \code{\link[=twbx_list]{twbx_list()}}).}
-
-\item{\code{relations}}{Tibble of \verb{<relation>} nodes (see \code{\link[=extract_relations]{extract_relations()}}).}
-
-\item{\code{joins}}{Tibble of join clauses (see \code{\link[=extract_joins]{extract_joins()}}).}
-
-\item{\code{relationships}}{Tibble of modern relationships (see \code{\link[=extract_relationships]{extract_relationships()}}).}
-
-\item{\code{inferred_relationships}}{Tibble of inferred pairs by name/role.}
-
-\item{\code{datasource_details}}{List with \code{data_sources}, \code{parameters}, \code{all_sources}.}
-
-\item{\code{fields}}{Tibble of raw fields with table info.}
-
-\item{\code{calculated_fields}}{Tibble of calculated fields.}
-
-\item{\code{last_validation}}{Result from validate() (list with \code{ok}/\code{issues}).}
-}}
+\item{path}{Path to the \code{.twb} or \code{.twbx} on disk.}
+\item{xml_doc}{Parsed \code{xml2} document of the workbook.}
+\item{twbx_path}{Original \code{.twbx} path (if packaged).}
+\item{twbx_dir}{Directory where the \code{.twbx} was extracted.}
+\item{twbx_manifest}{Tibble of \code{.twbx} contents.}
+\item{relations}{Tibble of \verb{<relation>} nodes.}
+\item{joins}{Tibble of join clauses.}
+\item{relationships}{Modern relationships tibble.}
+\item{inferred_relationships}{Inferred pairs by name/role.}
+\item{datasource_details}{List with \code{data_sources}, \code{parameters}, \code{all_sources}.}
+\item{fields}{Tibble of raw fields with table info.}
+\item{calculated_fields}{Tibble of calculated fields.}
+\item{last_validation}{List with \code{ok}/\code{issues} from \code{validate()}.}
+}
+}
 
 \section{Methods}{
 

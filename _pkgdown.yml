@@ -1,3 +1,4 @@
+url: https://PrigasG.github.io/twbparser
 template:
   bootstrap: 5
   bslib:
@@ -5,32 +6,57 @@ template:
     base_font: {google: "Inter"}
     heading_font: {google: "Inter"}
 
-url: https://PrigasG.github.io/twbparser
-
 navbar:
-  structure:
-    left:  [reference, articles]
-    right: [search, github]
+  structure: { left: [reference, articles], right: [search, github] }
   components:
     github:
       icon: fa-github
+      aria-label: "GitHub repository"
       href: https://github.com/PrigasG/twbparser
 
 home:
   title: "twbparser"
-  description: "Parse Tableau TWB/TWbx → tidy data + DAGs"
-
-articles:
-- title: Get Started
-  contents:
-  - getting-started-twbparser
+  description: "Parse Tableau TWB/TWBX → tidy data + DAGs"
 
 reference:
-  - title: Core
+  - title: "Core"
+    desc: >
+      Main R6 class used to parse .twb/.twbx workbooks.
     contents:
-      - TWBParser
-      - parse_twb
-      - get_calculated_fields
-      - get_field_dependencies
-      - generate_dag
-      - get_datasource_details
+      - TwbParser    # add @aliases TWBParser if you want to reference that name too
+
+  - title: "TWBX helpers"
+    contents:
+      - twbx_list
+      - extract_twb_from_twbx
+      - twbx_extract_files
+
+  - title: "Extraction"
+    contents:
+      - extract_named_connections
+      - extract_datasource_details
+      - extract_raw_fields
+      - extract_columns_with_table_source
+      - extract_calculated_fields
+      - extract_parameters
+      - extract_relations
+      - extract_joins
+      - extract_relationships
+
+  - title: "Inference & validation"
+    contents:
+      - infer_implicit_relationships
+      - validate_relationships
+
+  - title: "Lineage & graphs"
+    contents:
+      - build_dependency_graph
+      - plot_dependency_graph
+      - plot_relationship_graph
+      - plot_source_join_graph
+
+
+articles:
+  - title: "Get Started"
+    contents:
+      - twbparser-intro

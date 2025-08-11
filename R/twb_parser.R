@@ -7,19 +7,22 @@
 #'
 #' @format An R6 class generator.
 #'
-#' @field path Path to the `.twb` file on disk.
-#' @field xml_doc The parsed `xml2` document of the workbook.
-#' @field twbx_path The original `.twbx` path if the workbook was packaged.
-#' @field twbx_dir Directory where the `.twbx` was extracted (if any).
-#' @field twbx_manifest Tibble of `.twbx` contents (from [twbx_list()]).
-#' @field relations Tibble of `<relation>` nodes (see [extract_relations()]).
-#' @field joins Tibble of join clauses (see [extract_joins()]).
-#' @field relationships Tibble of modern relationships (see [extract_relationships()]).
-#' @field inferred_relationships Tibble of inferred pairs by name/role.
-#' @field datasource_details List with `data_sources`, `parameters`, `all_sources`.
-#' @field fields Tibble of raw fields with table info.
-#' @field calculated_fields Tibble of calculated fields.
-#' @field last_validation Result from validate() (list with `ok`/`issues`).
+#' @section Fields:
+#' \describe{
+#'   \item{path}{Path to the `.twb` or `.twbx` on disk.}
+#'   \item{xml_doc}{Parsed `xml2` document of the workbook.}
+#'   \item{twbx_path}{Original `.twbx` path (if packaged).}
+#'   \item{twbx_dir}{Directory where the `.twbx` was extracted.}
+#'   \item{twbx_manifest}{Tibble of `.twbx` contents.}
+#'   \item{relations}{Tibble of `<relation>` nodes.}
+#'   \item{joins}{Tibble of join clauses.}
+#'   \item{relationships}{Modern relationships tibble.}
+#'   \item{inferred_relationships}{Inferred pairs by name/role.}
+#'   \item{datasource_details}{List with `data_sources`, `parameters`, `all_sources`.}
+#'   \item{fields}{Tibble of raw fields with table info.}
+#'   \item{calculated_fields}{Tibble of calculated fields.}
+#'   \item{last_validation}{List with `ok`/`issues` from `validate()`.}
+#' }
 #'
 #' @section Methods:
 #' \describe{
@@ -41,8 +44,9 @@
 #'   \item{summary()}{Print a brief summary to console.}
 #' }
 #'
+#' @name TwbParser
+#' @aliases TwbParser TWBParser
 #' @export
-
 TwbParser <- R6::R6Class(
   "TwbParser",
   public = list(
