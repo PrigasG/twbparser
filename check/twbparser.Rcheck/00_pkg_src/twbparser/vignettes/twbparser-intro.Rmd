@@ -1,0 +1,29 @@
+---
+title: "twbparser-intro"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{twbparser-intro}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(twbparser)
+
+twb_path <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+
+if (nzchar(twb_path) && file.exists(twb_path)) {
+  parser <- TwbParser$new(twb_path)
+  parser$get_calculated_fields()
+} else {
+  cat("> Demo .twb not found in installed package. Skipping executable example.\n")
+  cat("  To enable examples, add `inst/extdata/test_for_wenjie.twb` to the package.\n")
+}
+```

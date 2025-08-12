@@ -1,0 +1,35 @@
+TwbParser               Tableau Workbook Parser (R6)
+build_dependency_graph
+                        Build a field dependency graph from calculated
+                        fields
+extract_calculated_fields
+                        Extract calculated fields from a TWB
+extract_columns_with_table_source
+                        Extract columns with their source tables from a
+                        TWB
+extract_datasource_details
+                        Extract datasource details from a Tableau TWB
+extract_joins           Extract Tableau join clauses from <relation
+                        type="join"> nodes
+extract_named_connections
+                        Extract <named-connection> entries from a TWB
+extract_parameters      Extract parameter fields from a TWB
+extract_raw_fields      Extract non-calculated, non-parameter fields
+                        from a TWB
+extract_relations       Extract all <relation> tags from a TWB
+extract_relationships   Extract modern relationships from a Tableau TWB
+extract_twb_from_twbx   Extract the .twb (and optionally all files)
+                        from a .twbx
+infer_implicit_relationships
+                        Infer implicit relationships between tables
+                        from field metadata
+plot_dependency_graph   Plot a field dependency graph
+plot_relationship_graph
+                        Plot a field-level relationship DAG (legacy)
+plot_source_join_graph
+                        Plot a source join graph
+twbx_extract_files      Extract specific files from a .twbx
+twbx_list               List contents of a Tableau .twbx
+validate_relationships
+                        Validate relationships against available
+                        datasources and fields

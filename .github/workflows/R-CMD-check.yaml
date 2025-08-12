@@ -42,6 +42,13 @@ jobs:
           extra-packages: any::rcmdcheck
           needs: check
 
+      - name: Build source tarball
+        shell: Rscript {0}
+        run: |
+          dir.create("build", showWarnings = FALSE)
+          tarball <- devtools::build(path = "build")
+          writeLines(tarball)
+
       - name: R CMD check
         uses: r-lib/actions/check-r-package@v2
         with:
@@ -54,3 +61,9 @@ jobs:
         with:
           name: check-results-${{ matrix.config.os }}-${{ matrix.config.r }}
           path: check
+
+      - name: Upload source tarball
+        uses: actions/upload-artifact@v4
+        with:
+          name: pkg-tarball
+          path: build/*.tar.gz
