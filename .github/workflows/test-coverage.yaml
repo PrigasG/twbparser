@@ -30,11 +30,6 @@ jobs:
           cov <- covr::package_coverage(quiet = FALSE, clean = FALSE)
           print(cov)
           covr::to_cobertura(cov, file = "cobertura.xml")
-          if (requireNamespace("DT", quietly = TRUE) && requireNamespace("htmltools", quietly = TRUE)) {
-            covr::report(cov, file = "coverage.html")
-          } else {
-            message("Skipping HTML report (DT/htmltools not installed).")
-          }
 
       - name: Upload HTML coverage (artifact)
         uses: actions/upload-artifact@v4
