@@ -1,2 +1,0 @@
-linters: lintr::linters_with_defaults(line_length_linter = lintr::line_length_linter(120), object_usage_linter = NULL, commented_code_linter = NULL, cyclocomp_linter = lintr::cyclocomp_linter(complexity_limit = 25))
-exclusions: list()
