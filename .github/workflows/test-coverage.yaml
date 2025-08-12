@@ -1,0 +1,49 @@
+name: test-coverage
+
+on:
+  push: { branches: [ master ] }
+  pull_request: { branches: [ master ] }
+
+jobs:
+  test-coverage:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: any::covr
+          needs: coverage
+
+      - name: Compute coverage
+        shell: Rscript {0}
+        run: |
+          cov <- covr::package_coverage(quiet = FALSE, clean = FALSE)
+          print(cov)
+          covr::to_cobertura(cov, file = "cobertura.xml")
+          covr::report(cov, file = "coverage.html")  # nice to have
+
+      - name: Upload HTML coverage (artifact)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-html
+          path: coverage.html
+
+      # For public repos you don't need a token; omit it entirely.
+      # If your repo is PRIVATE, create CODECOV_TOKEN secret and uncomment token line.
+      - name: Upload to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: cobertura.xml
+          disable_search: true
+          fail_ci_if_error: ${{ github.event_name != 'pull_request' }}
+          # token: ${{ secrets.CODECOV_TOKEN }}  # <-- only if PRIVATE
