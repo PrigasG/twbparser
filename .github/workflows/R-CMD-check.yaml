@@ -45,11 +45,10 @@ jobs:
           needs: check
 
       - name: Build source tarball
-        shell: Rscript {0}
         run: |
-          dir.create("build", showWarnings = FALSE)
-          tarball <- devtools::build(path = "build")
-          writeLines(tarball)
+          mkdir -p build
+          R CMD build . --no-build-vignettes
+          mv *.tar.gz build/
 
       - name: R CMD check
         uses: r-lib/actions/check-r-package@v2
