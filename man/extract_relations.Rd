@@ -2,7 +2,7 @@
 % Please edit documentation in R/relationships.R
 \name{extract_relations}
 \alias{extract_relations}
-\title{Extract all \if{html}{\out{<relation>}} tags from a TWB}
+\title{Extract all \verb{<relation>} tags from a TWB}
 \usage{
 extract_relations(xml_doc)
 }

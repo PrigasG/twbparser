@@ -14,7 +14,7 @@
 #'   \item{twbx_path}{Original `.twbx` path (if packaged).}
 #'   \item{twbx_dir}{Directory where the `.twbx` was extracted.}
 #'   \item{twbx_manifest}{Tibble of `.twbx` contents.}
-#'   \item{relations}{Tibble of `<relation>` nodes.}
+#'   \item{relations}{Tibble of \verb{<relation>} nodes.}
 #'   \item{joins}{Tibble of join clauses.}
 #'   \item{relationships}{Modern relationships tibble.}
 #'   \item{inferred_relationships}{Inferred pairs by name/role.}

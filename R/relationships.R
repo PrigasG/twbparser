@@ -30,9 +30,9 @@ clean_name <- function(name) {
   tail(parts, 1)
 }
 
-#' Extract all <relation> tags from a TWB
+#' Extract all \verb{<relation>} tags from a TWB
 #'
-#' Returns a tibble of `<relation>` elements found in a Tableau TWB XML,
+#' Returns a tibble of \verb{<relation>} elements found in a Tableau TWB XML,
 #' with key attributes and any custom SQL text.
 #'
 #' @param xml_doc An `xml2` document for a Tableau `.twb`.

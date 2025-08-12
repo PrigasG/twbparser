@@ -220,9 +220,9 @@ print_datasource_summary <- function(parser) {
   cat(sprintf("%d total source(s) in workbook\n", n_al))
 }
 
-#' Extract `<named-connection>` entries from a TWB
+#' Extract \verb{<named-connection>} entries from a TWB
 #'
-#' Rich, safe extraction of `<named-connection>` nodes and their `<connection>`
+#' Rich, safe extraction of \verb{<named-connection>} nodes and their \verb{<connection>}
 #' attributes into a tidy tibble.
 #'
 #' @param xml_doc An `xml2` document for a Tableau `.twb`.

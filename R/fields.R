@@ -27,7 +27,7 @@
 
 #' Extract columns with their source tables from a TWB
 #'
-#' Scans top-level `<datasource>` nodes (excluding view-specific references) and
+#' Scans top-level \verb{<datasource>} nodes (excluding view-specific references) and
 #' returns fields with raw names/captions, cleaned table/field names, and basic
 #' metadata.
 #'

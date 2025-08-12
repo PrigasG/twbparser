@@ -45,10 +45,10 @@
   .j_clean_field(token)
 }
 
-#' Extract Tableau join clauses from `<relation type="join">` nodes
+#' Extract Tableau join clauses from \verb{<relation type="join">} nodes
 #'
 #' Handles both column-based clauses (`<clause><column/></clause>`) and
-#' expression-based predicates (`<expression op=...>`) found in TWB XML.
+#' expression-based predicates (\verb{<expression op=...>}) found in TWB XML.
 #'
 #' @param xml_doc An `xml2` document for a Tableau `.twb`.
 #'

@@ -17,7 +17,7 @@
 
 #' Extract calculated fields from a TWB
 #'
-#' Finds columns that contain `<calculation>` nodes and returns metadata and
+#' Finds columns that contain \verb{<calculation>} nodes and returns metadata and
 #' formulas, with a heuristic flag for table calculations.
 #'
 #' @param xml_doc An `xml2` document for a Tableau `.twb`.
