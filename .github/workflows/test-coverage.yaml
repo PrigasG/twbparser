@@ -21,7 +21,10 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::covr
+          extra-packages: |
+            any::covr
+            any::DT
+            any::htmltools
           needs: coverage
 
       - name: Compute coverage
@@ -30,6 +33,7 @@ jobs:
           cov <- covr::package_coverage(quiet = FALSE, clean = FALSE)
           print(cov)
           covr::to_cobertura(cov, file = "cobertura.xml")
+          covr::report(cov, file = "coverage.html")
 
       - name: Upload HTML coverage (artifact)
         uses: actions/upload-artifact@v4
@@ -37,12 +41,14 @@ jobs:
           name: coverage-html
           path: coverage.html
 
-      # For public repos you don't need a token; omit it entirely.
-      # If your repo is PRIVATE, create CODECOV_TOKEN secret and uncomment token line.
+      - name: Verify cobertura exists
+        run: ls -l cobertura.xml
+
       - name: Upload to Codecov
         uses: codecov/codecov-action@v5
+        continue-on-error: true
         with:
           files: cobertura.xml
           disable_search: true
-          fail_ci_if_error: ${{ github.event_name != 'pull_request' }}
-          # token: ${{ secrets.CODECOV_TOKEN }}  # <-- only if PRIVATE
+          verbose: true
+
