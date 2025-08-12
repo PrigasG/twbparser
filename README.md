@@ -2,7 +2,7 @@
 
 [![Tableau: TWB/TWBX](https://img.shields.io/badge/Tableau-TWB%2FTWBX-blue)](https://PrigasG.github.io/twbparser/)
 
-[![R-CMD-check](https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master)](https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml) [![pkgdown](https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master)](https://PrigasG.github.io/twbparser/) [![Codecov](https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg)](https://codecov.io/gh/PrigasG/twbparser) [![License: MIT][![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md) [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![R-CMD-check](https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master)](https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml) [![pkgdown](https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master)](https://PrigasG.github.io/twbparser/) [![Codecov](https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg)](https://codecov.io/gh/PrigasG/twbparser) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md) [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
 Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationships, fields, and calculated fields**, plus inspect and unpack **TWBX** assets. Built for large workbooks and Shiny integration.
 
