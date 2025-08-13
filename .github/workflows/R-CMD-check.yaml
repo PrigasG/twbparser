@@ -45,6 +45,7 @@ jobs:
           needs: check
 
       - name: Build source tarball
+        shell: bash
         run: |
           mkdir -p build
           R CMD build . --no-build-vignettes
@@ -62,6 +63,7 @@ jobs:
         with:
           name: check-results-${{ matrix.config.os }}-${{ matrix.config.r }}
           path: check
+          overwrite: true
 
       - name: Upload source tarball
         uses: actions/upload-artifact@v4
