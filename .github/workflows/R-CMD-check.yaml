@@ -48,7 +48,7 @@ jobs:
         run: |
           mkdir -p build
           R CMD build . --no-build-vignettes
-          mv -t build $(ls -1t *.tar.gz | head -n1)
+          mv *.tar.gz build/
 
       - name: R CMD check
         uses: r-lib/actions/check-r-package@v2
