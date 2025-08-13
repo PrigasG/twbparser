@@ -48,7 +48,7 @@ jobs:
         run: |
           mkdir -p build
           R CMD build . --no-build-vignettes
-          mv *.tar.gz build/
+          mv -t build $(ls -1t *.tar.gz | head -n1)
 
       - name: R CMD check
         uses: r-lib/actions/check-r-package@v2
@@ -66,5 +66,9 @@ jobs:
       - name: Upload source tarball
         uses: actions/upload-artifact@v4
         with:
-          name: pkg-tarball
+          name: pkg-tarball-${{ matrix.config.os }}-${{ matrix.config.r }}
           path: build/*.tar.gz
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 7
+
