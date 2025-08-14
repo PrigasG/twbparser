@@ -2,7 +2,7 @@ Package: twbparser
 Title: Parse Tableau TWB/TWBX Workbooks
 Version: 0.2.0
 Authors@R: 
-    person("George", "Arthur", , "you@example.com", role = c("aut", "cre"),
+    person("George", "Arthur", email = "prigasgenthian48@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1975-1459"))
 Description: High-performance parsing of Tableau .twb/.twbx files into
     tidy data frames and dependency graphs for other visualization tools
