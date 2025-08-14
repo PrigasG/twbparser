@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,10 +32,70 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.0.0.9000" id="twbparser-0009000">twbparser 0.0.0.9000<a class="anchor" aria-label="anchor" href="#twbparser-0009000"></a></h2>
-<ul><li>Initial development version.</li>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="twbparser-020-2025-08-14">twbparser 0.2.0 (2025-08-14)<a class="anchor" aria-label="anchor" href="#twbparser-020-2025-08-14"></a></h2>
+<div class="section level3">
+<h3 id="new-0-2-0">New<a class="anchor" aria-label="anchor" href="#new-0-2-0"></a></h3>
+<ul><li>
+<strong>Custom SQL extraction (TWB/TWBX)</strong><br><code><a href="../reference/twb_custom_sql.html">twb_custom_sql()</a></code> returns one row per custom-SQL relation with <code>relation_name</code>, <code>relation_type</code>, <code>custom_sql</code>, and a heuristic <code>is_custom_sql</code>.</li>
+<li>
+<strong>Initial SQL extraction (TWB/TWBX)</strong><br><code><a href="../reference/twb_initial_sql.html">twb_initial_sql()</a></code> pulls connection-level <em>Initial SQL</em> text (when present).</li>
+<li>
+<strong>Published datasource detection (offline)</strong><br><code><a href="../reference/twb_published_refs.html">twb_published_refs()</a></code> flags datasources that likely reference <em>published</em> sources and surfaces the evidence.</li>
+<li>
+<strong>Pretty Tableau formulas</strong>
+<ul><li>
+<code><a href="../reference/tableau_formula_pretty.html">tableau_formula_pretty()</a></code> reflows/indents IF/ELSEIF/ELSE/END and CASE/WHEN/THEN blocks.</li>
+<li>
+<code><a href="../reference/prettify_calculated_fields.html">prettify_calculated_fields()</a></code> adds a <code>formula_pretty</code> column to the calculated-fields tibble.</li>
+</ul></li>
+<li>
+<strong>Optional Server/Cloud APIs (opt-in)</strong>
+<ul><li>
+<code><a href="../reference/tbs_publish_info.html">tbs_publish_info()</a></code> (REST): site/project/URL/created/updated for a content item.</li>
+<li>
+<code><a href="../reference/tbs_custom_sql_graphql.html">tbs_custom_sql_graphql()</a></code> (Metadata API): returns Custom SQL text and context for published items.</li>
+</ul></li>
 </ul></div>
-  </main></div>
+<div class="section level3">
+<h3 id="changes-0-2-0">Changes<a class="anchor" aria-label="anchor" href="#changes-0-2-0"></a></h3>
+<ul><li>
+<strong>R6: <code>TwbParser</code></strong>
+<ul><li>Now precomputes and exposes: <code>custom_sql</code>, <code>initial_sql</code>, <code>published_refs</code>.</li>
+<li>
+<code>get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L)</code><br>
+When <code>pretty = TRUE</code>, returns a cleaner table including <code>formula_pretty</code>.</li>
+</ul></li>
+<li>
+<strong>Column rename for clarity</strong>
+<ul><li>In calculated fields output, <code>class</code> → <strong><code>calc_class</code></strong> (Tableau calculation class).</li>
+</ul></li>
+</ul></div>
+<div class="section level3">
+<h3 id="fixes--robustness-0-2-0">Fixes &amp; robustness<a class="anchor" aria-label="anchor" href="#fixes--robustness-0-2-0"></a></h3>
+<ul><li>Eliminated NSE NOTES by using <code><a href="https://rlang.r-lib.org/reference/dot-data.html" class="external-link">rlang::.data</a></code>.</li>
+<li>Removed <code>%||%</code> dependency; now use <code><a href="https://dplyr.tidyverse.org/reference/coalesce.html" class="external-link">dplyr::coalesce()</a></code> where appropriate.</li>
+<li>Build hygiene: <code>.lintr</code> ignored via <code>.Rbuildignore</code>.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="docs--site-0-2-0">Docs &amp; site<a class="anchor" aria-label="anchor" href="#docs--site-0-2-0"></a></h3>
+<ul><li>Roxygen Markdown used consistently (backticks for inline code; <code>\verb{}</code> for angle-bracket tags).</li>
+<li>
+<code>_pkgdown.yml</code> updated to include new topics (SQL extraction, formatting, and optional server helpers).</li>
+<li>Function usage/arguments fully documented; R CMD check now passes cleanly.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="compatibility-notes-0-2-0">Compatibility notes<a class="anchor" aria-label="anchor" href="#compatibility-notes-0-2-0"></a></h3>
+<ul><li>
+<strong>Server features are optional.</strong> They require a REST auth token (e.g., PAT) or an admin-configured alternative (Connected App JWT). When not configured, helpers return empty tibbles or informative errors—offline TWB/TWBX parsing remains fully functional.</li>
+<li>If you relied on the <code>class</code> column in calculated fields, update code to use <code>calc_class</code>.</li>
+</ul><hr></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0" id="twbparser-010">twbparser 0.1.0<a class="anchor" aria-label="anchor" href="#twbparser-010"></a></h2>
+<ul><li>Initial CRAN-ready release: TWB/TWBX parsing, relationships/joins/fields/parameters, lineage graphs, and vignettes.</li>
+</ul></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
