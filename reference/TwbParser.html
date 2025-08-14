@@ -99,43 +99,43 @@ extracts the largest <code>.twb</code> and records a manifest.</p>
 
 
 <dl><dt>path</dt>
-<dd><p>Path to the <code>.twb</code> or <code>.twbx</code> on disk.</p></dd>
+<dd><p>Path to the <code>.twb</code> or <code>.twbx</code> file on disk.</p></dd>
 
 <dt>xml_doc</dt>
 <dd><p>Parsed <code>xml2</code> document of the workbook.</p></dd>
 
 <dt>twbx_path</dt>
-<dd><p>Original <code>.twbx</code> path (if packaged).</p></dd>
+<dd><p>Original <code>.twbx</code> path if the workbook was packaged.</p></dd>
 
 <dt>twbx_dir</dt>
 <dd><p>Directory where the <code>.twbx</code> was extracted.</p></dd>
 
 <dt>twbx_manifest</dt>
-<dd><p>Tibble of <code>.twbx</code> contents.</p></dd>
+<dd><p>Tibble of <code>.twbx</code> contents from <code><a href="twbx_list.html">twbx_list()</a></code>.</p></dd>
 
 <dt>relations</dt>
-<dd><p>Tibble of <code>&lt;relation&gt;</code> nodes.</p></dd>
+<dd><p>Tibble of <code>&lt;relation&gt;</code> nodes from <code><a href="extract_relations.html">extract_relations()</a></code>.</p></dd>
 
 <dt>joins</dt>
-<dd><p>Tibble of join clauses.</p></dd>
+<dd><p>Tibble of join clauses from <code><a href="extract_joins.html">extract_joins()</a></code>.</p></dd>
 
 <dt>relationships</dt>
-<dd><p>Modern relationships tibble.</p></dd>
+<dd><p>Tibble of modern relationships from <code><a href="extract_relationships.html">extract_relationships()</a></code>.</p></dd>
 
 <dt>inferred_relationships</dt>
-<dd><p>Inferred pairs by name/role.</p></dd>
+<dd><p>Tibble of inferred relationship pairs by name and role.</p></dd>
 
 <dt>datasource_details</dt>
-<dd><p>List with <code>data_sources</code>, <code>parameters</code>, <code>all_sources</code>.</p></dd>
+<dd><p>List containing <code>data_sources</code>, <code>parameters</code>, and <code>all_sources</code>.</p></dd>
 
 <dt>fields</dt>
-<dd><p>Tibble of raw fields with table info.</p></dd>
+<dd><p>Tibble of raw fields with table information.</p></dd>
 
 <dt>calculated_fields</dt>
 <dd><p>Tibble of calculated fields.</p></dd>
 
 <dt>last_validation</dt>
-<dd><p>List with <code>ok</code>/<code>issues</code> from <code>validate()</code>.</p></dd>
+<dd><p>Result from <code>validate()</code> as list with <code>ok</code> and <code>issues</code> elements.</p></dd>
 
 
 </dl></div>
@@ -144,7 +144,7 @@ extracts the largest <code>.twb</code> and records a manifest.</p>
 
 
 <dl><dt>new(path)</dt>
-<dd><p>Create a parser from <code>.twb</code> or <code>.twbx</code>.</p></dd>
+<dd><p>Create a parser from <code>.twb</code> or <code>.twbx</code> file.</p></dd>
 
 <dt>get_twbx_manifest()</dt>
 <dd><p>Return <code>.twbx</code> manifest tibble.</p></dd>
@@ -156,7 +156,7 @@ extracts the largest <code>.twb</code> and records a manifest.</p>
 <dd><p>Return <code>.twbx</code> image entries.</p></dd>
 
 <dt>extract_twbx_assets(types, pattern, files, exdir)</dt>
-<dd><p>Extract files from <code>.twbx</code>.</p></dd>
+<dd><p>Extract files from <code>.twbx</code> archive.</p></dd>
 
 <dt>get_relations()</dt>
 <dd><p>Return relations tibble.</p></dd>
@@ -182,11 +182,12 @@ extracts the largest <code>.twb</code> and records a manifest.</p>
 <dt>get_fields()</dt>
 <dd><p>Return raw fields tibble.</p></dd>
 
-<dt>get_calculated_fields()</dt>
-<dd><p>Return calculated fields tibble.</p></dd>
+<dt>get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L)</dt>
+<dd><p>Return calculated fields tibble. When <code>pretty = TRUE</code>, includes a
+<code>formula_pretty</code> column with line breaks and indentation.</p></dd>
 
 <dt>validate(error = FALSE)</dt>
-<dd><p>Validate relationships (stop if <code>error = TRUE</code>).</p></dd>
+<dd><p>Validate relationships. Stops execution if <code>error = TRUE</code>.</p></dd>
 
 <dt>summary()</dt>
 <dd><p>Print a brief summary to console.</p></dd>

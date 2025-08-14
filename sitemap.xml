@@ -30,10 +30,17 @@
 <url><loc>https://PrigasG.github.io/twbparser/reference/plot_dependency_graph.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/plot_relationship_graph.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/plot_source_join_graph.html</loc></url>
+<url><loc>https://PrigasG.github.io/twbparser/reference/prettify_calculated_fields.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/print_datasource_summary.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/put_in_sq_bracket.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/redact.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/safe_call.html</loc></url>
+<url><loc>https://PrigasG.github.io/twbparser/reference/tableau_formula_pretty.html</loc></url>
+<url><loc>https://PrigasG.github.io/twbparser/reference/tbs_custom_sql_graphql.html</loc></url>
+<url><loc>https://PrigasG.github.io/twbparser/reference/tbs_publish_info.html</loc></url>
+<url><loc>https://PrigasG.github.io/twbparser/reference/twb_custom_sql.html</loc></url>
+<url><loc>https://PrigasG.github.io/twbparser/reference/twb_initial_sql.html</loc></url>
+<url><loc>https://PrigasG.github.io/twbparser/reference/twb_published_refs.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/twbparser-package.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/twbx_extract_files.html</loc></url>
 <url><loc>https://PrigasG.github.io/twbparser/reference/twbx_list.html</loc></url>
