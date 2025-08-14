@@ -30,7 +30,7 @@
 #'   \item{datatype}{Tableau datatype.}
 #'   \item{role}{Tableau role.}
 #'   \item{formula}{Calculation formula string.}
-#'   \item{class}{Tableau calc class (often `"tableau"`).}
+#'   \item{calc_class}{Tableau calc class (often `"tableau"`).}
 #'   \item{is_table_calc}{Heuristic flag for table calcs (e.g., `WINDOW_`, `LOOKUP`).}
 #'   \item{table}{Raw table reference.}
 #'   \item{table_clean}{Cleaned table name.}
@@ -72,7 +72,7 @@ extract_calculated_fields <- function(xml_doc) {
       raw_tbl <- attr_safe_get(ca, "table", NA_character_)
 
       formula <- attr_safe_get(fa, "formula", NA_character_)
-      class <- attr_safe_get(fa, "class", NA_character_)
+      calc_class <- attr_safe_get(fa, "class", NA_character_)
 
       # Heuristic for table calcs
       is_tbl <- if (!is.na(formula)) {
@@ -88,7 +88,7 @@ extract_calculated_fields <- function(xml_doc) {
         datatype              = attr_safe_get(ca, "datatype", NA_character_),
         role                  = attr_safe_get(ca, "role", NA_character_),
         formula               = formula,
-        class                 = class,
+        calc_class            = calc_class,
         is_table_calc         = is_tbl,
         table                 = raw_tbl,
         table_clean           = .clean_table(raw_tbl)

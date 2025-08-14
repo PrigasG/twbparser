@@ -14,6 +14,7 @@ Useful links:
 \itemize{
   \item \url{https://PrigasG.github.io/twbparser}
   \item \url{https://github.com/PrigasG/twbparser}
+  \item \url{https://prigasg.github.io/twbparser/}
   \item Report bugs at \url{https://github.com/PrigasG/twbparser/issues}
 }
 

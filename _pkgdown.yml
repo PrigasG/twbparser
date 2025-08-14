@@ -42,6 +42,9 @@ reference:
       - extract_relations
       - extract_joins
       - extract_relationships
+      - twb_initial_sql
+      - twb_custom_sql
+      - twb_published_refs
 
   - title: "Inference & validation"
     contents:
@@ -55,6 +58,15 @@ reference:
       - plot_relationship_graph
       - plot_source_join_graph
 
+  - title: "Formatting & display"
+    contents:
+      - tableau_formula_pretty
+      - prettify_calculated_fields
+
+  - title: "Server/Cloud (optional)"
+    contents:
+      - tbs_publish_info
+      - tbs_custom_sql_graphql
 
 articles:
   - title: "Get Started"

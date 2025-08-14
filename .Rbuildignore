@@ -2,10 +2,12 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^tools$
-^^\\.lintr$$
 ^doc$
 ^Meta$
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
 ^\.github$
+^\.lintr$
+^build$
+^check$

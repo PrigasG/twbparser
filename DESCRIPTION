@@ -2,21 +2,20 @@ Package: twbparser
 Title: Parse Tableau TWB/TWBX Workbooks
 Version: 0.0.0.9000
 Authors@R: 
-    c(person(given = "George", family = "Arthur", role = c("aut", "cre"),
-             email = "you@example.com",
-             comment = c(ORCID = "0000-0002-1975-1459")))
+    person("George", "Arthur", , "you@example.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1975-1459"))
 Description: High-performance parsing of Tableau .twb/.twbx files into
     tidy data frames and dependency graphs for other visualization tools
     like R Shiny or Power BI replication.
 License: MIT + file LICENSE
-URL: https://PrigasG.github.io/twbparser,
-    https://github.com/PrigasG/twbparser
+URL: https://PrigasG.github.io/twbparser, https://github.com/PrigasG/twbparser, https://prigasg.github.io/twbparser/
 BugReports: https://github.com/PrigasG/twbparser/issues
 Imports: 
     dplyr,
     igraph,
     purrr,
     R6,
+    rlang,
     stringr,
     tibble,
     tidyr,
@@ -29,7 +28,6 @@ Suggests:
     lintr,
     magrittr,
     optparse,
-    rlang,
     rmarkdown,
     styler,
     testthat (>= 3.0.0),

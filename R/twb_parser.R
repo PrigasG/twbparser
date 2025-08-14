@@ -9,28 +9,28 @@
 #'
 #' @section Fields:
 #' \describe{
-#'   \item{path}{Path to the `.twb` or `.twbx` on disk.}
+#'   \item{path}{Path to the `.twb` or `.twbx` file on disk.}
 #'   \item{xml_doc}{Parsed `xml2` document of the workbook.}
-#'   \item{twbx_path}{Original `.twbx` path (if packaged).}
+#'   \item{twbx_path}{Original `.twbx` path if the workbook was packaged.}
 #'   \item{twbx_dir}{Directory where the `.twbx` was extracted.}
-#'   \item{twbx_manifest}{Tibble of `.twbx` contents.}
-#'   \item{relations}{Tibble of \verb{<relation>} nodes.}
-#'   \item{joins}{Tibble of join clauses.}
-#'   \item{relationships}{Modern relationships tibble.}
-#'   \item{inferred_relationships}{Inferred pairs by name/role.}
-#'   \item{datasource_details}{List with `data_sources`, `parameters`, `all_sources`.}
-#'   \item{fields}{Tibble of raw fields with table info.}
+#'   \item{twbx_manifest}{Tibble of `.twbx` contents from `twbx_list()`.}
+#'   \item{relations}{Tibble of \verb{<relation>} nodes from `extract_relations()`.}
+#'   \item{joins}{Tibble of join clauses from `extract_joins()`.}
+#'   \item{relationships}{Tibble of modern relationships from `extract_relationships()`.}
+#'   \item{inferred_relationships}{Tibble of inferred relationship pairs by name and role.}
+#'   \item{datasource_details}{List containing `data_sources`, `parameters`, and `all_sources`.}
+#'   \item{fields}{Tibble of raw fields with table information.}
 #'   \item{calculated_fields}{Tibble of calculated fields.}
-#'   \item{last_validation}{List with `ok`/`issues` from `validate()`.}
+#'   \item{last_validation}{Result from `validate()` as list with `ok` and `issues` elements.}
 #' }
 #'
 #' @section Methods:
 #' \describe{
-#'   \item{new(path)}{Create a parser from `.twb` or `.twbx`.}
+#'   \item{new(path)}{Create a parser from `.twb` or `.twbx` file.}
 #'   \item{get_twbx_manifest()}{Return `.twbx` manifest tibble.}
 #'   \item{get_twbx_extracts()}{Return `.twbx` extract entries.}
 #'   \item{get_twbx_images()}{Return `.twbx` image entries.}
-#'   \item{extract_twbx_assets(types, pattern, files, exdir)}{Extract files from `.twbx`.}
+#'   \item{extract_twbx_assets(types, pattern, files, exdir)}{Extract files from `.twbx` archive.}
 #'   \item{get_relations()}{Return relations tibble.}
 #'   \item{get_joins()}{Return joins tibble.}
 #'   \item{get_relationships()}{Return modern relationships tibble.}
@@ -39,8 +39,11 @@
 #'   \item{get_parameters()}{Return parameters tibble.}
 #'   \item{get_datasources_all()}{Return all sources tibble.}
 #'   \item{get_fields()}{Return raw fields tibble.}
-#'   \item{get_calculated_fields()}{Return calculated fields tibble.}
-#'   \item{validate(error = FALSE)}{Validate relationships (stop if `error = TRUE`).}
+#'   \item{get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L)}{
+#'     Return calculated fields tibble. When `pretty = TRUE`, includes a
+#'     `formula_pretty` column with line breaks and indentation.
+#'   }
+#'   \item{validate(error = FALSE)}{Validate relationships. Stops execution if `error = TRUE`.}
 #'   \item{summary()}{Print a brief summary to console.}
 #' }
 #'
@@ -68,6 +71,10 @@ TwbParser <- R6::R6Class(
     fields = NULL,
     calculated_fields = NULL,
     last_validation = NULL,
+    custom_sql = NULL,
+    initial_sql = NULL,
+    published_refs = NULL,
+    # publish_info_cache = NULL,
 
     #' @description
     #' Initialize the parser from a `.twb` or `.twbx` path.
@@ -105,6 +112,10 @@ TwbParser <- R6::R6Class(
         )
       )
       self$calculated_fields <- safe_call(extract_calculated_fields(self$xml_doc), tibble::tibble())
+      self$custom_sql <- safe_call(twb_custom_sql(self$xml_doc), tibble::tibble())
+      self$initial_sql <- safe_call(twb_initial_sql(self$xml_doc), tibble::tibble())
+      self$published_refs <- safe_call(twb_published_refs(self$xml_doc), tibble::tibble())
+
 
       message("TWB parsed and ready")
     },
@@ -160,7 +171,19 @@ TwbParser <- R6::R6Class(
     get_parameters = function() self$datasource_details$parameters,
     get_datasources_all = function() self$datasource_details$all_sources,
     get_fields = function() self$fields,
-    get_calculated_fields = function() self$calculated_fields,
+    #get_calculated_fields = function() self$calculated_fields,
+    get_custom_sql = function() self$custom_sql,
+    get_initial_sql = function() self$initial_sql,
+    get_published_refs = function() self$published_refs,
+    get_calculated_fields = function(pretty = FALSE, strip_brackets = FALSE, wrap = 100L) {
+      if (!isTRUE(pretty)) return(self$calculated_fields)
+      df <- prettify_calculated_fields(self$calculated_fields, strip_brackets = strip_brackets, wrap = wrap)
+      df |>
+        dplyr::select(
+          datasource, name, datatype, role, is_table_calc,calc_class,
+          formula_pretty, tableau_internal_name, table_clean
+        )
+    },
 
     # --- validator bridge ---
     #' @description Validate relationships; optionally stop on failure.

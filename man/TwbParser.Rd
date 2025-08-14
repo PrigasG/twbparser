@@ -44,30 +44,30 @@ extracts the largest \code{.twb} and records a manifest.
 \section{Fields}{
 
 \describe{
-\item{path}{Path to the \code{.twb} or \code{.twbx} on disk.}
+\item{path}{Path to the \code{.twb} or \code{.twbx} file on disk.}
 \item{xml_doc}{Parsed \code{xml2} document of the workbook.}
-\item{twbx_path}{Original \code{.twbx} path (if packaged).}
+\item{twbx_path}{Original \code{.twbx} path if the workbook was packaged.}
 \item{twbx_dir}{Directory where the \code{.twbx} was extracted.}
-\item{twbx_manifest}{Tibble of \code{.twbx} contents.}
-\item{relations}{Tibble of \verb{<relation>} nodes.}
-\item{joins}{Tibble of join clauses.}
-\item{relationships}{Modern relationships tibble.}
-\item{inferred_relationships}{Inferred pairs by name/role.}
-\item{datasource_details}{List with \code{data_sources}, \code{parameters}, \code{all_sources}.}
-\item{fields}{Tibble of raw fields with table info.}
+\item{twbx_manifest}{Tibble of \code{.twbx} contents from \code{twbx_list()}.}
+\item{relations}{Tibble of \verb{<relation>} nodes from \code{extract_relations()}.}
+\item{joins}{Tibble of join clauses from \code{extract_joins()}.}
+\item{relationships}{Tibble of modern relationships from \code{extract_relationships()}.}
+\item{inferred_relationships}{Tibble of inferred relationship pairs by name and role.}
+\item{datasource_details}{List containing \code{data_sources}, \code{parameters}, and \code{all_sources}.}
+\item{fields}{Tibble of raw fields with table information.}
 \item{calculated_fields}{Tibble of calculated fields.}
-\item{last_validation}{List with \code{ok}/\code{issues} from \code{validate()}.}
+\item{last_validation}{Result from \code{validate()} as list with \code{ok} and \code{issues} elements.}
 }
 }
 
 \section{Methods}{
 
 \describe{
-\item{new(path)}{Create a parser from \code{.twb} or \code{.twbx}.}
+\item{new(path)}{Create a parser from \code{.twb} or \code{.twbx} file.}
 \item{get_twbx_manifest()}{Return \code{.twbx} manifest tibble.}
 \item{get_twbx_extracts()}{Return \code{.twbx} extract entries.}
 \item{get_twbx_images()}{Return \code{.twbx} image entries.}
-\item{extract_twbx_assets(types, pattern, files, exdir)}{Extract files from \code{.twbx}.}
+\item{extract_twbx_assets(types, pattern, files, exdir)}{Extract files from \code{.twbx} archive.}
 \item{get_relations()}{Return relations tibble.}
 \item{get_joins()}{Return joins tibble.}
 \item{get_relationships()}{Return modern relationships tibble.}
@@ -76,8 +76,11 @@ extracts the largest \code{.twb} and records a manifest.
 \item{get_parameters()}{Return parameters tibble.}
 \item{get_datasources_all()}{Return all sources tibble.}
 \item{get_fields()}{Return raw fields tibble.}
-\item{get_calculated_fields()}{Return calculated fields tibble.}
-\item{validate(error = FALSE)}{Validate relationships (stop if \code{error = TRUE}).}
+\item{get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L)}{
+Return calculated fields tibble. When \code{pretty = TRUE}, includes a
+\code{formula_pretty} column with line breaks and indentation.
+}
+\item{validate(error = FALSE)}{Validate relationships. Stops execution if \code{error = TRUE}.}
 \item{summary()}{Print a brief summary to console.}
 }
 }

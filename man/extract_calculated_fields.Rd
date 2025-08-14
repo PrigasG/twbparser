@@ -18,7 +18,7 @@ A tibble with columns:
 \item{datatype}{Tableau datatype.}
 \item{role}{Tableau role.}
 \item{formula}{Calculation formula string.}
-\item{class}{Tableau calc class (often \code{"tableau"}).}
+\item{calc_class}{Tableau calc class (often \code{"tableau"}).}
 \item{is_table_calc}{Heuristic flag for table calcs (e.g., \code{WINDOW_}, \code{LOOKUP}).}
 \item{table}{Raw table reference.}
 \item{table_clean}{Cleaned table name.}
