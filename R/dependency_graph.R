@@ -46,7 +46,7 @@
 #' @param fields_df A data frame with at least columns `name` and `formula`.
 #'
 #' @return An `igraph` directed graph where vertices are field names and edges
-#'   represent dependencies (input ➜ output).
+#'   represent dependencies (input \if{html}{\out{&rarr;}}\if{latex}{->} output).
 #'
 #' @examples
 #' \dontrun{

@@ -11,3 +11,5 @@
 ^\.lintr$
 ^build$
 ^check$
+^cran-comments\.md$
+^CRAN-SUBMISSION$

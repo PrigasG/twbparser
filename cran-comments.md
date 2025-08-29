@@ -1,3 +1,17 @@
+# CRAN resubmission for twbparser 0.2.1
+
+## Changes since 0.2.0
+* Replaced a Unicode arrow in docs (PDF manual now builds on all platforms).
+* Added `Depends: R (>= 4.2.0)` due to native pipe placeholder usage.
+* Ensured vignettes are built into the tarball (`inst/doc`) and vignette index is created at install.
+* Canonicalized URLs (GitHub Pages trailing slash; Codecov `app.` host).
+* Spell-check pass; added a WORDLIST for domain terms and proper nouns (e.g., “TWB”, “TWBX”, “GraphQL”).
+
+## R CMD check results
+0 errors | 0 warnings | 0 notes
+
+---
+
 # CRAN submission for twbparser
 
 ## Package overview
@@ -6,17 +20,14 @@ calculated fields, parameters, field dependencies, data sources, filters, and da
 It uses only local files and writes only to temp directories during examples/tests.
 
 ## Test environments
-- local R installation, R 4.4.1
-- ubuntu-latest (GitHub Actions): devel, release, oldrel-1
-- macOS-latest (GitHub Actions): release
-- windows-latest (GitHub Actions): release
+- local R 4.4.1
+- GitHub Actions: ubuntu-latest (devel, release, oldrel-1); macos-latest (release); windows-latest (release)
 - win-builder: release, devel
-- rhub: Linux (R-devel, R-release), Windows, macOS
+- rhub: Linux (R-devel, R-release), Windows, macOS  
 
 ## R CMD check results
-0 errors | 0 warnings | 0 notes
-
-- `--as-cran` run locally and in CI.
+0 errors | 0 warnings | 0 notes  
+- `--as-cran` run locally and in CI.  
 - All examples complete in <5s total on GH Actions runners.
 
 ## Notes for CRAN
@@ -24,26 +35,16 @@ It uses only local files and writes only to temp directories during examples/tes
 - No external network resources are used in examples, vignettes, or tests.
 - No non-temporary files are written; tests/examples use `tempdir()`/`withr::with_tempdir()`.
 - No `:::` usage; all symbols are imported via `NAMESPACE`.
-- Spelling checked with `devtools::spell_check()`; product names like “Tableau”, “Shiny” are proper nouns.
-- Encodings are UTF-8; tested on Windows to avoid path/encoding issues.
+- Spelling checked with `devtools::spell_check()`; product names like “Tableau” and “Shiny” are proper nouns.
 - Examples that would require large `.twb/.twbx` files are trimmed; larger flows are demonstrated in vignettes using small bundled fixtures.
-- Dependencies in `Imports` are minimal and widely available; code guards optional `Suggests` with `requireNamespace()` in examples/tests.
-
-## Reverse dependencies
-- Not applicable (new package).
-
-## rhub / win-builder summary
-- win-builder (release & devel): OK
-- rhub multi-platform matrix: OK
-  - No platform-specific warnings; Solaris-equivalent checks not available but
-    code uses only base R + portable dependencies.
+- Dependencies in `Imports` are minimal and widely available; optional `Suggests` guarded via `requireNamespace()`.
 
 ## URL checks
-- All URLs (README/vignette) verified with `urlchecker::url_check()`. No redirects or failures.
+- All URLs (README/vignette) verified with `urlchecker::url_check()`; no redirects or failures.
 
 ## Additional policies
 - The package does not download or execute code at build/check time.
-- No use of long-running examples, network calls, or parallelization by default.
+- No long-running examples, network calls, or parallelization by default.
 - Memory usage is bounded and tested with large XML inputs in CI (sanity checks).
 
 ## Maintainer

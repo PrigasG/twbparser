@@ -1,3 +1,19 @@
+# twbparser 0.2.1 (2025-08-29)
+
+## Fixes for CRAN submission
+- Replaced a Unicode arrow in docs so the PDF manual builds on all platforms.
+- Added `Depends: R (>= 4.2.0)` (native pipe placeholder usage).
+- Ensured vignettes are built into the tarball (`inst/doc`) and vignette index is created at install.
+- Spell-check pass; added `inst/WORDLIST` for domain terms (e.g., “TWB”, “TWBX”, “GraphQL”).
+
+
+# twbparser 0.2.0 (2025-08-29)
+- Initial CRAN submission.
+- Core features: parse `.twb`/`.twbx`, extract datasources, parameters, fields & calculated fields, joins/relationships, and generate dependency graphs.
+
+
+---
+
 # twbparser 0.2.0 (2025-08-14)
 
 ## New

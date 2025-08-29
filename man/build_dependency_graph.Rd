@@ -11,7 +11,7 @@ build_dependency_graph(fields_df)
 }
 \value{
 An \code{igraph} directed graph where vertices are field names and edges
-represent dependencies (input ➜ output).
+represent dependencies (input \if{html}{\out{&rarr;}}\if{latex}{->} output).
 }
 \description{
 Creates a directed graph where edges point from input fields used in a

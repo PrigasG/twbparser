@@ -2,7 +2,7 @@
 
 [![Tableau: TWB/TWBX](https://img.shields.io/badge/Tableau-TWB%2FTWBX-blue)](https://PrigasG.github.io/twbparser/)
 
-[![R-CMD-check](https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master)](https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml) [![pkgdown](https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master)](https://PrigasG.github.io/twbparser/) [![Codecov](https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg)](https://codecov.io/gh/PrigasG/twbparser) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md) [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![R-CMD-check](https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master)](https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml) [![pkgdown](https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master)](https://PrigasG.github.io/twbparser/) [![Codecov](https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg)](https://app.codecov.io/gh/PrigasG/twbparser) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md) [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
 Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationships, fields, and calculated fields**, plus inspect and unpack **TWBX** assets. Built for large workbooks and Shiny integration.
 
@@ -70,6 +70,14 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 -   R Shiny: Build an interactive dashboard showing calculations, filters, and DAG visualizations.
 -   Power BI: Export calculated field logic to replicate measures in DAX.
 -   Data lineage: Combine with DiagrammeR or visNetwork for workflow diagrams.
+
+## What’s new (0.2.0)
+
+-   Custom SQL extraction: twb_custom_sql()
+-   Initial SQL extraction: twb_initial_sql()
+-   Published datasource detection: twb_published_refs()
+-   Pretty formulas: tableau_formula_pretty(), prettify_calculated_fields()
+-   Optional Server/Cloud helpers: tbs_publish_info(), tbs_custom_sql_graphql()
 
 ## Contributing
 
