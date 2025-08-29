@@ -13,6 +13,8 @@
 -   **File URI**: Changed README to link the license via a full https URL.
 -   **Spelling**: “TWB/TWBX” are Tableau file formats; updated Title/Description to use the acronyms and documented them in WORDLIST.
 -   **Vignette index**: We ship source vignettes and prebuilt vignette(s) in `inst/doc`; the vignette index (`Meta/vignette.rds`) is created at install time by R CMD INSTALL. Verified `inst/doc/twbparser-intro.html` is present in the source bundle.
+-   DESCRIPTION wording updated to avoid acronym spell NOTE (now “Tableau workbooks”).
+-   Vignettes built into source bundle (`inst/doc`); index is created at install.
 
 ## R CMD check results
 
