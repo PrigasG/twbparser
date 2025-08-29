@@ -1,10 +1,10 @@
 Package: twbparser
-Title: Parse Tableau .twb/.twbx Workbooks
+Title: Parse Tableau TWB/TWBX Workbooks
 Version: 0.2.1
 Authors@R: 
     person("George", "Arthur", email = "prigasgenthian48@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1975-1459"))
-Description: High-performance parsing of Tableau .twb/.twbx files into
+Description: High-performance parsing of Tableau TWB/TWBX files into
     tidy data frames and dependency graphs for other visualization tools
     like R Shiny or Power BI replication.
 License: MIT + file LICENSE
