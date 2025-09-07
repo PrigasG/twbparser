@@ -1,3 +1,17 @@
+# CRAN resubmission for twbparser 0.2.2
+
+## Changes since 0.2.1
+* Removed vignettes and `VignetteBuilder:` from DESCRIPTION to address prior vignette/index issues.
+* No other functional changes.
+
+## R CMD check results
+0 errors | 0 warnings | 1 note
+
+* NOTE (local only): "Files 'README.md' or 'NEWS.md' cannot be checked without 'pandoc' being installed."
+  This is due to Pandoc not being on PATH locally; CRAN has Pandoc so this should not occur on CRAN.
+
+--------------------------------------------------------------------------------
+
 # CRAN resubmission for twbparser 0.2.1
 
 ## Changes since 0.2.0
@@ -18,9 +32,9 @@
 
 ## R CMD check results
 
-0 errors \| 0 warnings \| 0 notes
+0 errors | 0 warnings | 0 notes
 
-------------------------------------------------------------------------
+--------------------------------------------------------------------------------
 
 # CRAN submission for twbparser
 
@@ -37,9 +51,9 @@
 
 ## R CMD check results
 
-0 errors \| 0 warnings \| 0 notes\
-- `--as-cran` run locally and in CI.\
-- All examples complete in \<5s total on GH Actions runners.
+0 errors | 0 warnings | 0 notes
+- `--as-cran` run locally and in CI.
+
 
 ## Notes for CRAN
 

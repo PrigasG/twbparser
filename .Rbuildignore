@@ -9,7 +9,10 @@
 ^pkgdown$
 ^\.github$
 ^\.lintr$
-^build$
 ^check$
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
+^twbparser.Rcheck
+^vignettes$
+^\.Rd2pdf
+^-manual\.tex$
