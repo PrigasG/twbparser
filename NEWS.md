@@ -1,6 +1,46 @@
+# twbparser 0.3.0
+
+## New
+- Page insights:
+  - `twb_pages()`: list all pages (dashboard / worksheet / story).
+  - `twb_page_composition(x, name)`: what a page contains (worksheets, filters, legends, parameter controls, text, images) with `x/y/w/h` for dashboard zones when available.
+  - `twb_pages_summary()`: per-page counts and quick descriptors.
+  - `twb_dashboards()`, `twb_dashboard_filters()`, `twb_charts()`, `twb_colors()`, `twb_dashboard_summary()` helpers (also available as `TwbParser` getters).
+
+- Ergonomics (active bindings; no API breaks):
+  - `parser$summary` (no parentheses) prints the textual summary.
+  - Read-only properties: `parser$overview`, `parser$pages`, `parser$pages_summary`, `parser$dashboard_summary`.
+
+- Calculated fields:
+  - Parameters are excluded by default in `extract_calculated_fields()` and `TwbParser$get_calculated_fields()`.
+  - Opt-in via `include_parameters = TRUE`.
+
+## Improvements
+- `summary()` now includes dashboards and total filters; `get_overview()` returns a one-row tibble snapshot.
+- Robust handling of dashboard zone positions and filter presentation hints.
+
+## Internal
+- New internal workers in `R/insights.R` (pure read-only functions) used by both R6 getters and functional wrappers.
+- Documentation and vignette expanded with page-centric examples.
+
+## Compatibility
+- No breaking changes to existing exported functions or S3 classes.
+
+
+---
+
+# twbparser 0.2.3 (2025-09-23)
+
+## Fixes for CRAN resubmission
+- Quoted software/API names in Title/Description per CRAN.
+- Shipped tiny example files in inst/extdata and use system.file().
+- Moved withr to Imports; removed fixed seeds inside functions.
+
+---
+
 # twbparser 0.2.1 (2025-08-29)
 
-## Fixes for CRAN submission
+## Fixes for CRAN resubmission
 - Replaced a Unicode arrow in docs so the PDF manual builds on all platforms.
 - Added `Depends: R (>= 4.2.0)` (native pipe placeholder usage).
 - Ensured vignettes are built into the tarball (`inst/doc`) and vignette index is created at install.

@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Inter-0.4.9/font.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/Inter-0.4.10/font.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="twbparser">
 <meta name="description" content="Parse Tableau TWB/TWBX → tidy data + DAGs">
 <meta property="og:description" content="Parse Tableau TWB/TWBX → tidy data + DAGs">
@@ -30,7 +30,7 @@
 
     <a class="navbar-brand me-2" href="index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,8 +60,8 @@
 <a class="anchor" aria-label="anchor" href="#twbparser-"></a>
 </h1>
 </div>
-<p><a href="https://PrigasG.github.io/twbparser/"><img src="https://img.shields.io/badge/Tableau-TWB%2FTWBX-blue" alt="Tableau: TWB/TWBX"></a></p>
-<p><a href="https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master" alt="R-CMD-check"></a> <a href="https://PrigasG.github.io/twbparser/"><img src="https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master" alt="pkgdown"></a> <a href="https://codecov.io/gh/PrigasG/twbparser" class="external-link"><img src="https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg" alt="Codecov"></a> <a href="LICENSE.html"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License: MIT"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></p>
+<p><a href="https://prigasg.github.io/twbparser/" class="external-link"><img src="https://img.shields.io/badge/Tableau-TWB%2FTWBX-blue" alt="Tableau: TWB/TWBX"></a></p>
+<p><a href="https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/PrigasG/twbparser/actions/workflows/R-CMD-check.yaml/badge.svg?branch=master" alt="R-CMD-check"></a> <a href="https://prigasg.github.io/twbparser/" class="external-link"><img src="https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master" alt="pkgdown"></a> <a href="https://app.codecov.io/gh/PrigasG/twbparser" class="external-link"><img src="https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg" alt="Codecov"></a> <a href="https://github.com/PrigasG/twbparser/blob/master/LICENSE" class="external-link"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License:MIT"></a> <a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle:experimental"></a></p>
 <p>Parse Tableau <strong>TWB/TWBX</strong> files in R: extract <strong>datasources, joins, relationships, fields, and calculated fields</strong>, plus inspect and unpack <strong>TWBX</strong> assets. Built for large workbooks and Shiny integration.</p>
 <div class="section level2">
 <h2 id="features">Features<a class="anchor" aria-label="anchor" href="#features"></a>
@@ -80,6 +80,9 @@
 <strong>Dependency graph</strong>: build/plot field dependency DAGs</li>
 <li>
 <strong>TWBX assets</strong>: list/extract images, extracts, text files, etc.</li>
+<li>
+<strong>Ergonomics</strong>: <code>parser$summary</code> (no parens), <code>parser$overview</code>, <code>parser$pages</code>, <code>parser$pages_summary</code>
+</li>
 </ul>
 </div>
 <div class="section level2">
@@ -88,7 +91,7 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Install from GitHub (using pak)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"pak"</span><span class="op">)</span></span>
-<span><span class="fu">pak</span><span class="fu">::</span><span class="fu">pak</span><span class="op">(</span><span class="st">"PrigasG/twbparser"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"PrigasG/twbparser"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Or using devtools</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
@@ -97,32 +100,87 @@
 <div class="section level2">
 <h2 id="quick-start">Quick Start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<p>Parse a “.twb” file</p>
+<p>Summary for twb workbook</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://PrigasG.github.io/twbparser">twbparser</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://prigasg.github.io/twbparser/" class="external-link">twbparser</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fs.r-lib.org" class="external-link">fs</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Parse workbook</span></span>
-<span><span class="va">parser</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/TwbParser.html">TWBParser</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"path/to/workbook.twb"</span><span class="op">)</span></span>
+<span><span class="va">path</span> <span class="op">&lt;-</span> <span class="fu">fs</span><span class="fu">::</span><span class="fu"><a href="https://fs.r-lib.org/reference/path_math.html" class="external-link">path_abs</a></span><span class="op">(</span><span class="st">"path/to/workbook.twbx"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html" class="external-link">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">path</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Extract calculated fields</span></span>
-<span><span class="va">calc_fields</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_calculated_fields</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">parser</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/TwbParser.html">TwbParser</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># View dependencies</span></span>
-<span><span class="va">deps</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_field_dependencies</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># summary (prints)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="va">summary</span></span>
 <span></span>
-<span><span class="co"># Generate DAG</span></span>
-<span><span class="va">dag</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">generate_dag</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Parse a “.twbx” file</p>
+<span><span class="co"># summary (one row tibble)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="va">overview</span></span></code></pre></div>
+<p>With a “.twbx” file</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">parser</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/TwbParser.html">TWBParser</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"path/to/workbook.twbx"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Inspect manifest</span></span>
-<span><span class="va">parser</span><span class="op">$</span><span class="va">twbx_manifest</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="va">twbx_manifest</span></span></code></pre></div>
+<p>Peek inside</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Datasources / parameters / all sources</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_datasources</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_parameters</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_datasources_all</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Extract data sources</span></span>
-<span><span class="va">sources</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_datasource_details</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Fields and calculated fields (parameters excluded by default)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_fields</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_calculated_fields</span><span class="op">(</span>pretty <span class="op">=</span> <span class="cn">TRUE</span>, wrap <span class="op">=</span> <span class="fl">120</span><span class="op">)</span></span></code></pre></div>
+<p>Page insights (dashboards, worksheets, stories)</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># What pages exist?</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="va">pages</span></span>
+<span><span class="co"># Or functional: twb_pages(parser)</span></span>
+<span></span>
+<span><span class="co"># One-line summaries per page</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="va">pages_summary</span></span>
+<span></span>
+<span><span class="co"># What is on a page and where? (filters include x/y/w/h on dashboards)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_page_composition</span><span class="op">(</span><span class="st">"Executive Dashboard"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Filters across dashboards (with positions)</span></span>
+<span><span class="fu"><a href="reference/twb_dashboard_filters.html">twb_dashboard_filters</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Chart/mark types per worksheet</span></span>
+<span><span class="fu"><a href="reference/twb_charts.html">twb_charts</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Colors and palettes referenced</span></span>
+<span><span class="fu"><a href="reference/twb_colors.html">twb_colors</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span></code></pre></div>
+<p>Relationships/Joins</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">rel_df</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_relationships</span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span></span>
+<span>    op   <span class="op">=</span> <span class="fu"><a href="https://tidyr.tidyverse.org/reference/replace_na.html" class="external-link">replace_na</a></span><span class="op">(</span><span class="va">operator</span>, <span class="st">"="</span><span class="op">)</span>,</span>
+<span>    left <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">left_table</span>,  <span class="st">"."</span>, <span class="va">left_field</span><span class="op">)</span>,</span>
+<span>    right<span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">right_table</span>, <span class="st">"."</span>, <span class="va">right_field</span><span class="op">)</span>,</span>
+<span>    Join <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">left</span>, <span class="va">op</span>, <span class="va">right</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Join</span>, datasource_left <span class="op">=</span> <span class="va">left_table</span>, datasource_right <span class="op">=</span> <span class="va">right_table</span>,</span>
+<span>         <span class="va">operator</span>, <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html" class="external-link">everything</a></span><span class="op">(</span><span class="op">)</span>, <span class="op">-</span><span class="va">left</span>, <span class="op">-</span><span class="va">right</span>, <span class="op">-</span><span class="va">left_is_calc</span>, <span class="op">-</span><span class="va">right_is_calc</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">rel_df</span></span></code></pre></div>
+<p>Nice tabular view for calculated fields</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">calcs</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_calculated_fields</span><span class="op">(</span>pretty <span class="op">=</span> <span class="cn">TRUE</span>, wrap <span class="op">=</span> <span class="fl">120</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span>Name <span class="op">=</span> <span class="va">name</span>, Formula <span class="op">=</span> <span class="va">formula_pretty</span>, Datasource <span class="op">=</span> <span class="va">datasource</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># DT example optional:</span></span>
+<span><span class="co"># DT::datatable(calcs, escape = FALSE, rownames = FALSE,</span></span>
+<span><span class="co">#   options = list(scrollX = TRUE, pageLength = 50)) |&gt;</span></span>
+<span><span class="co">#   DT::formatStyle("Formula", `white-space` = "pre", `font-family` = "monospace")</span></span></code></pre></div>
 <p>And graph objects (via igraph or ggraph) for visualization:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>Rscript <span class="sc">-</span>e <span class="st">"twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>Rscript <span class="sc">-</span>e <span class="st">"twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="integration-examples">Integration Examples<a class="anchor" aria-label="anchor" href="#integration-examples"></a>
@@ -131,6 +189,15 @@
 <li>R Shiny: Build an interactive dashboard showing calculations, filters, and DAG visualizations.</li>
 <li>Power BI: Export calculated field logic to replicate measures in DAX.</li>
 <li>Data lineage: Combine with DiagrammeR or visNetwork for workflow diagrams.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="whats-new-030">What’s new (0.3.0)<a class="anchor" aria-label="anchor" href="#whats-new-030"></a>
+</h2>
+<ul>
+<li>Page insights (pages, composition, summaries), filter positions on dashboards</li>
+<li>No-parens parser$summary plus read-only properties (overview, pages, pages_summary, dashboard_summary)</li>
+<li>Calculated fields exclude parameters by default; opt-in with include_parameters = TRUE</li>
 </ul>
 </div>
 <div class="section level2">
@@ -153,6 +220,7 @@
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
+<li><a href="https://cloud.r-project.org/package=twbparser" class="external-link">View on CRAN</a></li>
 <li><a href="https://github.com/PrigasG/twbparser/" class="external-link">Browse source code</a></li>
 <li><a href="https://github.com/PrigasG/twbparser/issues" class="external-link">Report a bug</a></li>
 </ul>

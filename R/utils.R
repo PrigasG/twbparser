@@ -87,13 +87,16 @@ safe_call <- function(expr, fallback) {
 #'
 #' @param twbx_path Path to a `.twbx` file.
 #' @return Tibble with columns: `name`, `size_bytes`, `modified`, `type`.
-#' @examples
-#' \dontrun{
-#' twbx_list(system.file("extdata", "example.twbx", package = "twbparser"))
-#' }
+#' @examplesIf nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))
+#' twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
+#' twbx_list(twbx)
+#'
 #' @export
 twbx_list <- function(twbx_path) {
-  tibble::as_tibble(unzip(twbx_path, list = TRUE)) |>
+  if (!nzchar(twbx_path) || !file.exists(twbx_path)) {
+    stop("File not found: ", twbx_path, call. = FALSE)
+  }
+  tibble::as_tibble(utils::unzip(twbx_path, list = TRUE)) |>
     dplyr::transmute(
       name       = Name,
       size_bytes = as.double(Length),
@@ -102,12 +105,18 @@ twbx_list <- function(twbx_path) {
     )
 }
 
+
 #' Extract the .twb (and optionally all files) from a .twbx
 #'
 #' @param twbx_path Path to a `.twbx` file.
 #' @param extract_dir Directory to extract into (defaults to a timestamped temp dir).
 #' @param extract_all If `TRUE`, extract entire archive; otherwise only the largest `.twb`.
 #' @return List with `twb_path`, `exdir`, `twbx_path`, and `manifest` (tibble).
+#' @examplesIf nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))
+#' twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
+#' res  <- extract_twb_from_twbx(twbx, extract_all = FALSE)
+#' basename(res$twb_path)
+#'
 #' @export
 extract_twb_from_twbx <- function(
     twbx_path,
@@ -115,29 +124,33 @@ extract_twb_from_twbx <- function(
       tempdir(),
       paste0("twbx_", tools::file_path_sans_ext(basename(twbx_path)), "_", format(Sys.time(), "%Y%m%d%H%M%S"))
     ),
-    extract_all = FALSE) {
-  if (!file.exists(twbx_path)) stop("File does not exist: ", twbx_path)
-  manifest <- twbx_list(twbx_path)
+    extract_all = FALSE
+) {
+  if (!nzchar(twbx_path) || !file.exists(twbx_path)) {
+    stop("File not found: ", twbx_path, call. = FALSE)
+  }
 
+  manifest <- twbx_list(twbx_path)
   twb_rows <- manifest |>
     dplyr::filter(type == "workbook") |>
     dplyr::arrange(dplyr::desc(size_bytes))
 
-  if (nrow(twb_rows) == 0) stop("No .twb file found inside .twbx")
+  if (nrow(twb_rows) == 0) stop("No .twb file found inside .twbx", call. = FALSE)
 
   twb_rel <- twb_rows$name[[1]]
 
   dir.create(extract_dir, showWarnings = FALSE, recursive = TRUE)
   if (isTRUE(extract_all)) {
-    unzip(twbx_path, exdir = extract_dir, junkpaths = FALSE)
+    utils::unzip(twbx_path, exdir = extract_dir, junkpaths = FALSE)
   } else {
-    unzip(twbx_path, files = twb_rel, exdir = extract_dir, junkpaths = FALSE)
+    utils::unzip(twbx_path, files = twb_rel, exdir = extract_dir, junkpaths = FALSE)
   }
   twb_path <- file.path(extract_dir, twb_rel)
   message("Extracted .twb from .twbx: ", basename(twb_path))
 
   list(twb_path = twb_path, exdir = extract_dir, twbx_path = normalizePath(twbx_path), manifest = manifest)
 }
+
 
 #' Extract specific files from a .twbx
 #'
@@ -147,15 +160,22 @@ extract_twb_from_twbx <- function(
 #' @param types Subset by `.twbx` entry `type` (see [twbx_list()]) (optional).
 #' @param exdir Output directory (defaults to temp).
 #' @return Tibble with `name`, `type`, and `out_path` of extracted files.
+#' @examplesIf nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))
+#' twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
+#' files <- twbx_extract_files(twbx, types = c("workbook"))
+#' head(files)
+#'
 #' @export
 twbx_extract_files <- function(twbx_path, files = NULL, pattern = NULL, types = NULL, exdir = NULL) {
-  stopifnot(file.exists(twbx_path))
+  if (!nzchar(twbx_path) || !file.exists(twbx_path)) {
+    stop("File not found: ", twbx_path, call. = FALSE)
+  }
   man <- twbx_list(twbx_path)
 
   sel <- man
-  if (!is.null(types)) sel <- dplyr::filter(sel, type %in% types)
+  if (!is.null(types))   sel <- dplyr::filter(sel, type %in% types)
   if (!is.null(pattern)) sel <- dplyr::filter(sel, grepl(pattern, name, perl = TRUE))
-  if (!is.null(files)) sel <- dplyr::filter(sel, name %in% files)
+  if (!is.null(files))   sel <- dplyr::filter(sel, name %in% files)
   if (nrow(sel) == 0) {
     return(tibble::tibble(name = character(), out_path = character(), type = character()))
   }
@@ -164,7 +184,7 @@ twbx_extract_files <- function(twbx_path, files = NULL, pattern = NULL, types = 
     exdir <- file.path(tempdir(), paste0("twbx_extract_", format(Sys.time(), "%Y%m%d%H%M%S")))
   }
   dir.create(exdir, showWarnings = FALSE, recursive = TRUE)
-  unzip(twbx_path, files = sel$name, exdir = exdir, junkpaths = FALSE)
+  utils::unzip(twbx_path, files = sel$name, exdir = exdir, junkpaths = FALSE)
 
   tibble::tibble(
     name     = sel$name,
@@ -172,6 +192,7 @@ twbx_extract_files <- function(twbx_path, files = NULL, pattern = NULL, types = 
     out_path = file.path(exdir, sel$name)
   )
 }
+
 
 #' Log a one-line summary of .twbx contents
 #' @param twbx_path Path to a `.twbx`
@@ -229,11 +250,27 @@ print_datasource_summary <- function(parser) {
 #' @return Tibble with columns like `connection_id`, `connection_caption`,
 #'   `connection_class`, `connection_target`, `dbname`, `schema`, `warehouse`,
 #'   `region`, `filename`, and `location_named`.
+#'
 #' @examples
-#' \dontrun{
-#' xml <- xml2::read_xml("inst/extdata/sample.twb")
+#' # Preferred: read from a tiny '.twb'
+#' twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+#' if (nzchar(twb) && file.exists(twb)) {
+#' xml <- xml2::read_xml(twb)
 #' extract_named_connections(xml)
 #' }
+#'
+# Alternative: read from a tiny '.twbx'
+#' twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
+#' if (nzchar(twbx) && file.exists(twbx)) {
+#'  members <- twbx_list(twbx)
+#'  twb_rows <- members$name[grepl("\\.twb$", members$name)]
+#'  if (length(twb_rows) > 0L && !is.na(twb_rows[1])) {
+#'    twb_member <- twb_rows[1]
+#'    xml <- xml2::read_xml(utils::unzip(twbx, twb_member))
+#'    extract_named_connections(xml)
+#'  }
+#' }
+#'
 #' @export
 extract_named_connections <- function(xml_doc) {
   ncs <- xml2::xml_find_all(xml_doc, "//named-connection")
@@ -301,3 +338,8 @@ extract_named_connections <- function(xml_doc) {
 #' @return Character vector with keys replaced by `[REDACTED_AWS_KEY]`
 #' @keywords internal
 redact <- function(x) gsub("\\bAKIA[0-9A-Z]{16}\\b", "[REDACTED_AWS_KEY]", x %||% "")
+utils::globalVariables(c(
+  "value", "palette_name", "kind", "detail", "scope",
+  "dashboard", "mark_types", "filters", "chart_types",
+  "integer_", "page_type"
+))

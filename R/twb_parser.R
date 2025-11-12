@@ -52,6 +52,7 @@
 #' @export
 TwbParser <- R6::R6Class(
   "TwbParser",
+  lock_objects = FALSE,
   public = list(
     # state
     path = NULL,
@@ -115,7 +116,7 @@ TwbParser <- R6::R6Class(
       self$custom_sql <- safe_call(twb_custom_sql(self$xml_doc), tibble::tibble())
       self$initial_sql <- safe_call(twb_initial_sql(self$xml_doc), tibble::tibble())
       self$published_refs <- safe_call(twb_published_refs(self$xml_doc), tibble::tibble())
-
+      twb_install_active_properties(self, cache = TRUE)
 
       message("TWB parsed and ready")
     },
@@ -175,15 +176,38 @@ TwbParser <- R6::R6Class(
     get_custom_sql = function() self$custom_sql,
     get_initial_sql = function() self$initial_sql,
     get_published_refs = function() self$published_refs,
-    get_calculated_fields = function(pretty = FALSE, strip_brackets = FALSE, wrap = 100L) {
-      if (!isTRUE(pretty)) return(self$calculated_fields)
-      df <- prettify_calculated_fields(self$calculated_fields, strip_brackets = strip_brackets, wrap = wrap)
-      df |>
-        dplyr::select(
-          datasource, name, datatype, role, is_table_calc,calc_class,
-          formula_pretty, tableau_internal_name, table_clean
-        )
+    get_calculated_fields = function(pretty = FALSE,
+                                     strip_brackets = FALSE,
+                                     wrap = 100L,
+                                     include_parameters = FALSE) {
+      df <- self$calculated_fields %||% tibble::tibble()
+
+      if (!isTRUE(include_parameters) && nrow(df)) {
+        df <- dplyr::filter(df, .data$datasource != "Parameters")
+      }
+      if (!isTRUE(pretty)) return(df)
+      df <- prettify_calculated_fields(df, strip_brackets = strip_brackets, wrap = wrap)
+      dplyr::select(
+        df,
+        datasource, name, datatype, role,
+        is_table_calc, calc_class,
+        formula_pretty, tableau_internal_name, table_clean
+      )
     },
+    get_pages            = function() safe_call(.ins_pages(self$xml_doc), tibble::tibble()),
+    get_pages_summary    = function() safe_call(.ins_pages_summary(self$xml_doc), tibble::tibble()),
+    get_page_composition = function(name) {
+      stopifnot(is.character(name), length(name)==1L)
+      safe_call(.ins_page_composition(self$xml_doc, name), tibble::tibble()) },
+    get_charts           = function() safe_call(.ins_charts(self$xml_doc), tibble::tibble()),
+    get_colors           = function() safe_call(.ins_colors(self$xml_doc), tibble::tibble()),
+    get_dashboards       = function() safe_call(.ins_dashboards(self$xml_doc), tibble::tibble()),
+    get_dashboard_filters = function(dashboard = NULL) {
+      safe_call(.ins_dashboard_filters(self$xml_doc, dashboard = dashboard), tibble::tibble())
+    },
+    get_dashboard_summary= function() safe_call(.ins_dashboard_summary(self$xml_doc), tibble::tibble()),
+
+
 
     # --- validator bridge ---
     #' @description Validate relationships; optionally stop on failure.
@@ -198,18 +222,57 @@ TwbParser <- R6::R6Class(
     },
 
     # --- summary ---
-    #' @description Print a one‑line summary of parsed content.
+    #' @description Print a concise summary of parsed content.
     summary = function() {
+      ov  <- self$get_overview()
       cat("TWB PARSER SUMMARY\n")
-      cat("---------------------\n")
-      cat(sprintf("File: %s\n", basename(self$path)))
-      cat(sprintf("Datasources: %d\n", NROW(self$datasource_details$data_sources)))
-      cat(sprintf("Parameters:  %d\n", NROW(self$datasource_details$parameters)))
-      cat(sprintf("Relationships: %d\n", NROW(self$relationships)))
-      cat(sprintf("Calculated fields: %d\n", NROW(self$calculated_fields)))
-      cat(sprintf("Raw fields: %d\n", NROW(self$fields)))
-      cat(sprintf("Inferred joins: %d\n", NROW(self$inferred_relationships)))
-      invisible(NULL)
+      cat("------------------\n")
+      cat(sprintf("File: %s\n", ov$file[1]))
+      cat(sprintf("Datasources: %d\n", ov$datasources[1]))
+      cat(sprintf("Parameters: %d\n", ov$parameters[1]))
+      cat(sprintf("Relationships: %d\n", ov$relationships[1]))
+      cat(sprintf("Calculated fields: %d\n", ov$calculated_fields[1]))
+      cat(sprintf("Raw fields: %d\n", ov$raw_fields[1]))
+      cat(sprintf("Inferred joins: %d\n", ov$inferred_relationships[1]))
+      cat(sprintf("Dashboards: %d\n", ov$dashboards[1]))
+      cat(sprintf("Total filters: %d\n", ov$total_filters[1]))
+
+      ds <- tryCatch(self$get_dashboard_summary(), error = function(e) tibble::tibble())
+      if (nrow(ds)) {
+        cat("\nDashboards overview (first 8):\n")
+        utils::print(utils::head(ds, 8), row.names = FALSE)
+        if (nrow(ds) > 8) {
+          cat(sprintf("... and %d more\n", nrow(ds) - 8))
+        }
+      }
+      invisible(list(overview = ov, dashboard_summary = ds))
+    },
+
+    get_overview = function() {
+      # Safe counts
+      n_ds    <- tryCatch(NROW(self$datasource_details$data_sources),  error = function(e) 0L)
+      n_param <- tryCatch(NROW(self$datasource_details$parameters),    error = function(e) 0L)
+      n_rel   <- tryCatch(NROW(self$relationships),                    error = function(e) 0L)
+      n_calc  <- tryCatch(NROW(self$calculated_fields),                error = function(e) 0L)
+      n_raw   <- tryCatch(NROW(self$fields),                           error = function(e) 0L)
+      n_inf   <- tryCatch(NROW(self$inferred_relationships),           error = function(e) 0L)
+
+      dsum <- tryCatch(self$get_dashboard_summary(), error = function(e) tibble::tibble())
+      n_dash   <- if (nrow(dsum)) NROW(dsum) else 0L
+      n_filt   <- if (nrow(dsum)) sum(dplyr::coalesce(dsum$filters, 0L)) else 0L
+
+      tibble::tibble(
+        file                 = basename(self$path %||% ""),
+        datasources          = n_ds,
+        parameters           = n_param,
+        relationships        = n_rel,
+        calculated_fields    = n_calc,
+        raw_fields           = n_raw,
+        inferred_relationships = n_inf,
+        dashboards           = n_dash,
+        total_filters        = n_filt
+      )
     }
+
   )
 )

@@ -14,9 +14,9 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.4.9/font.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="twbparser-intro">
 </head>
 <body>
@@ -27,7 +27,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,20 +66,189 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://PrigasG.github.io/twbparser">twbparser</a></span><span class="op">)</span></span>
-<span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://prigasg.github.io/twbparser/" class="external-link">twbparser</a></span><span class="op">)</span></span>
+<span><span class="va">ok</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
 <span><span class="va">twb_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"test_for_wenjie.twb"</span>, package <span class="op">=</span> <span class="st">"twbparser"</span><span class="op">)</span></span>
-<span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">twb_path</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">twb_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="va">parser</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/TwbParser.html">TwbParser</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">twb_path</span><span class="op">)</span></span>
-<span>  <span class="va">parser</span><span class="op">$</span><span class="fu">get_calculated_fields</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">parser</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/TwbParser.html">TwbParser</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">twb_path</span><span class="op">)</span></span>
+<span><span class="va">ok</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
 <span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&gt; Demo .twb not found in installed package. Skipping executable example.\n"</span><span class="op">)</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"  To enable examples, add `inst/extdata/test_for_wenjie.twb` to the package.\n"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"&gt; Demo .twb not found in installed package. Skipping executable examples.\n"</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="co">#&gt; &gt; Demo .twb not found in installed package. Skipping executable example.</span></span>
-<span><span class="co">#&gt;   To enable examples, add `inst/extdata/test_for_wenjie.twb` to the package.</span></span></code></pre></div>
-  </main>
+<span><span class="co">#&gt; TWB loaded: test_for_wenjie.twb</span></span>
+<span><span class="co">#&gt; TWB parsed and ready</span></span></code></pre></div>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
+<p><code>twbparser</code> parses Tableau <code>.twb</code> and
+<code>.twbx</code> workbooks and exposes datasources, relationships,
+joins, fields, calculated fields, and TWBX assets. It also provides
+page-centric insights: dashboards, worksheets, stories, their
+composition, filter positions, chart types, and colors/palettes. This
+vignette demonstrates common use cases.</p>
+</div>
+<div class="section level2">
+<h2 id="parse-a-tableau-workbook">Parse a Tableau Workbook<a class="anchor" aria-label="anchor" href="#parse-a-tableau-workbook"></a>
+</h2>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">parser</span><span class="op">$</span><span class="va">summary</span></span>
+<span><span class="co">#&gt; Warning: Join columns in `x` must be present in the data.</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> Problem with `worksheet`.</span></span>
+<span><span class="co">#&gt; TWB PARSER SUMMARY</span></span>
+<span><span class="co">#&gt; ------------------</span></span>
+<span><span class="co">#&gt; File: test_for_wenjie.twb</span></span>
+<span><span class="co">#&gt; Datasources: 2</span></span>
+<span><span class="co">#&gt; Parameters: 0</span></span>
+<span><span class="co">#&gt; Relationships: 1</span></span>
+<span><span class="co">#&gt; Calculated fields: 1</span></span>
+<span><span class="co">#&gt; Raw fields: 55</span></span>
+<span><span class="co">#&gt; Inferred joins: 0</span></span>
+<span><span class="co">#&gt; Dashboards: 0</span></span>
+<span><span class="co">#&gt; Total filters: 0</span></span>
+<span><span class="co">#&gt; Warning: Join columns in `x` must be present in the data.</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> Problem with `worksheet`.</span></span>
+<span><span class="co">#&gt; NULL</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="va">overview</span></span>
+<span><span class="co">#&gt; Warning: Join columns in `x` must be present in the data.</span></span>
+<span><span class="co">#&gt; <span style="color: #BB0000;">✖</span> Problem with `worksheet`.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
+<span><span class="co">#&gt;   file         datasources parameters relationships calculated_fields raw_fields</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> test_for_we…           2          0             1                 1         55</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: inferred_relationships &lt;int&gt;, dashboards &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   total_filters &lt;int&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="extracting-datasources-and-parameters">Extracting Datasources and Parameters<a class="anchor" aria-label="anchor" href="#extracting-datasources-and-parameters"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">datasources</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_datasources</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">parameters</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_parameters</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">datasources</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 10</span></span></span>
+<span><span class="co">#&gt;   datasource     primary_table connection_id connection_caption connection_class</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Municipal_Bou… [Municipal_B… ogrdirect.07… Municipal_Boundar… ogrdirect       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Sheet1         [Sheet1$]     excel-direct… test_county        excel-direct    </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: connection_target &lt;chr&gt;, datasource_name &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   field_count &lt;int&gt;, connection_type &lt;chr&gt;, location &lt;chr&gt;</span></span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">parameters</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 5</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 variables: datasource_name &lt;chr&gt;, primary_table &lt;chr&gt;, field_count &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   connection_type &lt;chr&gt;, location &lt;chr&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="fields-and-calculated-fields">Fields and calculated fields<a class="anchor" aria-label="anchor" href="#fields-and-calculated-fields"></a>
+</h2>
+<p>Parameters are excluded by default from calculated fields; opt-in via
+<code>include_parameters = TRUE</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">parser</span><span class="op">$</span><span class="fu">get_fields</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
+<span><span class="co">#&gt;   datasource        name  caption datatype role  semantic_role table table_clean</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> federated.0grgao… OBJE… <span style="color: #BB0000;">NA</span>      integer  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> federated.0grgao… MUN   <span style="color: #BB0000;">NA</span>      string   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> federated.0grgao… COUN… <span style="color: #BB0000;">NA</span>      string   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> federated.0grgao… MUN_… <span style="color: #BB0000;">NA</span>      string   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> federated.0grgao… MUN_… <span style="color: #BB0000;">NA</span>      string   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> federated.0grgao… NAME  <span style="color: #BB0000;">NA</span>      string   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: field_clean &lt;chr&gt;, is_parameter &lt;lgl&gt;</span></span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">parser</span><span class="op">$</span><span class="fu">get_calculated_fields</span><span class="op">(</span>pretty <span class="op">=</span> <span class="cn">TRUE</span>, wrap <span class="op">=</span> <span class="fl">120</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
+<span><span class="co">#&gt;   datasource        name  datatype role  is_table_calc calc_class formula_pretty</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> federated.0grgao… no d… string   dime… FALSE         tableau    <span style="color: #949494;">"</span>if ISNULL([c…</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: tableau_internal_name &lt;chr&gt;, table_clean &lt;chr&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="page-insights">Page insights<a class="anchor" aria-label="anchor" href="#page-insights"></a>
+</h2>
+<p>List all pages and summarize each page</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/twb_pages.html">twb_pages</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
+<span><span class="co">#&gt;   page_type name   </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> worksheet Sheet 1</span></span>
+<span><span class="fu"><a href="../reference/twb_pages_summary.html">twb_pages_summary</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   page_type name    mark_types n_filters n_legends n_parameter_controls</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> worksheet Sheet 1 <span style="color: #949494;">""</span>                 0         0                    0</span></span></code></pre></div>
+<p>Inspect what a specific page contains</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span></span>
+<span><span class="va">pg</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_pages.html">twb_pages</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="va">nm</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">pg</span><span class="op">)</span><span class="op">)</span> <span class="va">pg</span><span class="op">$</span><span class="va">name</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="kw">else</span> <span class="cn">NA_character_</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">nm</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">parser</span><span class="op">$</span><span class="fu">get_page_composition</span><span class="op">(</span><span class="va">nm</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 11</span></span></span>
+<span><span class="co">#&gt;   page_type page_name component_type zone_id target field presentation     x</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> worksheet Sheet 1   mark_type      <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>              <span style="color: #BB0000;">NA</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 3 more variables: y &lt;int&gt;, w &lt;int&gt;, h &lt;int&gt;</span></span></span></code></pre></div>
+<p>Filters and their positions across dashboards</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/twb_dashboard_filters.html">twb_dashboard_filters</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 0</span></span></span></code></pre></div>
+<p>Chart (mark) types per worksheet and colors/palettes</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/twb_charts.html">twb_charts</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
+<span><span class="co">#&gt;   worksheet mark_types</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Sheet 1   <span style="color: #949494;">""</span></span></span>
+<span><span class="fu"><a href="../reference/twb_colors.html">twb_colors</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 4</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 variables: kind &lt;chr&gt;, detail &lt;chr&gt;, scope &lt;chr&gt;, label &lt;chr&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="relationships-and-joins">Relationships and Joins<a class="anchor" aria-label="anchor" href="#relationships-and-joins"></a>
+</h2>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">relations</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_relationships</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">relations</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 8</span></span></span>
+<span><span class="co">#&gt;   relationship_type left_table right_table       left_field operator right_field</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Relationship      Sheet1     Municipal_Bounda… County     =        COUNTY     </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: left_is_calc &lt;lgl&gt;, right_is_calc &lt;lgl&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="working-with-twbx-files-if-applicable">Working with TWBX Files (if applicable)<a class="anchor" aria-label="anchor" href="#working-with-twbx-files-if-applicable"></a>
+</h2>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_manifest</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_extracts</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_images</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="validation-of-relationships">Validation of Relationships<a class="anchor" aria-label="anchor" href="#validation-of-relationships"></a>
+</h2>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">validate</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">ok</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Relationships validated successfully.\n"</span><span class="op">)</span></span>
+<span><span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">issues</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt; Relationships validated successfully.</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
+</h2>
+<p>This vignette overviewed how to use the <code>twbparser</code>
+package for detailed inspection and extraction of Tableau workbook
+internals to assist in analysis, replication, or integration
+workflows.</p>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

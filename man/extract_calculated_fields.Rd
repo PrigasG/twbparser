@@ -4,10 +4,13 @@
 \alias{extract_calculated_fields}
 \title{Extract calculated fields from a TWB}
 \usage{
-extract_calculated_fields(xml_doc)
+extract_calculated_fields(xml_doc, include_parameters = FALSE)
 }
 \arguments{
-\item{xml_doc}{An \code{xml2} document for a Tableau \code{.twb}.}
+\item{xml_doc}{An xml2 document for a Tableau .twb.}
+
+\item{include_parameters}{Logical. If TRUE, include items from the
+"Parameters" datasource or columns with @param-domain-type. Default FALSE.}
 }
 \value{
 A tibble with columns:
@@ -18,20 +21,21 @@ A tibble with columns:
 \item{datatype}{Tableau datatype.}
 \item{role}{Tableau role.}
 \item{formula}{Calculation formula string.}
-\item{calc_class}{Tableau calc class (often \code{"tableau"}).}
-\item{is_table_calc}{Heuristic flag for table calcs (e.g., \code{WINDOW_}, \code{LOOKUP}).}
+\item{calc_class}{Tableau calc class (often "tableau").}
+\item{is_table_calc}{Heuristic flag for table calcs (e.g., WINDOW_, LOOKUP).}
 \item{table}{Raw table reference.}
 \item{table_clean}{Cleaned table name.}
 }
 }
 \description{
-Finds columns that contain \verb{<calculation>} nodes and returns metadata and
+Finds columns that contain \if{html}{\out{<calculation>}} nodes and returns metadata and
 formulas, with a heuristic flag for table calculations.
 }
 \examples{
-\dontrun{
-xml <- xml2::read_xml("inst/extdata/sample.twb")
-calc <- extract_calculated_fields(xml)
-}
+twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+stopifnot(nzchar(twb), file.exists(twb))
+xml <- xml2::read_xml(twb)
+calcs <- extract_calculated_fields(xml)
+head(calcs)
 
 }

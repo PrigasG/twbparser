@@ -17,10 +17,12 @@
 
 #' Extract calculated fields from a TWB
 #'
-#' Finds columns that contain \verb{<calculation>} nodes and returns metadata and
+#' Finds columns that contain <calculation> nodes and returns metadata and
 #' formulas, with a heuristic flag for table calculations.
 #'
-#' @param xml_doc An `xml2` document for a Tableau `.twb`.
+#' @param xml_doc An xml2 document for a Tableau .twb.
+#' @param include_parameters Logical. If TRUE, include items from the
+#'   "Parameters" datasource or columns with @param-domain-type. Default FALSE.
 #'
 #' @return A tibble with columns:
 #' \describe{
@@ -30,23 +32,24 @@
 #'   \item{datatype}{Tableau datatype.}
 #'   \item{role}{Tableau role.}
 #'   \item{formula}{Calculation formula string.}
-#'   \item{calc_class}{Tableau calc class (often `"tableau"`).}
-#'   \item{is_table_calc}{Heuristic flag for table calcs (e.g., `WINDOW_`, `LOOKUP`).}
+#'   \item{calc_class}{Tableau calc class (often "tableau").}
+#'   \item{is_table_calc}{Heuristic flag for table calcs (e.g., WINDOW_, LOOKUP).}
 #'   \item{table}{Raw table reference.}
 #'   \item{table_clean}{Cleaned table name.}
 #' }
 #'
 #' @examples
-#' \dontrun{
-#' xml <- xml2::read_xml("inst/extdata/sample.twb")
-#' calc <- extract_calculated_fields(xml)
-#' }
+#' twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+#' stopifnot(nzchar(twb), file.exists(twb))
+#' xml <- xml2::read_xml(twb)
+#' calcs <- extract_calculated_fields(xml)
+#' head(calcs)
 #'
 #' @export
 #' @importFrom xml2 xml_find_all xml_find_first xml_attrs xml_attr
 #' @importFrom tibble tibble
 #' @importFrom dplyr distinct
-extract_calculated_fields <- function(xml_doc) {
+extract_calculated_fields <- function(xml_doc, include_parameters = FALSE) {
   ds_nodes <- xml2::xml_find_all(
     xml_doc,
     "/workbook/datasources/datasource[@name and not(ancestor::view)]"
@@ -57,24 +60,33 @@ extract_calculated_fields <- function(xml_doc) {
 
   purrr::map_dfr(ds_nodes, function(ds) {
     ds_name <- xml2::xml_attr(ds, "name")
-    cols <- xml2::xml_find_all(ds, ".//column[@name][.//calculation]")
+
+    # Skip the special "Parameters" datasource unless requested
+    if (!isTRUE(include_parameters) && identical(ds_name, "Parameters")) {
+      return(tibble::tibble())
+    }
+
+    # Only real calculated columns; exclude parameter columns even if they have a child
+    cols <- xml2::xml_find_all(
+      ds,
+      ".//column[@name and not(@param-domain-type)][.//calculation]"
+    )
     if (length(cols) == 0) {
       return(tibble::tibble())
     }
 
     purrr::map_dfr(cols, function(col) {
-      ca <- xml2::xml_attrs(col) # column attrs
+      ca <- xml2::xml_attrs(col)
       calc <- xml2::xml_find_first(col, ".//calculation")
       fa <- if (!inherits(calc, "xml_missing")) xml2::xml_attrs(calc) else list()
 
       internal <- attr_safe_get(ca, "name", NA_character_)
-      caption <- attr_safe_get(ca, "caption", NA_character_)
-      raw_tbl <- attr_safe_get(ca, "table", NA_character_)
+      caption  <- attr_safe_get(ca, "caption", NA_character_)
+      raw_tbl  <- attr_safe_get(ca, "table", NA_character_)
 
-      formula <- attr_safe_get(fa, "formula", NA_character_)
+      formula    <- attr_safe_get(fa, "formula", NA_character_)
       calc_class <- attr_safe_get(fa, "class", NA_character_)
 
-      # Heuristic for table calcs
       is_tbl <- if (!is.na(formula)) {
         grepl("\\b(WINDOW_|LOOKUP\\(|INDEX\\(|RUNNING_|RANK\\(|PREVIOUS_VALUE\\()", formula)
       } else {
@@ -121,10 +133,12 @@ extract_calculated_fields <- function(xml_doc) {
 #' }
 #'
 #' @examples
-#' \dontrun{
-#' xml <- xml2::read_xml("inst/extdata/sample.twb")
+#' twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+#' stopifnot(nzchar(twb), file.exists(twb))
+#' xml <- xml2::read_xml(twb)
 #' params <- extract_parameters(xml)
-#' }
+#' head(params)
+#'
 #'
 #' @export
 #' @importFrom xml2 xml_find_all xml_find_first xml_attrs xml_attr
@@ -194,10 +208,12 @@ extract_parameters <- function(xml_doc) {
 #' }
 #'
 #' @examples
-#' \dontrun{
-#' xml <- xml2::read_xml("inst/extdata/sample.twb")
+#' twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+#' stopifnot(nzchar(twb), file.exists(twb))
+#' xml <- xml2::read_xml(twb)
 #' raw_fields <- extract_raw_fields(xml)
-#' }
+#' head(raw_fields)
+#'
 #'
 #' @export
 #' @importFrom xml2 xml_find_all xml_attrs xml_attr

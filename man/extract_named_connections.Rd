@@ -19,8 +19,22 @@ Rich, safe extraction of \verb{<named-connection>} nodes and their \verb{<connec
 attributes into a tidy tibble.
 }
 \examples{
-\dontrun{
-xml <- xml2::read_xml("inst/extdata/sample.twb")
+# Preferred: read from a tiny '.twb'
+twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+if (nzchar(twb) && file.exists(twb)) {
+xml <- xml2::read_xml(twb)
 extract_named_connections(xml)
 }
+
+twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
+if (nzchar(twbx) && file.exists(twbx)) {
+ members <- twbx_list(twbx)
+ twb_rows <- members$name[grepl("\\\\.twb$", members$name)]
+ if (length(twb_rows) > 0L && !is.na(twb_rows[1])) {
+   twb_member <- twb_rows[1]
+   xml <- xml2::read_xml(utils::unzip(twbx, twb_member))
+   extract_named_connections(xml)
+ }
+}
+
 }

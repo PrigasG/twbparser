@@ -33,7 +33,7 @@ Extract files from the TWBX to disk.
 
 Validate relationships; optionally stop on failure.
 
-Print a one‑line summary of parsed content.
+Print a concise summary of parsed content.
 }
 \details{
 Create a parser for Tableau \code{.twb} / \code{.twbx} files. On initialization, the

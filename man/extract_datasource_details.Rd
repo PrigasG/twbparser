@@ -18,16 +18,32 @@ A named list with:
 }
 }
 \description{
-Gathers runtime tables (from the object graph), merges in named connection
+Gathers runtime tables (from the object graph), merges in named-connection
 metadata (class, caption, targets), and augments with top-level datasource
 definitions (field counts, connection type, location). Also returns a
 filtered table of parameter datasources.
 }
 \examples{
-\dontrun{
-xml <- xml2::read_xml("inst/extdata/sample.twb")
-out <- extract_datasource_details(xml)
-out$data_sources
+# Preferred: from a tiny .twb
+twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+if (nzchar(twb) && file.exists(twb)) {
+  xml <- xml2::read_xml(twb)
+  res <- extract_datasource_details(xml)
+  head(res$data_sources)
 }
 
+\dontshow{if (nzchar(system.file("extdata","test_for_zip.twbx", package = "twbparser"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+# Alternative: from a tiny .twbx (guarded)
+twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
+if (nzchar(twbx) && file.exists(twbx)) {
+ members  <- twbx_list(twbx)
+ twb_rows <- members$name[grepl("\\\\.twb$", members$name)]
+ if (length(twb_rows) > 0L && !is.na(twb_rows[1])) {
+   twb_member <- twb_rows[1]
+   xml <- xml2::read_xml(utils::unzip(twbx, twb_member))
+   res <- extract_datasource_details(xml)
+   head(res$data_sources)
+ }
+}
+\dontshow{\}) # examplesIf}
 }

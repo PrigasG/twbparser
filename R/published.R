@@ -30,5 +30,5 @@ twb_published_refs <- function(xml_doc) {
         "embedded or no published markers"
       )
     ) |>
-    dplyr::select(-.data$raw)
+    dplyr::select(-raw)
 }

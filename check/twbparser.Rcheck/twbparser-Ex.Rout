@@ -1,0 +1,587 @@
+
+R version 4.4.1 (2024-06-14 ucrt) -- "Race for Your Life"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "twbparser"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> options(pager = "console")
+> base::assign(".ExTimings", "twbparser-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('twbparser')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("build_dependency_graph")
+> ### * build_dependency_graph
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: build_dependency_graph
+> ### Title: Build a field dependency graph from calculated fields
+> ### Aliases: build_dependency_graph
+> 
+> ### ** Examples
+> 
+> 
+> fields <- tibble::tibble(
++ name = c("X_plus_Y", "Z"),
++ formula = c("[X] + [Y]", "[X_plus_Y] * 2")
++ )
+> g <- build_dependency_graph(fields)
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("build_dependency_graph", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_calculated_fields")
+> ### * extract_calculated_fields
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_calculated_fields
+> ### Title: Extract calculated fields from a TWB
+> ### Aliases: extract_calculated_fields
+> 
+> ### ** Examples
+> 
+> # A tiny TWB shipped with the package:
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> stopifnot(nzchar(twb), file.exists(twb))
+> xml <- xml2::read_xml(twb)
+> # Extract calculated fields
+> calcs <- extract_calculated_fields(xml)
+> head(calcs)
+# A tibble: 1 × 10
+  datasource       name  tableau_internal_name datatype role  formula calc_class
+  <chr>            <chr> <chr>                 <chr>    <chr> <chr>   <chr>     
+1 federated.0grga… no d… [Calculation_2139209… string   dime… "if IS… tableau   
+# ℹ 3 more variables: is_table_calc <lgl>, table <chr>, table_clean <chr>
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_calculated_fields", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_columns_with_table_source")
+> ### * extract_columns_with_table_source
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_columns_with_table_source
+> ### Title: Extract columns with their source tables from a TWB
+> ### Aliases: extract_columns_with_table_source
+> 
+> ### ** Examples
+> 
+> 
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> stopifnot(nzchar(twb), file.exists(twb))
+> xml <- xml2::read_xml(twb)
+> fields <- extract_columns_with_table_source(xml)
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_columns_with_table_source", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_datasource_details")
+> ### * extract_datasource_details
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_datasource_details
+> ### Title: Extract datasource details from a Tableau TWB
+> ### Aliases: extract_datasource_details
+> 
+> ### ** Examples
+> 
+> # Preferred: from a tiny .twb
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> if (nzchar(twb) && file.exists(twb)) {
++ xml <- xml2::read_xml(twb)
++ res <- extract_datasource_details(xml)
++ head(res$data_sources)
++ }
+# A tibble: 2 × 10
+  datasource     primary_table connection_id connection_caption connection_class
+  <chr>          <chr>         <chr>         <chr>              <chr>           
+1 Municipal_Bou… [Municipal_B… ogrdirect.07… Municipal_Boundar… ogrdirect       
+2 Sheet1         [Sheet1$]     excel-direct… test_county        excel-direct    
+# ℹ 5 more variables: connection_target <chr>, datasource_name <chr>,
+#   field_count <int>, connection_type <chr>, location <chr>
+> 
+> # Alternative: from a tiny .twbx
+> twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
+> if (nzchar(twbx) && file.exists(twbx)) {
++ members <- twbx_list(twbx)
++ twb_member <- members$Name[grepl("\\.twb$", members$Name)][1]
++ if (!is.na(twb_member)) {
++ xml <- xml2::read_xml(unz(twbx, twb_member))
++ res <- extract_datasource_details(xml)
++ head(res$data_sources)
++   }
++ }
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_datasource_details", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_joins")
+> ### * extract_joins
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_joins
+> ### Title: Extract Tableau join clauses from <relation type="join"> nodes
+> ### Aliases: extract_joins
+> 
+> ### ** Examples
+> 
+> 
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> stopifnot(nzchar(twb), file.exists(twb))
+> xml <- xml2::read_xml(twb)
+> extract_joins(xml)
+# A tibble: 0 × 6
+# ℹ 6 variables: join_type <chr>, left_table <chr>, left_field <chr>,
+#   operator <chr>, right_table <chr>, right_field <chr>
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_joins", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_named_connections")
+> ### * extract_named_connections
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_named_connections
+> ### Title: Extract <named-connection> entries from a TWB
+> ### Aliases: extract_named_connections
+> 
+> ### ** Examples
+> 
+> # Preferred: read from a tiny '.twb'
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> if (nzchar(twb) && file.exists(twb)) {
++ xml <- xml2::read_xml(twb)
++ extract_named_connections(xml)
++ }
+# A tibble: 2 × 10
+  connection_id     connection_caption connection_class connection_target dbname
+  <chr>             <chr>              <chr>            <chr>             <chr> 
+1 excel-direct.0df… test_county        excel-direct     ""                <NA>  
+2 ogrdirect.07lza2… Municipal_Boundar… ogrdirect        ""                <NA>  
+# ℹ 5 more variables: schema <chr>, warehouse <chr>, region <chr>,
+#   filename <chr>, location_named <chr>
+> 
+> # Alternative: read from a tiny '.twbx'
+> twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
+> if (nzchar(twbx) && file.exists(twbx)) {
++ members <- twbx_list(twbx)
++ twb_member <- members$Name[grepl("\\.twb$", members$Name)][1]
++ if (!is.na(twb_member)) {
++ xml <- xml2::read_xml(utils::unz(twbx, twb_member))
++ extract_named_connections(xml)
++   }
++ }
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_named_connections", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_parameters")
+> ### * extract_parameters
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_parameters
+> ### Title: Extract parameter fields from a TWB
+> ### Aliases: extract_parameters
+> 
+> ### ** Examples
+> 
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> stopifnot(nzchar(twb), file.exists(twb))
+> xml <- xml2::read_xml(twb)
+> params <- extract_parameters(xml)
+> head(params)
+# A tibble: 0 × 0
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_parameters", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_raw_fields")
+> ### * extract_raw_fields
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_raw_fields
+> ### Title: Extract non-calculated, non-parameter fields from a TWB
+> ### Aliases: extract_raw_fields
+> 
+> ### ** Examples
+> 
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> stopifnot(nzchar(twb), file.exists(twb))
+> xml <- xml2::read_xml(twb)
+> raw_fields <- extract_raw_fields(xml)
+> head(raw_fields)
+# A tibble: 6 × 9
+  datasource   name  tableau_internal_name datatype role  is_hidden is_parameter
+  <chr>        <chr> <chr>                 <chr>    <chr> <lgl>     <lgl>       
+1 federated.0… OBJE… OBJECTID              integer  <NA>  FALSE     FALSE       
+2 federated.0… MUN   MUN                   string   <NA>  FALSE     FALSE       
+3 federated.0… COUN… COUNTY                string   <NA>  FALSE     FALSE       
+4 federated.0… MUN_… MUN_LABEL             string   <NA>  FALSE     FALSE       
+5 federated.0… MUN_… MUN_TYPE              string   <NA>  FALSE     FALSE       
+6 federated.0… NAME  NAME                  string   <NA>  FALSE     FALSE       
+# ℹ 2 more variables: table <chr>, table_clean <chr>
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_raw_fields", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_relations")
+> ### * extract_relations
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_relations
+> ### Title: Extract all <relation> tags from a TWB
+> ### Aliases: extract_relations
+> 
+> ### ** Examples
+> 
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> stopifnot(nzchar(twb), file.exists(twb))
+> xml <- xml2::read_xml(twb)
+> fields <- extract_columns_with_table_source(xml)
+> inferred <- infer_implicit_relationships(fields)
+> head(inferred)
+# A tibble: 0 × 5
+# ℹ 5 variables: left_table <chr>, left_field <chr>, right_table <chr>,
+#   right_field <chr>, reason <chr>
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_relations", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_relationships")
+> ### * extract_relationships
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_relationships
+> ### Title: Extract modern relationships from a Tableau TWB
+> ### Aliases: extract_relationships
+> 
+> ### ** Examples
+> 
+> 
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> stopifnot(nzchar(twb), file.exists(twb))
+> xml <- xml2::read_xml(twb)
+> extract_relationships(xml)
+# A tibble: 1 × 8
+  relationship_type left_table right_table       left_field operator right_field
+  <chr>             <chr>      <chr>             <chr>      <chr>    <chr>      
+1 Relationship      Sheet1     Municipal_Bounda… County     =        COUNTY     
+# ℹ 2 more variables: left_is_calc <lgl>, right_is_calc <lgl>
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_relationships", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("extract_twb_from_twbx")
+> ### * extract_twb_from_twbx
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: extract_twb_from_twbx
+> ### Title: Extract the .twb (and optionally all files) from a .twbx
+> ### Aliases: extract_twb_from_twbx
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) (if (getRversion() >= "3.4") withAutoprint else force)({ # examplesIf
++ ## End(Don't show)
++ twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
++ res  <- extract_twb_from_twbx(twbx, extract_all = FALSE)
++ basename(res$twb_path)
++ ## Don't show: 
++ }) # examplesIf
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("extract_twb_from_twbx", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("infer_implicit_relationships")
+> ### * infer_implicit_relationships
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: infer_implicit_relationships
+> ### Title: Infer implicit relationships between tables from field metadata
+> ### Aliases: infer_implicit_relationships
+> 
+> ### ** Examples
+> 
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> stopifnot(nzchar(twb), file.exists(twb))
+> xml <- xml2::read_xml(twb)
+> fields <- extract_columns_with_table_source(xml)
+> inferred <- infer_implicit_relationships(fields)
+> head(inferred)
+# A tibble: 0 × 5
+# ℹ 5 variables: left_table <chr>, left_field <chr>, right_table <chr>,
+#   right_field <chr>, reason <chr>
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("infer_implicit_relationships", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("plot_dependency_graph")
+> ### * plot_dependency_graph
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: plot_dependency_graph
+> ### Title: Plot a field dependency graph
+> ### Aliases: plot_dependency_graph
+> 
+> ### ** Examples
+> 
+> fields <- tibble::tibble(
++ name = c("X_plus_Y", "Z"),
++ formula = c("[X] + [Y]", "[X_plus_Y] * 2")
++ )
+> g <- build_dependency_graph(fields)
+> plot_dependency_graph(g, fields)           # nondeterministic layout
+> plot_dependency_graph(g, fields, seed = 1) # deterministic layout
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("plot_dependency_graph", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("tbs_custom_sql_graphql")
+> ### * tbs_custom_sql_graphql
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: tbs_custom_sql_graphql
+> ### Title: Custom SQL (Metadata API) for a published item
+> ### Aliases: tbs_custom_sql_graphql
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (all(nzchar(Sys.getenv(c("TABLEAU_BASE_URL","TABLEAU_SITE","TABLEAU_PAT"))))) (if (getRversion() >= "3.4") withAutoprint else force)({ # examplesIf
++ ## End(Don't show)
++ tbs_custom_sql_graphql("abc-123")
++ ## Don't show: 
++ }) # examplesIf
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("tbs_custom_sql_graphql", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("tbs_publish_info")
+> ### * tbs_publish_info
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: tbs_publish_info
+> ### Title: Publish info for a workbook or datasource on 'Tableau'
+> ###   Server/Cloud
+> ### Aliases: tbs_publish_info
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (all(nzchar(Sys.getenv(c("TABLEAU_BASE_URL","TABLEAU_SITE","TABLEAU_PAT"))))) (if (getRversion() >= "3.4") withAutoprint else force)({ # examplesIf
++ ## End(Don't show)
++ tbs_publish_info("abc-123")
++ ## Don't show: 
++ }) # examplesIf
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("tbs_publish_info", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("twbx_extract_files")
+> ### * twbx_extract_files
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: twbx_extract_files
+> ### Title: Extract specific files from a .twbx
+> ### Aliases: twbx_extract_files
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) (if (getRversion() >= "3.4") withAutoprint else force)({ # examplesIf
++ ## End(Don't show)
++ twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
++ files <- twbx_extract_files(twbx, types = c("workbook"))
++ head(files)
++ ## Don't show: 
++ }) # examplesIf
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("twbx_extract_files", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("twbx_list")
+> ### * twbx_list
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: twbx_list
+> ### Title: List contents of a Tableau .twbx
+> ### Aliases: twbx_list
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) (if (getRversion() >= "3.4") withAutoprint else force)({ # examplesIf
++ ## End(Don't show)
++ twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
++ twbx_list(twbx)
++ ## Don't show: 
++ }) # examplesIf
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("twbx_list", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("validate_relationships")
+> ### * validate_relationships
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: validate_relationships
+> ### Title: Validate relationships against available datasources and fields
+> ### Aliases: validate_relationships
+> 
+> ### ** Examples
+> 
+> twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+> if (nzchar(twb) && file.exists(twb)) {
++   parser <- TwbParser$new(twb)
++   res <- validate_relationships(parser)
++   if (!res$ok) print(res$issues)
++ }
+TWB loaded: test_for_wenjie.twb
+TWB parsed and ready
+> 
+> 
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("validate_relationships", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  2.57 0.17 2.81 NA NA 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

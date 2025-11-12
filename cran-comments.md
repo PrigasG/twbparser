@@ -1,3 +1,26 @@
+# CRAN updates for twbparser 0.3.0
+
+##Changes since 0.2.3
+- Uses only base active-binding primitives; no unsafe side effects or global state.
+- Helpers are internal; no exported API changes.
+- Works on all platforms; no system calls or paths.
+- Tests can assert behavior without relying on interactive consoles.
+- Update (v0.2.4) adds read-only page insights
+
+--------------------------------------------------------------------------------
+
+# CRAN resubmission for twbparser 0.2.3
+
+## Changes since 0.2.2
+- Quote software/API names in Title/Description.
+- Added tiny example files under inst/extdata and use system.file().
+- Moved 'withr' to Imports; removed fixed seeds inside functions.
+
+## R CMD check results
+0 errors | 0 warnings | 0 notes
+
+--------------------------------------------------------------------------------
+
 # CRAN resubmission for twbparser 0.2.2
 
 ## Changes since 0.2.1
@@ -6,9 +29,6 @@
 
 ## R CMD check results
 0 errors | 0 warnings | 1 note
-
-* NOTE (local only): "Files 'README.md' or 'NEWS.md' cannot be checked without 'pandoc' being installed."
-  This is due to Pandoc not being on PATH locally; CRAN has Pandoc so this should not occur on CRAN.
 
 --------------------------------------------------------------------------------
 

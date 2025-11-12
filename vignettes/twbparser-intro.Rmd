@@ -16,25 +16,27 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(twbparser)
-
+ok <- FALSE
 twb_path <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
-
 if (nzchar(twb_path) && file.exists(twb_path)) {
-  parser <- TwbParser$new(twb_path)
+parser <- TwbParser$new(twb_path)
+ok <- TRUE
 } else {
-  cat("> Demo .twb not found in installed package. Skipping executable example.\n")
-  cat("  To enable examples, add `inst/extdata/test_for_wenjie.twb` to the package.\n")
+cat("> Demo .twb not found in installed package. Skipping executable examples.\n")
 }
+
+
 ```
 
 # Introduction
 
-The `twbparser` package allows you to parse Tableau `.twb` and `.twbx` workbook files and extract rich metadata such as datasources, relationships, joins, fields, calculated fields, and TWBX assets. This vignette demonstrates common use cases.
+`twbparser` parses Tableau `.twb` and `.twbx` workbooks and exposes datasources, relationships, joins, fields, calculated fields, and TWBX assets. It also provides page-centric insights: dashboards, worksheets, stories, their composition, filter positions, chart types, and colors/palettes. This vignette demonstrates common use cases.
 
-# Parsing a Tableau Workbook
+# Parse a Tableau Workbook
 
 ```{r parse-twb, eval=exists("parser")}
-parser$summary()
+parser$summary
+parser$overview
 ```
 
 # Extracting Datasources and Parameters
@@ -47,68 +49,83 @@ print(head(datasources))
 print(head(parameters))
 ```
 
-# Working with Relationships and Joins
+# Fields and calculated fields
 
-```{r relationships-joins, eval=exists("parser")}
-relations <- parser$get_relations()
-joins <- parser$get_joins()
-relationships <- parser$get_relationships()
-inferred_relationships <- parser$get_inferred_relationships()
+Parameters are excluded by default from calculated fields; opt-in via `include_parameters = TRUE`.
 
-cat("Legacy relations:\n")
-print(head(relations))
+```{r calculated_fields, eval=exists("parser")}
+head(parser$get_fields())
+head(parser$get_calculated_fields(pretty = TRUE, wrap = 120))
 
-cat("Join clauses:\n")
-print(head(joins))
-
-cat("Modern relationships:\n")
-print(head(relationships))
-
-cat("Inferred relationships:\n")
-print(head(inferred_relationships))
 ```
 
-# Accessing Fields and Calculated Fields
+# Page insights
 
-```{r fields-calculated, eval=exists("parser")}
-fields <- parser$get_fields()
-calculated_fields <- parser$get_calculated_fields(pretty = TRUE)
+List all pages and summarize each page
 
-cat("Sample raw fields:\n")
-print(head(fields))
+```{r insights_1, eval=ok}
+twb_pages(parser)
+twb_pages_summary(parser)
 
-cat("Sample calculated fields:\n")
-print(head(calculated_fields))
+
+```
+
+Inspect what a specific page contains
+
+```{r insight_2, eval=ok}
+
+
+pg <- twb_pages(parser)
+nm <- if (nrow(pg)) pg$name[[1]] else NA_character_
+if (!is.na(nm)) {
+  parser$get_page_composition(nm)
+}
+
+
+```
+
+Filters and their positions across dashboards
+
+```{r insights_3, eval=ok}
+twb_dashboard_filters(parser)
+
+```
+
+Chart (mark) types per worksheet and colors/palettes
+
+```{r insights_4, eval=ok}
+twb_charts(parser)
+twb_colors(parser)
+
+```
+
+# Relationships and Joins
+
+```{r relationships-joins, eval=exists("parser")}
+relations <- parser$get_relationships()
+
+head(relations)
 ```
 
 # Working with TWBX Files (if applicable)
 
 ```{r twbx, eval=exists("parser") && !is.null(parser$twbx_path)}
-cat("TWBX manifest contents:\n")
-print(parser$get_twbx_manifest())
+parser$get_twbx_manifest()
+parser$get_twbx_extracts()
+parser$get_twbx_images()
 
-cat("Listing TWBX extract files:\n")
-print(parser$get_twbx_extracts())
-
-cat("Listing TWBX images:\n")
-print(parser$get_twbx_images())
-
-# Example: Extract all image files to temporary directory
-# temp_images_dir <- tempdir()
-# parser$extract_twbx_assets(types = "image", exdir = temp_images_dir)
-# cat("Extracted TWBX images to:", temp_images_dir, "\n")
 ```
 
 # Validation of Relationships
 
 ```{r validate, eval=exists("parser")}
-validation <- parser$validate()
-if (validation$ok) {
-  cat("Relationships validated successfully.\n")
+v <- parser$validate()
+if (isTRUE(v$ok)) {
+cat("Relationships validated successfully.\n")
 } else {
-  cat("Validation issues found:\n")
-  print(validation$issues)
+print(v$issues)
 }
+
 ```
 
 # Summary

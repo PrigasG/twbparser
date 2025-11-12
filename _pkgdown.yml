@@ -23,7 +23,20 @@ reference:
     desc: >
       Main R6 class used to parse .twb/.twbx workbooks.
     contents:
-      - TwbParser    # add @aliases TWBParser if you want to reference that name too
+      - TwbParser
+
+  - title: "Insights (dashboards, pages, charts, colors)"
+    desc: >
+      Page-centric helpers and summaries; work with TwbParser or xml2 documents.
+    contents:
+      - twb_pages
+      - twb_pages_summary
+      - twb_page_composition
+      - twb_dashboards
+      - twb_dashboard_filters
+      - twb_charts
+      - twb_colors
+      - twb_dashboard_summary
 
   - title: "TWBX helpers"
     contents:

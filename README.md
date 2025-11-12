@@ -18,6 +18,8 @@ Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationshi
 -   **Datasources**: connection classes/targets, inferred locations, field counts
 -   **Dependency graph**: build/plot field dependency DAGs
 -   **TWBX assets**: list/extract images, extracts, text files, etc.
+-   **Ergonomics**: `parser$summary` (no parens), `parser$overview`, `parser$pages`, `parser$pages_summary`
+
 
 ## Installation
 
@@ -33,25 +35,26 @@ devtools::install_github("PrigasG/twbparser")
 
 ## Quick Start
 
-Parse a ".twb" file
+Summary for twb workbook
 
 ``` r
 library(twbparser)
+library(fs)
 
 # Parse workbook
-parser <- TWBParser$new("path/to/workbook.twb")
+path <- fs::path_abs("path/to/workbook.twbx")
+stopifnot(file.exists(path))
 
-# Extract calculated fields
-calc_fields <- parser$get_calculated_fields()
+parser <- TwbParser$new(path)
 
-# View dependencies
-deps <- parser$get_field_dependencies()
+# summary (prints)
+parser$summary
 
-# Generate DAG
-dag <- parser$generate_dag()
+# summary (one row tibble)
+parser$overview
 ```
 
-Parse a ".twbx" file
+With a ".twbx" file
 
 ``` r
 parser <- TWBParser$new("path/to/workbook.twbx")
@@ -59,9 +62,81 @@ parser <- TWBParser$new("path/to/workbook.twbx")
 # Inspect manifest
 parser$twbx_manifest
 
-# Extract data sources
-sources <- parser$get_datasource_details()
 ```
+
+Peek inside
+
+```r
+# Datasources / parameters / all sources
+parser$get_datasources()
+parser$get_parameters()
+parser$get_datasources_all()
+
+# Fields and calculated fields (parameters excluded by default)
+parser$get_fields()
+parser$get_calculated_fields(pretty = TRUE, wrap = 120)
+
+```
+
+Page insights (dashboards, worksheets, stories)
+
+```r
+# What pages exist?
+parser$pages
+# Or functional: twb_pages(parser)
+
+# One-line summaries per page
+parser$pages_summary
+
+# What is on a page and where? (filters include x/y/w/h on dashboards)
+parser$get_page_composition("Executive Dashboard")
+
+# Filters across dashboards (with positions)
+twb_dashboard_filters(parser)
+
+# Chart/mark types per worksheet
+twb_charts(parser)
+
+# Colors and palettes referenced
+twb_colors(parser)
+
+```
+
+Relationships/Joins 
+
+```r
+library(dplyr)
+library(tidyr)
+
+rel_df <- parser$get_relationships() |>
+  mutate(
+    op   = replace_na(operator, "="),
+    left = paste0(left_table,  ".", left_field),
+    right= paste0(right_table, ".", right_field),
+    Join = paste(left, op, right)
+  ) |>
+  select(Join, datasource_left = left_table, datasource_right = right_table,
+         operator, everything(), -left, -right, -left_is_calc, -right_is_calc)
+
+rel_df
+
+```
+
+Nice tabular view for calculated fields
+
+```r
+library(dplyr)
+
+calcs <- parser$get_calculated_fields(pretty = TRUE, wrap = 120) |>
+  select(Name = name, Formula = formula_pretty, Datasource = datasource)
+
+# DT example optional:
+# DT::datatable(calcs, escape = FALSE, rownames = FALSE,
+#   options = list(scrollX = TRUE, pageLength = 50)) |>
+#   DT::formatStyle("Formula", `white-space` = "pre", `font-family` = "monospace")
+
+```
+
 
 And graph objects (via igraph or ggraph) for visualization:
 
@@ -75,13 +150,11 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 -   Power BI: Export calculated field logic to replicate measures in DAX.
 -   Data lineage: Combine with DiagrammeR or visNetwork for workflow diagrams.
 
-## What’s new (0.2.0)
+## What’s new (0.3.0)
 
--   Custom SQL extraction: twb_custom_sql()
--   Initial SQL extraction: twb_initial_sql()
--   Published datasource detection: twb_published_refs()
--   Pretty formulas: tableau_formula_pretty(), prettify_calculated_fields()
--   Optional Server/Cloud helpers: tbs_publish_info(), tbs_custom_sql_graphql()
+- Page insights (pages, composition, summaries), filter positions on dashboards
+- No-parens parser$summary plus read-only properties (overview, pages, pages_summary, dashboard_summary)
+- Calculated fields exclude parameters by default; opt-in with include_parameters = TRUE
 
 ## Contributing
 
