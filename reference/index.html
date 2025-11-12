@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,8 +35,7 @@
 
       <div class="section-desc"><p>Main R6 class used to parse .twb/.twbx workbooks.</p></div>
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -48,12 +47,76 @@
         </dt>
         <dd>Tableau Workbook Parser (R6)</dd>
       </dl></div><div class="section level2">
+      <h2 id="insights-dashboards-pages-charts-colors-">Insights (dashboards, pages, charts, colors)<a class="anchor" aria-label="anchor" href="#insights-dashboards-pages-charts-colors-"></a></h2>
+
+      <div class="section-desc"><p>Page-centric helpers and summaries; work with TwbParser or xml2 documents.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="twb_pages.html">twb_pages()</a></code>
+
+        </dt>
+        <dd>List all pages (dashboards, worksheets, stories).</dd>
+
+        <dt>
+
+          <code><a href="twb_pages_summary.html">twb_pages_summary()</a></code>
+
+        </dt>
+        <dd>Summary of all pages (counts and quick descriptors).</dd>
+
+        <dt>
+
+          <code><a href="twb_page_composition.html">twb_page_composition()</a></code>
+
+        </dt>
+        <dd>Show what a specific page is composed of.</dd>
+
+        <dt>
+
+          <code><a href="twb_dashboards.html">twb_dashboards()</a></code>
+
+        </dt>
+        <dd>Dashboards overview (count of zones and referenced worksheets).</dd>
+
+        <dt>
+
+          <code><a href="twb_dashboard_filters.html">twb_dashboard_filters()</a></code>
+
+        </dt>
+        <dd>Filters found on dashboards and their positions.</dd>
+
+        <dt>
+
+          <code><a href="twb_charts.html">twb_charts()</a></code>
+
+        </dt>
+        <dd>Chart (mark) types per worksheet.</dd>
+
+        <dt>
+
+          <code><a href="twb_colors.html">twb_colors()</a></code>
+
+        </dt>
+        <dd>Colors and palettes referenced in the workbook.</dd>
+
+        <dt>
+
+          <code><a href="twb_dashboard_summary.html">twb_dashboard_summary()</a></code>
+
+        </dt>
+        <dd>Per-dashboard summary (filters count and chart types).</dd>
+      </dl></div><div class="section level2">
       <h2 id="twbx-helpers">TWBX helpers<a class="anchor" aria-label="anchor" href="#twbx-helpers"></a></h2>
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -64,13 +127,15 @@
 
         </dt>
         <dd>List contents of a Tableau .twbx</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_twb_from_twbx.html">extract_twb_from_twbx()</a></code>
 
         </dt>
         <dd>Extract the .twb (and optionally all files) from a .twbx</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="twbx_extract_files.html">twbx_extract_files()</a></code>
 
@@ -81,8 +146,7 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -93,67 +157,78 @@
 
         </dt>
         <dd>Extract <code>&lt;named-connection&gt;</code> entries from a TWB</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_datasource_details.html">extract_datasource_details()</a></code>
 
         </dt>
         <dd>Extract datasource details from a Tableau TWB</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_raw_fields.html">extract_raw_fields()</a></code>
 
         </dt>
         <dd>Extract non-calculated, non-parameter fields from a TWB</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_columns_with_table_source.html">extract_columns_with_table_source()</a></code>
 
         </dt>
         <dd>Extract columns with their source tables from a TWB</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_calculated_fields.html">extract_calculated_fields()</a></code>
 
         </dt>
         <dd>Extract calculated fields from a TWB</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_parameters.html">extract_parameters()</a></code>
 
         </dt>
         <dd>Extract parameter fields from a TWB</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_relations.html">extract_relations()</a></code>
 
         </dt>
         <dd>Extract all <code>&lt;relation&gt;</code> tags from a TWB</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_joins.html">extract_joins()</a></code>
 
         </dt>
         <dd>Extract Tableau join clauses from <code>&lt;relation type="join"&gt;</code> nodes</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="extract_relationships.html">extract_relationships()</a></code>
 
         </dt>
         <dd>Extract modern relationships from a Tableau TWB</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="twb_initial_sql.html">twb_initial_sql()</a></code>
 
         </dt>
         <dd>Extract Initial SQL statements from connections (if present)</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="twb_custom_sql.html">twb_custom_sql()</a></code>
 
         </dt>
         <dd>Extract Custom SQL relations from a TWB XML</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="twb_published_refs.html">twb_published_refs()</a></code>
 
@@ -164,8 +239,7 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -176,7 +250,8 @@
 
         </dt>
         <dd>Infer implicit relationships between tables from field metadata</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="validate_relationships.html">validate_relationships()</a></code>
 
@@ -187,8 +262,7 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -199,19 +273,22 @@
 
         </dt>
         <dd>Build a field dependency graph from calculated fields</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="plot_dependency_graph.html">plot_dependency_graph()</a></code>
 
         </dt>
         <dd>Plot a field dependency graph</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="plot_relationship_graph.html">plot_relationship_graph()</a></code>
 
         </dt>
         <dd>Plot a field-level relationship DAG (legacy)</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="plot_source_join_graph.html">plot_source_join_graph()</a></code>
 
@@ -222,8 +299,7 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -234,7 +310,8 @@
 
         </dt>
         <dd>Prettify a Tableau calculation formula for display</dd>
-      </dl><dl><dt>
+
+        <dt>
 
           <code><a href="prettify_calculated_fields.html">prettify_calculated_fields()</a></code>
 
@@ -245,8 +322,7 @@
 
 
 
-
-    </div><div class="section level2">
+      <dl></dl></div><div class="section level2">
 
 
 
@@ -256,13 +332,14 @@
           <code><a href="tbs_publish_info.html">tbs_publish_info()</a></code>
 
         </dt>
-        <dd>Publish info for a workbook or datasource on Tableau Server/Cloud</dd>
-      </dl><dl><dt>
+        <dd>Publish info for a workbook or datasource on 'Tableau' Server/Cloud</dd>
+
+        <dt>
 
           <code><a href="tbs_custom_sql_graphql.html">tbs_custom_sql_graphql()</a></code>
 
         </dt>
-        <dd>Custom SQL (Metadata API) for a published workbook/datasource</dd>
+        <dd>Custom SQL (Metadata API) for a published item</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -273,7 +350,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
