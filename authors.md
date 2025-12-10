@@ -11,12 +11,12 @@ Source:
 [`DESCRIPTION`](https://github.com/PrigasG/twbparser/blob/master/DESCRIPTION)
 
 Arthur G (2025). *twbparser: Parse 'Tableau' Workbooks into Functional
-Data*. R package version 0.3.0, <https://prigasg.github.io/twbparser/>.
+Data*. R package version 0.3.1, <https://prigasg.github.io/twbparser/>.
 
     @Manual{,
       title = {twbparser: Parse 'Tableau' Workbooks into Functional Data},
       author = {George Arthur},
       year = {2025},
-      note = {R package version 0.3.0},
+      note = {R package version 0.3.1},
       url = {https://prigasg.github.io/twbparser/},
     }
