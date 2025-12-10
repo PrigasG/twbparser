@@ -31,7 +31,7 @@
 #'  twb_rows <- members$name[grepl("\\.twb$", members$name)]
 #'  if (length(twb_rows) > 0L && !is.na(twb_rows[1])) {
 #'    twb_member <- twb_rows[1]
-#'    xml <- xml2::read_xml(utils::unzip(twbx, twb_member))
+#'    xml <- xml2::read_xml(utils::unzip(twbx, twb_member, exdir = tempdir()))
 #'    res <- extract_datasource_details(xml)
 #'    head(res$data_sources)
 #'  }

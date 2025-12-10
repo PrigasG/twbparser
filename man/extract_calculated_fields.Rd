@@ -28,7 +28,7 @@ A tibble with columns:
 }
 }
 \description{
-Finds columns that contain \if{html}{\out{<calculation>}} nodes and returns metadata and
+Finds columns that contain \code{<calculation>}nodes and returns metadata and
 formulas, with a heuristic flag for table calculations.
 }
 \examples{

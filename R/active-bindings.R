@@ -5,36 +5,48 @@
 #' @keywords internal
 #' @noRd
 twb_install_active_properties <- function(x, cache = TRUE) {
-  stopifnot("TwbParser" %in% class(x))
+  stopifnot(inherits(x, "TwbParser"))
 
-  # optional: idempotent guard
+  # idempotent guard
   if (isTRUE(x$.__active_installed__)) return(invisible(x))
   x$.__active_installed__ <- TRUE
 
-  if (!exists(".cache", envir = x, inherits = FALSE)) {
+  # cache env
+  if (!exists(".cache", envir = x, inherits = FALSE) || !is.environment(x$.cache)) {
     x$.cache <- new.env(parent = emptyenv())
   }
 
-  # helper
   is_active <- function(nm, env) {
     if (!exists(nm, envir = env, inherits = FALSE)) return(FALSE)
     bindingIsActive(nm, env)
   }
 
-  rebind <- function(name, getter) {
-    # only call bindingIsActive if the name exists
+  rebind <- function(name, getter, keep_function = TRUE) {
+    # if it's already an active binding, assume it's ours and leave it alone
     if (is_active(name, x)) {
-      unlockBinding(name, x); rm(list = name, envir = x)
-    } else if (exists(name, envir = x, inherits = FALSE) &&
-               !is.function(get(name, envir = x, inherits = FALSE))) {
-      # a concrete field lives here; do not replace
       return(invisible())
-    } else if (exists(name, envir = x, inherits = FALSE)) {
-      # preserve original callable as *_fn
-      orig <- get(name, envir = x, inherits = FALSE)
-      assign(paste0(name, "_fn"), orig, envir = x)
+    }
+
+    if (exists(name, envir = x, inherits = FALSE)) {
+      val <- get(name, envir = x, inherits = FALSE)
+
+      # concrete field: never overwrite
+      if (!is.function(val)) {
+        return(invisible())
+      }
+
+      # stash original callable as *_fn (once)
+      if (keep_function) {
+        fn_name <- paste0(name, "_fn")
+        if (!exists(fn_name, envir = x, inherits = FALSE)) {
+          assign(fn_name, val, envir = x)
+        }
+      }
+
+      # remove original symbol so we can bind actively
       rm(list = name, envir = x)
     }
+
     makeActiveBinding(name, getter, x)
     invisible()
   }
@@ -49,24 +61,25 @@ twb_install_active_properties <- function(x, cache = TRUE) {
     }
   }
 
-  # summary as a property (prints when accessed)
-  rebind("summary", wrap_cache("summary", function() { x$summary_fn(); invisible(NULL) }))
+  ## summary as a property (prints when accessed)
+  rebind(
+    "summary",
+    wrap_cache("summary", function() { x$summary_fn(); invisible(NULL) })
+  )
 
-  # High-level read-only conveniences (new names; originals untouched)
+  ## High-level read-only conveniences (new names; originals untouched)
   rebind("overview",          wrap_cache("overview",          function() x$get_overview()))
   rebind("pages",             wrap_cache("pages",             function() .ins_pages(x$xml_doc)))
   rebind("pages_summary",     wrap_cache("pages_summary",     function() .ins_pages_summary(x$xml_doc)))
   rebind("dashboard_summary", wrap_cache("dashboard_summary", function() .ins_dashboard_summary(x$xml_doc)))
 
-
-  # Safe getters as properties (same names; originals stashed as *_fn)
-  rebind("relations", wrap_cache("relations", function() x$get_relations_fn()))
-  rebind("joins", wrap_cache("joins", function() x$get_joins_fn()))
-  rebind("relationships", wrap_cache("relationships", function() x$get_relationships_fn()))
+  ## Safe getters as properties (same names; originals stashed as *_fn)
+  rebind("relations",              wrap_cache("relations",              function() x$get_relations_fn()))
+  rebind("joins",                  wrap_cache("joins",                  function() x$get_joins_fn()))
+  rebind("relationships",          wrap_cache("relationships",          function() x$get_relationships_fn()))
   rebind("inferred_relationships", wrap_cache("inferred_relationships", function() x$get_inferred_relationships_fn()))
-  # Keep only NEW read-only properties (snapshots). Do NOT override get_* methods.
 
-  # Data snapshot properties (NEW names; originals remain callable as get_*())
+  ## Data snapshot properties (NEW names; originals remain callable as get_*())
   rebind("datasources",        wrap_cache("datasources",        function() x$get_datasources()))
   rebind("parameters_tbl",     wrap_cache("parameters_tbl",     function() x$get_parameters()))
   rebind("datasources_all",    wrap_cache("datasources_all",    function() x$get_datasources_all()))
@@ -78,12 +91,14 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind("twbx_extracts_tbl",  wrap_cache("twbx_extracts_tbl",  function() x$get_twbx_extracts()))
   rebind("twbx_images_tbl",    wrap_cache("twbx_images_tbl",    function() x$get_twbx_images()))
 
-
-  # Validation snapshot (read-only); runs a lenient validate once if missing
-  rebind("validation", wrap_cache("validation", function() {
-    if (is.null(x$last_validation)) invisible(x$validate_fn(error = FALSE))
-    x$last_validation %||% list(ok = NA, issues = tibble::tibble())
-  }))
+  ## Validation snapshot (read-only)
+  rebind(
+    "validation",
+    wrap_cache("validation", function() {
+      if (is.null(x$last_validation)) invisible(x$validate_fn(error = FALSE))
+      x$last_validation %||% list(ok = NA, issues = tibble::tibble())
+    })
+  )
 
   invisible(x)
 }
@@ -92,7 +107,9 @@ twb_install_active_properties <- function(x, cache = TRUE) {
 #' @keywords internal
 #' @noRd
 twb_invalidate_active_cache <- function(x, which = NULL) {
-  if (!exists(".cache", envir = x, inherits = FALSE)) return(invisible(x))
+  if (!exists(".cache", envir = x, inherits = FALSE) || !is.environment(x$.cache)) {
+    return(invisible(x))
+  }
   if (is.null(which)) {
     rm(list = ls(envir = x$.cache, all.names = TRUE), envir = x$.cache)
   } else {
@@ -100,4 +117,4 @@ twb_invalidate_active_cache <- function(x, which = NULL) {
   }
   invisible(x)
 }
-
+# nocov end
