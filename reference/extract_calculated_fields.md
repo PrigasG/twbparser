@@ -1,7 +1,7 @@
 # Extract calculated fields from a TWB
 
-Finds columns that contain nodes and returns metadata and formulas, with
-a heuristic flag for table calculations.
+Finds columns that contain `<calculation>`nodes and returns metadata and
+formulas, with a heuristic flag for table calculations.
 
 ## Usage
 
