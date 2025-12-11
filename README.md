@@ -150,7 +150,7 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 -   Power BI: Export calculated field logic to replicate measures in DAX.
 -   Data lineage: Combine with DiagrammeR or visNetwork for workflow diagrams.
 
-## What’s new (0.3.0)
+## What’s new (0.3.1)
 
 - Page insights (pages, composition, summaries), filter positions on dashboards
 - No-parens parser$summary plus read-only properties (overview, pages, pages_summary, dashboard_summary)
