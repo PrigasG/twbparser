@@ -153,7 +153,7 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 - Data lineage: Combine with DiagrammeR or visNetwork for workflow
   diagrams.
 
-## What’s new (0.3.0)
+## What’s new (0.3.1)
 
 - Page insights (pages, composition, summaries), filter positions on
   dashboards
