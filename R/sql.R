@@ -1,10 +1,29 @@
-#' Extract Custom SQL relations from a TWB XML
+#' Extract Custom SQL relations from a Tableau workbook
+#'
+#' Finds every `<relation formula="...">` node that looks like a SQL statement
+#' and returns its name, type, raw SQL text, and a flag for whether it starts
+#' with `SELECT` or `WITH`.
+#'
+#' @param x A `TwbParser` object **or** an `xml2` document.
+#'
+#' @return A tibble with columns:
+#' \describe{
+#'   \item{relation_name}{Name attribute of the relation node.}
+#'   \item{relation_type}{Type attribute (e.g. `"text"`, `"table"`).}
+#'   \item{custom_sql}{Full SQL text.}
+#'   \item{is_custom_sql}{`TRUE` when the text begins with `SELECT` or `WITH`.}
+#' }
+#'
+#' @examples
+#' twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+#' stopifnot(nzchar(twb), file.exists(twb))
+#' xml <- xml2::read_xml(twb)
+#' twb_custom_sql(xml)
+#'
 #' @importFrom rlang .data
-#' @param xml_doc An xml2 document for a .twb
-#' @return tibble with relation_name, relation_type, custom_sql
 #' @export
-twb_custom_sql <- function(xml_doc) {
-  stopifnot(inherits(xml_doc, "xml_document"))
+twb_custom_sql <- function(x) {
+  xml_doc <- .twb_resolve_xml(x)
   rels <- xml2::xml_find_all(xml_doc, "//relation[@formula]")
   tibble::tibble(
     relation_name = xml2::xml_attr(rels, "name"),
@@ -14,22 +33,42 @@ twb_custom_sql <- function(xml_doc) {
     dplyr::filter(!is.na(.data$custom_sql)) |>
     dplyr::mutate(
       is_custom_sql = dplyr::coalesce(
-        stringr::str_detect(.data$custom_sql,
-                            stringr::regex("^\\s*(select|with)\\b", ignore_case = TRUE)
+        stringr::str_detect(
+          .data$custom_sql,
+          stringr::regex("^\\s*(select|with)\\b", ignore_case = TRUE)
         ),
         FALSE
       )
     )
 }
 
-#' Extract Initial SQL statements from connections (if present)
-#' @param xml_doc An xml2 document for a .twb
-#' @return tibble with connection_id, initial_sql
+#' Extract Initial SQL statements from Tableau connections
+#'
+#' Returns any `<initial-sql>` nodes found inside connection or
+#' named-connection elements.
+#'
+#' @param x A `TwbParser` object **or** an `xml2` document.
+#'
+#' @return A tibble with columns:
+#' \describe{
+#'   \item{connection_id}{Name or caption of the parent connection element.}
+#'   \item{initial_sql}{SQL text of the initial statement.}
+#' }
+#'
+#' @examples
+#' twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+#' stopifnot(nzchar(twb), file.exists(twb))
+#' xml <- xml2::read_xml(twb)
+#' twb_initial_sql(xml)
+#'
 #' @export
-twb_initial_sql <- function(xml_doc) {
-  stopifnot(inherits(xml_doc, "xml_document"))
-  nodes <- xml2::xml_find_all(xml_doc, "//connection/initial-sql | //named-connection/initial-sql")
-  if (length(nodes) == 0) {
+twb_initial_sql <- function(x) {
+  xml_doc <- .twb_resolve_xml(x)
+  nodes <- xml2::xml_find_all(
+    xml_doc,
+    "//connection/initial-sql | //named-connection/initial-sql"
+  )
+  if (length(nodes) == 0L) {
     return(tibble::tibble(connection_id = character(), initial_sql = character()))
   }
   tibble::tibble(

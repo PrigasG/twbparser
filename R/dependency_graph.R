@@ -8,7 +8,7 @@
   tok <- sub("^([^:]+:)+", "", tok) # remove prefixes like "none:" or "clct:"
 
   # Split table-qualified references: [Table].[Field] -> take Field
-  parts <- strsplit(tok, "\\.?", fixed = FALSE)[[1]]
+  parts <- strsplit(tok, "\\.", fixed = FALSE)[[1]]
   parts <- parts[nzchar(parts)]
   parts <- gsub("^\\s+|\\s+$", "", parts)
   if (length(parts) == 0) {

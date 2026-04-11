@@ -100,6 +100,10 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind("dashboard_layout",   wrap_cache("dashboard_layout",   function() x$get_dashboard_layout()))
   rebind("dashboard_actions",  wrap_cache("dashboard_actions",  function() x$get_dashboard_actions()))
 
+  ## Phase 4: analytics
+  rebind("calc_complexity",    wrap_cache("calc_complexity",    function() x$get_calc_complexity()))
+  rebind("field_usage",        wrap_cache("field_usage",        function() x$get_field_usage()))
+
   ## Validation snapshot (read-only)
   rebind(
     "validation",
