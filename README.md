@@ -6,7 +6,7 @@
 [![pkgdown](https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master)](https://prigasg.github.io/twbparser/)
 [![Codecov](https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg)](https://app.codecov.io/gh/PrigasG/twbparser)
 [![License:MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/PrigasG/twbparser/blob/master/LICENSE)
-[![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![Lifecycle:stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
 Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationships, fields, calculated fields, worksheet configuration, and dashboard structure**, plus inspect and unpack **TWBX** assets. Built for large workbooks and Shiny integration.
 
