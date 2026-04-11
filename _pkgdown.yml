@@ -38,6 +38,23 @@ reference:
       - twb_colors
       - twb_dashboard_summary
 
+  - title: "Worksheet intelligence"
+    desc: >
+      Per-worksheet shelf, filter, axis, and sort details.
+    contents:
+      - twb_sheet_shelves
+      - twb_sheet_filters
+      - twb_sheet_axes
+      - twb_sheet_sorts
+
+  - title: "Dashboard intelligence"
+    desc: >
+      Per-dashboard zone layout, sheet positions, and actions.
+    contents:
+      - twb_dashboard_sheets
+      - twb_dashboard_layout
+      - twb_dashboard_actions
+
   - title: "TWBX helpers"
     contents:
       - twbx_list

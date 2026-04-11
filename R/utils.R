@@ -3,6 +3,65 @@
 #' @noRd
 `%||%` <- function(a, b) if (!is.null(a)) a else b
 
+# ---- Canonical field/table cleaners (single source of truth) ----------------
+
+#' Clean a table reference to a human-readable name (vectorized)
+#'
+#' Removes `[Extract].` / `[Connection].` prefixes, strips `[ ]` brackets, and
+#' drops Tableau's trailing 32-character hex suffix.
+#'
+#' @param x Character vector of raw table references.
+#' @return Character vector of the same length; unresolvable entries become
+#'   `NA_character_`.
+#' @keywords internal
+#' @noRd
+.twb_clean_table <- function(x) {
+  x <- as.character(x)
+  x <- gsub("^\\[.*?\\]\\.", "", x)        # drop [Extract]. / [Connection].
+  x <- gsub("\\[|\\]", "", x)              # strip brackets
+  x <- sub("_[0-9A-Fa-f]{32}$", "", x)    # drop 32-char hex suffix
+  x <- trimws(x)
+  x[is.na(x) | !nzchar(x)] <- NA_character_
+  x
+}
+
+#' Clean a field reference to a human-readable name (vectorized)
+#'
+#' Strips `[ ]` brackets, removes Tableau derivation prefixes (e.g., `none:`,
+#' `clct:`) and takes the last dot-separated token.
+#'
+#' @param x Character vector of raw field references.
+#' @return Character vector of the same length; unresolvable entries become
+#'   `NA_character_`.
+#' @keywords internal
+#' @noRd
+.twb_clean_field <- function(x) {
+  x <- as.character(x)
+  x <- gsub("\\[|\\]", "", x)   # strip brackets
+
+  # Take last dot-separated part: "[ds].[field]" -> "field"
+  parts_list <- strsplit(x, "\\.", fixed = FALSE)
+  x <- unname(vapply(parts_list, function(p) {
+    p <- p[nzchar(p)]
+    if (!length(p)) NA_character_ else utils::tail(p, 1L)
+  }, character(1L)))
+
+  # Strip Tableau column-instance wrapper "derivation:name:pivot_code"
+  # e.g. "none:Category:nk" -> "Category", "clct:Geometry:ok" -> "Geometry"
+  # Only fires when the full pattern matches (3-part, lowercase prefix & suffix).
+  unname(vapply(x, function(tok) {
+    if (is.na(tok)) return(NA_character_)
+    m <- regexpr("^[a-z]+:(.+):[a-z]{1,3}$", tok, perl = TRUE)
+    if (m > 0L) {
+      start <- attr(m, "capture.start")[[1L]]
+      len   <- attr(m, "capture.length")[[1L]]
+      substr(tok, start, start + len - 1L)
+    } else {
+      tok
+    }
+  }, character(1L)))
+}
+
 #' Escape square/round brackets with backslashes
 #' @param string Character vector (or NULL)
 #' @return Character vector with [], () escaped; NULL passes through.

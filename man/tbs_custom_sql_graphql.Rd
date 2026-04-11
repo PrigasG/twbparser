@@ -28,7 +28,7 @@ A tibble with columns such as \code{custom_sql_name}, \code{custom_sql_query},
 Queries the Metadata (GraphQL) API for Custom SQL tables in the content graph.
 }
 \examples{
-\dontshow{if (all(nzchar(Sys.getenv(c("TABLEAU_BASE_URL","TABLEAU_SITE","TABLEAU_PAT"))))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (all(nzchar(Sys.getenv(c("TABLEAU_BASE_URL","TABLEAU_SITE","TABLEAU_PAT"))))) withAutoprint(\{ # examplesIf}
 tbs_custom_sql_graphql("abc-123")
 \dontshow{\}) # examplesIf}
 }

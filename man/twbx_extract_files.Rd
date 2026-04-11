@@ -30,7 +30,7 @@ Tibble with \code{name}, \code{type}, and \code{out_path} of extracted files.
 Extract specific files from a .twbx
 }
 \examples{
-\dontshow{if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) withAutoprint(\{ # examplesIf}
 twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
 files <- twbx_extract_files(twbx, types = c("workbook"))
 head(files)

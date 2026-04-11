@@ -1,13 +1,4 @@
 #' @keywords internal
-clean_name <- function(name) {
-  name |>
-    stringr::str_remove("^\\[.*?\\]\\.") |> # remove leading [Extract]. or [Connection].
-    stringr::str_remove("_[:xdigit:]{32}$") |> # drop trailing _32hex suffix
-    stringr::str_remove_all("\\[|\\]") |> # strip all brackets
-    stringr::str_trim()
-}
-
-#' @keywords internal
 .extract_field_from_expr <- function(x) {
   if (inherits(x, "xml_missing")) {
     return(NA_character_)
@@ -75,17 +66,6 @@ extract_relations <- function(xml_doc) {
 }
 
 #' @keywords internal
-.rel_clean_table <- function(x) {
-  if (is.null(x) || is.na(x)) {
-    return(NA_character_)
-  }
-  x <- gsub("^\\[.*?\\]\\.", "", x)
-  x <- gsub("\\[|\\]", "", x)
-  x <- sub("_[0-9A-Fa-f]{32}$", "", x)
-  trimws(x)
-}
-
-#' @keywords internal
 .rel_field_expr <- function(node) {
   if (inherits(node, "xml_missing")) {
     return(NA_character_)
@@ -127,19 +107,19 @@ build_object_table_mapping <- function(xml_doc) {
     caps <- xml2::xml_attr(objs, "caption")
     for (i in seq_along(ids)) {
       if (!is.na(ids[i]) && !is.na(caps[i])) {
-        mapping[[ids[i]]] <- .rel_clean_table(caps[i])
+        mapping[[ids[i]]] <- .twb_clean_table(caps[i])
       }
     }
   }
   for (lt in xml2::xml_find_all(xml_doc, "//logical-table[@id]")) {
     id <- xml2::xml_attr(lt, "id")
     nm <- xml2::xml_attr(lt, "name")
-    if (!is.na(id) && !is.na(nm)) mapping[[id]] <- .rel_clean_table(nm)
+    if (!is.na(id) && !is.na(nm)) mapping[[id]] <- .twb_clean_table(nm)
   }
   for (rel in xml2::xml_find_all(xml_doc, "//relation[@name]")) {
     nm <- xml2::xml_attr(rel, "name")
     tb <- xml2::xml_attr(rel, "table")
-    if (!is.na(nm)) mapping[[nm]] <- .rel_clean_table(tb %||% nm)
+    if (!is.na(nm)) mapping[[nm]] <- .twb_clean_table(tb %||% nm)
   }
   mapping
 }
@@ -179,8 +159,8 @@ extract_relationships <- function(xml_doc) {
   purrr::map_dfr(rel_nodes, function(rel_node) {
     e1 <- xml2::xml_attr(xml2::xml_find_first(rel_node, ".//first-end-point"), "object-id")
     e2 <- xml2::xml_attr(xml2::xml_find_first(rel_node, ".//second-end-point"), "object-id")
-    left_table <- .rel_clean_table(id_map[[e1]] %||% e1)
-    right_table <- .rel_clean_table(id_map[[e2]] %||% e2)
+    left_table <- .twb_clean_table(id_map[[e1]] %||% e1)
+    right_table <- .twb_clean_table(id_map[[e2]] %||% e2)
     ex <- xml2::xml_find_first(rel_node, ".//expression[@op][count(./expression) >= 2]")
     if (inherits(ex, "xml_missing")) {
       return(tibble::tibble())

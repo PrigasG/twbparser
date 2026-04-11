@@ -1,30 +1,3 @@
-#' @keywords internal
-.f_clean_table <- function(x) {
-  if (is.null(x) || is.na(x)) {
-    return(NA_character_)
-  }
-  x <- gsub("^\\[.*?\\]\\.", "", x) # remove [Extract]. or [Connection].
-  x <- gsub("\\[|\\]", "", x) # strip brackets
-  x <- sub("_[0-9A-Fa-f]{32}$", "", x) # drop trailing _32hex
-  x <- trimws(x)
-  if (!nzchar(x)) NA_character_ else x
-}
-
-#' @keywords internal
-.f_clean_field <- function(x) {
-  if (is.null(x) || is.na(x)) {
-    return(NA_character_)
-  }
-  x <- gsub("\\[|\\]", "", x) # strip brackets
-  x <- sub("^([^:]+:)+", "", x) # drop "none:" / "clct:" prefixes
-  parts <- unlist(strsplit(x, "\\.", fixed = FALSE), use.names = FALSE)
-  parts <- parts[nzchar(parts)]
-  if (!length(parts)) {
-    return(NA_character_)
-  }
-  tail(parts, 1)
-}
-
 #' Extract columns with their source tables from a TWB
 #'
 #' Scans top-level \verb{<datasource>} nodes (excluding view-specific references) and
@@ -79,33 +52,20 @@ extract_columns_with_table_source <- function(xml_doc) {
       a <- xml2::xml_attrs(col)
 
       raw_table <- attr_safe_get(a, "table", NA_character_)
-      raw_name <- attr_safe_get(a, "name", NA_character_)
-      cap <- attr_safe_get(a, "caption", NA_character_)
-
-      # compute field_clean
-      nn <- gsub("\\[|\\]", "", raw_name)
-      nn <- sub("^([^:]+:)+", "", nn)
-      parts <- strsplit(nn, "\\.", perl = TRUE)[[1]]
-      field_clean <- if (length(parts)) tail(parts, 1) else nn
-
-      # compute table_clean
-      table_clean <- raw_table |>
-        gsub("^\\[.*?\\]\\.", "", x = _) |>
-        gsub("\\[|\\]", "", x = _) |>
-        gsub("_[0-9A-Fa-f]{32}$", "", x = _) |>
-        trimws()
+      raw_name  <- attr_safe_get(a, "name",  NA_character_)
+      cap       <- attr_safe_get(a, "caption", NA_character_)
 
       tibble::tibble(
-        datasource     = ds_name,
-        name           = raw_name,
-        caption        = cap,
-        datatype       = attr_safe_get(a, "datatype", NA_character_),
-        role           = attr_safe_get(a, "role", NA_character_),
-        semantic_role  = attr_safe_get(a, "semantic-role", NA_character_),
-        table          = gsub("_[0-9A-Fa-f]{32}$", "", raw_table),
-        table_clean    = ifelse(table_clean == "", NA_character_, table_clean),
-        field_clean    = ifelse(field_clean == "", NA_character_, field_clean),
-        is_parameter   = !is.na(attr_safe_get(a, "param-domain-type", NA_character_))
+        datasource    = ds_name,
+        name          = raw_name,
+        caption       = cap,
+        datatype      = attr_safe_get(a, "datatype",      NA_character_),
+        role          = attr_safe_get(a, "role",          NA_character_),
+        semantic_role = attr_safe_get(a, "semantic-role", NA_character_),
+        table         = gsub("_[0-9A-Fa-f]{32}$", "", raw_table %||% NA_character_),
+        table_clean   = .twb_clean_table(raw_table),
+        field_clean   = .twb_clean_field(raw_name),
+        is_parameter  = !is.na(attr_safe_get(a, "param-domain-type", NA_character_))
       )
     })
   }) |>
@@ -159,35 +119,14 @@ infer_implicit_relationships <- function(fields_df, max_pairs = 50000L) {
     if (!nm %in% names(fields_df)) fields_df[[nm]] <- NA_character_
   }
 
-  # --- vectorized cleaners ---
-  vec_clean_table <- function(x) {
-    x <- as.character(x)
-    x <- gsub("^\\[.*?\\]\\.", "", x)
-    x <- gsub("\\[|\\]", "", x)
-    x <- gsub("_[0-9A-Fa-f]{32}$", "", x)
-    x <- trimws(x)
-    x[x == ""] <- NA_character_
-    x
-  }
-  vec_clean_field <- function(x) {
-    x <- as.character(x)
-    x <- gsub("\\[|\\]", "", x)
-    x <- sub("^([^:]+:)+", "", x)
-    parts <- strsplit(x, "\\.", perl = TRUE)
-    vapply(parts, function(p) {
-      p <- p[nzchar(p)]
-      if (!length(p)) NA_character_ else tail(p, 1)
-    }, character(1))
-  }
-
   fields_df <- fields_df |>
     dplyr::mutate(
       table_clean = as.character(table_clean),
       field_clean = as.character(field_clean),
       table       = as.character(table),
       name        = as.character(name),
-      table_use   = dplyr::coalesce(dplyr::na_if(table_clean, ""), vec_clean_table(table)),
-      field_use   = dplyr::coalesce(dplyr::na_if(field_clean, ""), vec_clean_field(name))
+      table_use   = dplyr::coalesce(dplyr::na_if(table_clean, ""), .twb_clean_table(table)),
+      field_use   = dplyr::coalesce(dplyr::na_if(field_clean, ""), .twb_clean_field(name))
     )
 
   f <- fields_df |>
@@ -213,7 +152,8 @@ infer_implicit_relationships <- function(fields_df, max_pairs = 50000L) {
 
   by_role <- dplyr::inner_join(
     f_role, f_role,
-    by = "role", suffix = c("_l", "_r")
+    by = "role", suffix = c("_l", "_r"),
+    relationship = "many-to-many"
   ) |>
     dplyr::filter(table_l != table_r) |>
     dplyr::transmute(
@@ -225,11 +165,15 @@ infer_implicit_relationships <- function(fields_df, max_pairs = 50000L) {
     )
 
 
+  # Deduplicate on (table, field_lower) before the self-join to prevent
+  # a Cartesian explosion when the same field appears multiple times.
   f2 <- f |>
-    dplyr::mutate(field_lower = tolower(field))
+    dplyr::mutate(field_lower = tolower(field)) |>
+    dplyr::distinct(table, field_lower, .keep_all = TRUE)
 
   by_name <- f2 |>
-    dplyr::inner_join(f2, by = "field_lower", suffix = c("_l", "_r")) |>
+    dplyr::inner_join(f2, by = "field_lower", suffix = c("_l", "_r"),
+                      relationship = "many-to-many") |>
     dplyr::filter(table_l != table_r) |>
     dplyr::transmute(
       left_table  = table_l,

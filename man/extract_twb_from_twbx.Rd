@@ -26,7 +26,7 @@ List with \code{twb_path}, \code{exdir}, \code{twbx_path}, and \code{manifest} (
 Extract the .twb (and optionally all files) from a .twbx
 }
 \examples{
-\dontshow{if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) withAutoprint(\{ # examplesIf}
 twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
 res  <- extract_twb_from_twbx(twbx, extract_all = FALSE)
 basename(res$twb_path)

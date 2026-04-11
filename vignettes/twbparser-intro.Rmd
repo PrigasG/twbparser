@@ -30,7 +30,12 @@ cat("> Demo .twb not found in installed package. Skipping executable examples.\n
 
 # Introduction
 
-`twbparser` parses Tableau `.twb` and `.twbx` workbooks and exposes datasources, relationships, joins, fields, calculated fields, and TWBX assets. It also provides page-centric insights: dashboards, worksheets, stories, their composition, filter positions, chart types, and colors/palettes. This vignette demonstrates common use cases.
+`twbparser` parses Tableau `.twb` and `.twbx` workbooks and exposes datasources,
+relationships, joins, fields, calculated fields, and TWBX assets. It also
+provides page-centric insights — dashboards, worksheets, stories, their
+composition, filter positions, chart types, and colors/palettes — as well as
+per-worksheet shelf/filter/axis/sort details and per-dashboard zone layout and
+actions. This vignette demonstrates common use cases.
 
 # Parse a Tableau Workbook
 
@@ -98,6 +103,77 @@ twb_charts(parser)
 twb_colors(parser)
 
 ```
+
+# Worksheet intelligence
+
+Each of the four functions below accepts an optional `sheet` argument to
+restrict output to a single worksheet.
+
+## Shelves — what fields are on rows, cols, and encodings?
+
+```{r sheet-shelves, eval=ok}
+shelves <- twb_sheet_shelves(parser)
+head(shelves)
+```
+
+The `shelf` column distinguishes `"rows"`, `"cols"`, `"color"`, `"size"`,
+`"label"`, `"detail"`, and `"tooltip"`.
+
+## Filters
+
+```{r sheet-filters, eval=ok}
+filters <- twb_sheet_filters(parser)
+head(filters)
+```
+
+Categorical filters include a comma-separated `members` column;
+range filters populate `range_min` / `range_max`.
+
+## Axis configuration
+
+```{r sheet-axes, eval=ok}
+axes <- twb_sheet_axes(parser)
+head(axes)
+```
+
+## Sort directives
+
+```{r sheet-sorts, eval=ok}
+sorts <- twb_sheet_sorts(parser)
+head(sorts)
+```
+
+# Dashboard intelligence
+
+## Sheet positions
+
+```{r dashboard-sheets, eval=ok}
+db_sheets <- twb_dashboard_sheets(parser)
+head(db_sheets)
+```
+
+`x`, `y`, `w`, `h` are pixel coordinates within the dashboard canvas.
+
+## Zone layout tree
+
+```{r dashboard-layout, eval=ok}
+layout <- twb_dashboard_layout(parser)
+head(layout)
+```
+
+`parent_zone_id` links child zones to their container; root zones have `NA`.
+`component_type` is one of `"worksheet"`, `"filter"`, `"container"`,
+`"legend"`, `"parameter_control"`, `"text"`, `"image"`, or `"blank"`.
+
+## Actions
+
+```{r dashboard-actions, eval=ok}
+actions <- twb_dashboard_actions(parser)
+head(actions)
+```
+
+`action_type` is `"filter"`, `"url"`, `"highlight"`, or `"parameter"`.
+`source_sheets` is a comma-separated list; `url` is populated for URL actions.
 
 # Relationships and Joins
 
