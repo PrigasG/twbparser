@@ -10,6 +10,20 @@ Return TWBX image entries.
 
 Extract files from the TWBX to disk.
 
+Fields placed on visual shelves for one or all worksheets.
+
+Detailed filter configuration for one or all worksheets.
+
+Axis configuration for one or all worksheets.
+
+Sort directives for one or all worksheets.
+
+Worksheets embedded in one or all dashboards.
+
+Full zone layout with container hierarchy.
+
+Dashboard and workbook actions.
+
 Validate relationships; optionally stop on failure.
 
 Print a concise summary of parsed content.
@@ -39,6 +53,14 @@ An R6 class generator.
 - exdir:
 
   Output directory (defaults to parser's twbx dir or tempdir()).
+
+- sheet:
+
+  Optional worksheet name.
+
+- dashboard:
+
+  Optional dashboard name to filter by.
 
 - error:
 

@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -82,9 +82,11 @@
 <p><code>twbparser</code> parses Tableau <code>.twb</code> and
 <code>.twbx</code> workbooks and exposes datasources, relationships,
 joins, fields, calculated fields, and TWBX assets. It also provides
-page-centric insights: dashboards, worksheets, stories, their
-composition, filter positions, chart types, and colors/palettes. This
-vignette demonstrates common use cases.</p>
+page-centric insights — dashboards, worksheets, stories, their
+composition, filter positions, chart types, and colors/palettes — as
+well as per-worksheet shelf/filter/axis/sort details and per-dashboard
+zone layout and actions. This vignette demonstrates common use
+cases.</p>
 </div>
 <div class="section level2">
 <h2 id="parse-a-tableau-workbook">Parse a Tableau Workbook<a class="anchor" aria-label="anchor" href="#parse-a-tableau-workbook"></a>
@@ -140,7 +142,7 @@ vignette demonstrates common use cases.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">parser</span><span class="op">$</span><span class="fu">get_fields</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 10</span></span></span>
 <span><span class="co">#&gt;   datasource        name  caption datatype role  semantic_role table table_clean</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>      </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> federated.0grgao… OBJE… <span style="color: #BB0000;">NA</span>      integer  <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> federated.0grgao… MUN   <span style="color: #BB0000;">NA</span>      string   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
 <span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> federated.0grgao… COUN… <span style="color: #BB0000;">NA</span>      string   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>            <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>         </span></span>
@@ -200,9 +202,117 @@ vignette demonstrates common use cases.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 variables: kind &lt;chr&gt;, detail &lt;chr&gt;, scope &lt;chr&gt;, label &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="worksheet-intelligence">Worksheet intelligence<a class="anchor" aria-label="anchor" href="#worksheet-intelligence"></a>
+</h2>
+<p>Each of the four functions below accepts an optional
+<code>sheet</code> argument to restrict output to a single
+worksheet.</p>
+<div class="section level3">
+<h3 id="shelves-what-fields-are-on-rows-cols-and-encodings">Shelves — what fields are on rows, cols, and encodings?<a class="anchor" aria-label="anchor" href="#shelves-what-fields-are-on-rows-cols-and-encodings"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">shelves</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_sheet_shelves.html">twb_sheet_shelves</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">shelves</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 × 7</span></span></span>
+<span><span class="co">#&gt;   sheet   shelf    field_ref   field_instance field_clean datasource aggregation</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Sheet 1 color    [federated… none:Calculat… Calculatio… federated… <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Sheet 1 cols     [federated… Longitude (ge… Longitude … federated… <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> Sheet 1 geometry [federated… clct:Geometry… Geometry    federated… <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> Sheet 1 lod      [federated… clct:Geometry… Geometry    federated… <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> Sheet 1 lod      [federated… none:counts:qk counts      federated… <span style="color: #BB0000;">NA</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> Sheet 1 rows     [federated… Latitude (gen… Latitude (… federated… <span style="color: #BB0000;">NA</span></span></span></code></pre></div>
+<p>The <code>shelf</code> column distinguishes <code>"rows"</code>,
+<code>"cols"</code>, <code>"color"</code>, <code>"size"</code>,
+<code>"label"</code>, <code>"detail"</code>, and
+<code>"tooltip"</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="filters">Filters<a class="anchor" aria-label="anchor" href="#filters"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">filters</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_sheet_filters.html">twb_sheet_filters</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">filters</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 9</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 variables: sheet &lt;chr&gt;, field_ref &lt;chr&gt;, field_clean &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   datasource &lt;chr&gt;, filter_class &lt;chr&gt;, include_mode &lt;chr&gt;, members &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   range_min &lt;chr&gt;, range_max &lt;chr&gt;</span></span></span></code></pre></div>
+<p>Categorical filters include a comma-separated <code>members</code>
+column; range filters populate <code>range_min</code> /
+<code>range_max</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="axis-configuration">Axis configuration<a class="anchor" aria-label="anchor" href="#axis-configuration"></a>
+</h3>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">axes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_sheet_axes.html">twb_sheet_axes</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">axes</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 variables: sheet &lt;chr&gt;, axis &lt;chr&gt;, field_ref &lt;chr&gt;, field_clean &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   scale_type &lt;chr&gt;, reversed &lt;lgl&gt;, include_zero &lt;lgl&gt;</span></span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="sort-directives">Sort directives<a class="anchor" aria-label="anchor" href="#sort-directives"></a>
+</h3>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sorts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_sheet_sorts.html">twb_sheet_sorts</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sorts</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 variables: sheet &lt;chr&gt;, field_ref &lt;chr&gt;, field_clean &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   datasource &lt;chr&gt;, sort_order &lt;chr&gt;, sort_by &lt;chr&gt;</span></span></span></code></pre></div>
+</div>
+</div>
+<div class="section level2">
+<h2 id="dashboard-intelligence">Dashboard intelligence<a class="anchor" aria-label="anchor" href="#dashboard-intelligence"></a>
+</h2>
+<div class="section level3">
+<h3 id="sheet-positions">Sheet positions<a class="anchor" aria-label="anchor" href="#sheet-positions"></a>
+</h3>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">db_sheets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_dashboard_sheets.html">twb_dashboard_sheets</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">db_sheets</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 7</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 variables: dashboard &lt;chr&gt;, sheet &lt;chr&gt;, zone_id &lt;chr&gt;, x &lt;int&gt;, y &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   w &lt;int&gt;, h &lt;int&gt;</span></span></span></code></pre></div>
+<p><code>x</code>, <code>y</code>, <code>w</code>, <code>h</code> are
+pixel coordinates within the dashboard canvas.</p>
+</div>
+<div class="section level3">
+<h3 id="zone-layout-tree">Zone layout tree<a class="anchor" aria-label="anchor" href="#zone-layout-tree"></a>
+</h3>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_dashboard_layout.html">twb_dashboard_layout</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">layout</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 10</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 10 variables: dashboard &lt;chr&gt;, zone_id &lt;chr&gt;, parent_zone_id &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   component_type &lt;chr&gt;, target &lt;chr&gt;, layout_type &lt;chr&gt;, x &lt;int&gt;, y &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   w &lt;int&gt;, h &lt;int&gt;</span></span></span></code></pre></div>
+<p><code>parent_zone_id</code> links child zones to their container;
+root zones have <code>NA</code>. <code>component_type</code> is one of
+<code>"worksheet"</code>, <code>"filter"</code>,
+<code>"container"</code>, <code>"legend"</code>,
+<code>"parameter_control"</code>, <code>"text"</code>,
+<code>"image"</code>, or <code>"blank"</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
+</h3>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">actions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_dashboard_actions.html">twb_dashboard_actions</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">actions</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 6</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 variables: action_name &lt;chr&gt;, action_type &lt;chr&gt;, source_sheets &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   target_sheet &lt;chr&gt;, run_on &lt;chr&gt;, url &lt;chr&gt;</span></span></span></code></pre></div>
+<p><code>action_type</code> is <code>"filter"</code>,
+<code>"url"</code>, <code>"highlight"</code>, or
+<code>"parameter"</code>. <code>source_sheets</code> is a
+comma-separated list; <code>url</code> is populated for URL actions.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="relationships-and-joins">Relationships and Joins<a class="anchor" aria-label="anchor" href="#relationships-and-joins"></a>
 </h2>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">relations</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_relationships</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">relations</span><span class="op">)</span></span>
@@ -215,7 +325,7 @@ vignette demonstrates common use cases.</p>
 <div class="section level2">
 <h2 id="working-with-twbx-files-if-applicable">Working with TWBX Files (if applicable)<a class="anchor" aria-label="anchor" href="#working-with-twbx-files-if-applicable"></a>
 </h2>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_manifest</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_extracts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_images</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -223,7 +333,7 @@ vignette demonstrates common use cases.</p>
 <div class="section level2">
 <h2 id="validation-of-relationships">Validation of Relationships<a class="anchor" aria-label="anchor" href="#validation-of-relationships"></a>
 </h2>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">validate</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">ok</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Relationships validated successfully.\n"</span><span class="op">)</span></span>

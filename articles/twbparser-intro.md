@@ -18,9 +18,11 @@ cat("> Demo .twb not found in installed package. Skipping executable examples.\n
 
 `twbparser` parses Tableau `.twb` and `.twbx` workbooks and exposes
 datasources, relationships, joins, fields, calculated fields, and TWBX
-assets. It also provides page-centric insights: dashboards, worksheets,
+assets. It also provides page-centric insights — dashboards, worksheets,
 stories, their composition, filter positions, chart types, and
-colors/palettes. This vignette demonstrates common use cases.
+colors/palettes — as well as per-worksheet shelf/filter/axis/sort
+details and per-dashboard zone layout and actions. This vignette
+demonstrates common use cases.
 
 ## Parse a Tableau Workbook
 
@@ -76,7 +78,7 @@ Parameters are excluded by default from calculated fields; opt-in via
 head(parser$get_fields())
 #> # A tibble: 6 × 10
 #>   datasource        name  caption datatype role  semantic_role table table_clean
-#>   <chr>             <chr> <chr>   <chr>    <chr> <chr>         <chr> <lgl>      
+#>   <chr>             <chr> <chr>   <chr>    <chr> <chr>         <chr> <chr>      
 #> 1 federated.0grgao… OBJE… NA      integer  NA    NA            NA    NA         
 #> 2 federated.0grgao… MUN   NA      string   NA    NA            NA    NA         
 #> 3 federated.0grgao… COUN… NA      string   NA    NA            NA    NA         
@@ -145,6 +147,108 @@ twb_colors(parser)
 #> # A tibble: 0 × 4
 #> # ℹ 4 variables: kind <chr>, detail <chr>, scope <chr>, label <chr>
 ```
+
+## Worksheet intelligence
+
+Each of the four functions below accepts an optional `sheet` argument to
+restrict output to a single worksheet.
+
+### Shelves — what fields are on rows, cols, and encodings?
+
+``` r
+shelves <- twb_sheet_shelves(parser)
+head(shelves)
+#> # A tibble: 6 × 7
+#>   sheet   shelf    field_ref   field_instance field_clean datasource aggregation
+#>   <chr>   <chr>    <chr>       <chr>          <chr>       <chr>      <chr>      
+#> 1 Sheet 1 color    [federated… none:Calculat… Calculatio… federated… NA         
+#> 2 Sheet 1 cols     [federated… Longitude (ge… Longitude … federated… NA         
+#> 3 Sheet 1 geometry [federated… clct:Geometry… Geometry    federated… NA         
+#> 4 Sheet 1 lod      [federated… clct:Geometry… Geometry    federated… NA         
+#> 5 Sheet 1 lod      [federated… none:counts:qk counts      federated… NA         
+#> 6 Sheet 1 rows     [federated… Latitude (gen… Latitude (… federated… NA
+```
+
+The `shelf` column distinguishes `"rows"`, `"cols"`, `"color"`,
+`"size"`, `"label"`, `"detail"`, and `"tooltip"`.
+
+### Filters
+
+``` r
+filters <- twb_sheet_filters(parser)
+head(filters)
+#> # A tibble: 0 × 9
+#> # ℹ 9 variables: sheet <chr>, field_ref <chr>, field_clean <chr>,
+#> #   datasource <chr>, filter_class <chr>, include_mode <chr>, members <chr>,
+#> #   range_min <chr>, range_max <chr>
+```
+
+Categorical filters include a comma-separated `members` column; range
+filters populate `range_min` / `range_max`.
+
+### Axis configuration
+
+``` r
+axes <- twb_sheet_axes(parser)
+head(axes)
+#> # A tibble: 0 × 7
+#> # ℹ 7 variables: sheet <chr>, axis <chr>, field_ref <chr>, field_clean <chr>,
+#> #   scale_type <chr>, reversed <lgl>, include_zero <lgl>
+```
+
+### Sort directives
+
+``` r
+sorts <- twb_sheet_sorts(parser)
+head(sorts)
+#> # A tibble: 0 × 6
+#> # ℹ 6 variables: sheet <chr>, field_ref <chr>, field_clean <chr>,
+#> #   datasource <chr>, sort_order <chr>, sort_by <chr>
+```
+
+## Dashboard intelligence
+
+### Sheet positions
+
+``` r
+db_sheets <- twb_dashboard_sheets(parser)
+head(db_sheets)
+#> # A tibble: 0 × 7
+#> # ℹ 7 variables: dashboard <chr>, sheet <chr>, zone_id <chr>, x <int>, y <int>,
+#> #   w <int>, h <int>
+```
+
+`x`, `y`, `w`, `h` are pixel coordinates within the dashboard canvas.
+
+### Zone layout tree
+
+``` r
+layout <- twb_dashboard_layout(parser)
+head(layout)
+#> # A tibble: 0 × 10
+#> # ℹ 10 variables: dashboard <chr>, zone_id <chr>, parent_zone_id <chr>,
+#> #   component_type <chr>, target <chr>, layout_type <chr>, x <int>, y <int>,
+#> #   w <int>, h <int>
+```
+
+`parent_zone_id` links child zones to their container; root zones have
+`NA`. `component_type` is one of `"worksheet"`, `"filter"`,
+`"container"`, `"legend"`, `"parameter_control"`, `"text"`, `"image"`,
+or `"blank"`.
+
+### Actions
+
+``` r
+actions <- twb_dashboard_actions(parser)
+head(actions)
+#> # A tibble: 0 × 6
+#> # ℹ 6 variables: action_name <chr>, action_type <chr>, source_sheets <chr>,
+#> #   target_sheet <chr>, run_on <chr>, url <chr>
+```
+
+`action_type` is `"filter"`, `"url"`, `"highlight"`, or `"parameter"`.
+`source_sheets` is a comma-separated list; `url` is populated for URL
+actions.
 
 ## Relationships and Joins
 

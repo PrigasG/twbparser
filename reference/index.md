@@ -30,6 +30,30 @@ documents.
 - [`twb_dashboard_summary()`](https://PrigasG.github.io/twbparser/reference/twb_dashboard_summary.md)
   : Per-dashboard summary (filters count and chart types).
 
+## Worksheet intelligence
+
+Per-worksheet shelf, filter, axis, and sort details.
+
+- [`twb_sheet_shelves()`](https://PrigasG.github.io/twbparser/reference/twb_sheet_shelves.md)
+  : Extract field-to-shelf assignments for worksheets
+- [`twb_sheet_filters()`](https://PrigasG.github.io/twbparser/reference/twb_sheet_filters.md)
+  : Extract detailed filter configuration for worksheets
+- [`twb_sheet_axes()`](https://PrigasG.github.io/twbparser/reference/twb_sheet_axes.md)
+  : Extract axis configuration for worksheets
+- [`twb_sheet_sorts()`](https://PrigasG.github.io/twbparser/reference/twb_sheet_sorts.md)
+  : Extract sort configuration for worksheets
+
+## Dashboard intelligence
+
+Per-dashboard zone layout, sheet positions, and actions.
+
+- [`twb_dashboard_sheets()`](https://PrigasG.github.io/twbparser/reference/twb_dashboard_sheets.md)
+  : List worksheets embedded in each dashboard
+- [`twb_dashboard_layout()`](https://PrigasG.github.io/twbparser/reference/twb_dashboard_layout.md)
+  : Full layout of dashboard zones with container hierarchy
+- [`twb_dashboard_actions()`](https://PrigasG.github.io/twbparser/reference/twb_dashboard_actions.md)
+  : Extract dashboard and workbook actions
+
 ## TWBX helpers
 
 - [`twbx_list()`](https://PrigasG.github.io/twbparser/reference/twbx_list.md)

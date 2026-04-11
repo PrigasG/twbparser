@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,50 @@
       <small>Source: <a href="https://github.com/PrigasG/twbparser/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.4.0" id="twbparser-040">twbparser 0.4.0<a class="anchor" aria-label="anchor" href="#twbparser-040"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-0"></a></h3>
+<div class="section level4">
+<h4 id="per-worksheet-intelligence-0-4-0">Per-worksheet intelligence<a class="anchor" aria-label="anchor" href="#per-worksheet-intelligence-0-4-0"></a></h4>
+<ul><li>
+<code><a href="../reference/twb_sheet_shelves.html">twb_sheet_shelves()</a></code> — extract every field placed on rows, cols, or an encoding shelf (color, size, label, detail, tooltip) for one or all worksheets.</li>
+<li>
+<code><a href="../reference/twb_sheet_filters.html">twb_sheet_filters()</a></code> — extract worksheet-level filters including categorical member lists, range min/max, and include/exclude mode.</li>
+<li>
+<code><a href="../reference/twb_sheet_axes.html">twb_sheet_axes()</a></code> — extract per-axis configuration: reversed, include-zero, and scale type (linear, log, …).</li>
+<li>
+<code><a href="../reference/twb_sheet_sorts.html">twb_sheet_sorts()</a></code> — extract sort directives with sort direction and method (field aggregate, alphabetic, manual, data-source order).</li>
+<li>All four are exposed on <code>TwbParser</code> as <code>get_sheet_shelves()</code>, <code>get_sheet_filters()</code>, <code>get_sheet_axes()</code>, <code>get_sheet_sorts()</code> and as no-parens active bindings (<code>parser$sheet_shelves</code>, etc.).</li>
+</ul></div>
+<div class="section level4">
+<h4 id="per-dashboard-intelligence-0-4-0">Per-dashboard intelligence<a class="anchor" aria-label="anchor" href="#per-dashboard-intelligence-0-4-0"></a></h4>
+<ul><li>
+<code><a href="../reference/twb_dashboard_sheets.html">twb_dashboard_sheets()</a></code> — list every worksheet placed on a dashboard with zone id and pixel position (x, y, w, h).</li>
+<li>
+<code><a href="../reference/twb_dashboard_layout.html">twb_dashboard_layout()</a></code> — full zone tree including parent zone id, component type (worksheet / filter / container / …), layout type (tiled / floating), and pixel bounds.</li>
+<li>
+<code><a href="../reference/twb_dashboard_actions.html">twb_dashboard_actions()</a></code> — extract filter and URL actions with source and target sheets, run-on trigger type, and URL value.</li>
+<li>All three are exposed on <code>TwbParser</code> as <code>get_dashboard_sheets()</code>, <code>get_dashboard_layout()</code>, <code>get_dashboard_actions()</code> and as active bindings.</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="bug-fixes-0-4-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-4-0"></a></h3>
+<ul><li>
+<code><a href="../reference/plot_relationship_graph.html">plot_relationship_graph()</a></code>: fixed edge direction — the <code>from</code> vertex was incorrectly built from <code>right_field</code> instead of <code>left_field</code>.</li>
+<li>
+<code><a href="../reference/plot_source_join_graph.html">plot_source_join_graph()</a></code>: fixed reference to non-existent columns <code>left_source</code> / <code>right_source</code>; replaced with <code>left_table</code> / <code>right_table</code>.</li>
+<li>
+<code><a href="../reference/infer_implicit_relationships.html">infer_implicit_relationships()</a></code>: added deduplication before the field-name self-join to prevent Cartesian explosion when many tables share a field name; added <code>relationship = "many-to-many"</code> to suppress the dplyr 1.1+ warning.</li>
+<li>Fixed <code>integer_</code> typo in <code>insights.R</code> that caused errors when parsing dashboard zone dimensions.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="internal-0-4-0">Internal<a class="anchor" aria-label="anchor" href="#internal-0-4-0"></a></h3>
+<ul><li>Canonical <code>.twb_clean_table()</code> and <code>.twb_clean_field()</code> helpers added to <code>utils.R</code>, replacing four independent copies scattered across <code>fields.R</code>, <code>calculated_fields.R</code>, <code>relationships.R</code>, <code>joins.R</code>, and <code>dependency_graph.R</code>.</li>
+<li>
+<code>.twb_clean_field()</code> now correctly strips Tableau column-instance prefixes (<code>none:Category:nk</code> → <code>Category</code>) and returns unnamed vectors.</li>
+</ul><hr></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.1" id="twbparser-031">twbparser 0.3.1<a class="anchor" aria-label="anchor" href="#twbparser-031"></a></h2><p class="text-muted">CRAN release: 2025-12-10</p>
 <ul><li>Remove use of <code><a href="https://rdrr.io/r/base/bindenv.html" class="external-link">unlockBinding()</a></code> in internal TwbParser active-binding helpers. This avoids CRAN’s “possibly unsafe call” NOTE while keeping the same user-facing behaviour for no-parens properties (overview, pages, datasources, etc.).</li>

@@ -4,12 +4,26 @@ Return the TWBX manifest (if available).
 Return TWBX extract entries.
 Return TWBX image entries.
 Extract files from the TWBX to disk.
+Fields placed on visual shelves for one or all worksheets.
+Detailed filter configuration for one or all worksheets.
+Axis configuration for one or all worksheets.
+Sort directives for one or all worksheets.
+Worksheets embedded in one or all dashboards.
+Full zone layout with container hierarchy.
+Dashboard and workbook actions.
 Validate relationships; optionally stop on failure.
 Print a concise summary of parsed content."><meta property="og:description" content="Initialize the parser from a .twb or .twbx path.
 Return the TWBX manifest (if available).
 Return TWBX extract entries.
 Return TWBX image entries.
 Extract files from the TWBX to disk.
+Fields placed on visual shelves for one or all worksheets.
+Detailed filter configuration for one or all worksheets.
+Axis configuration for one or all worksheets.
+Sort directives for one or all worksheets.
+Worksheets embedded in one or all dashboards.
+Full zone layout with container hierarchy.
+Dashboard and workbook actions.
 Validate relationships; optionally stop on failure.
 Print a concise summary of parsed content."><meta property="og:image" content="https://PrigasG.github.io/twbparser/logo.png"></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -19,7 +33,7 @@ Print a concise summary of parsed content."><meta property="og:image" content="h
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +64,13 @@ Print a concise summary of parsed content."><meta property="og:image" content="h
 <p>Return TWBX extract entries.</p>
 <p>Return TWBX image entries.</p>
 <p>Extract files from the TWBX to disk.</p>
+<p>Fields placed on visual shelves for one or all worksheets.</p>
+<p>Detailed filter configuration for one or all worksheets.</p>
+<p>Axis configuration for one or all worksheets.</p>
+<p>Sort directives for one or all worksheets.</p>
+<p>Worksheets embedded in one or all dashboards.</p>
+<p>Full zone layout with container hierarchy.</p>
+<p>Dashboard and workbook actions.</p>
 <p>Validate relationships; optionally stop on failure.</p>
 <p>Print a concise summary of parsed content.</p>
     </div>
@@ -81,6 +102,14 @@ Print a concise summary of parsed content."><meta property="og:image" content="h
 
 <dt id="arg-exdir">exdir<a class="anchor" aria-label="anchor" href="#arg-exdir"></a></dt>
 <dd><p>Output directory (defaults to parser's twbx dir or tempdir()).</p></dd>
+
+
+<dt id="arg-sheet">sheet<a class="anchor" aria-label="anchor" href="#arg-sheet"></a></dt>
+<dd><p>Optional worksheet name.</p></dd>
+
+
+<dt id="arg-dashboard">dashboard<a class="anchor" aria-label="anchor" href="#arg-dashboard"></a></dt>
+<dd><p>Optional dashboard name to filter by.</p></dd>
 
 
 <dt id="arg-error">error<a class="anchor" aria-label="anchor" href="#arg-error"></a></dt>
