@@ -1,31 +1,4 @@
 #' @keywords internal
-.j_clean_table <- function(x) {
-  if (is.null(x) || is.na(x)) {
-    return(NA_character_)
-  }
-  x <- gsub("^\\[.*?\\]\\.", "", x) # remove [Extract]. / [Connection].
-  x <- gsub("\\[|\\]", "", x) # remove brackets
-  x <- sub("_[0-9A-Fa-f]{32}$", "", x) # drop 32-hex suffix
-  x <- trimws(x)
-  if (!nzchar(x)) NA_character_ else x
-}
-
-#' @keywords internal
-.j_clean_field <- function(x) {
-  if (is.null(x) || is.na(x)) {
-    return(NA_character_)
-  }
-  x <- gsub("\\[|\\]", "", x) # strip brackets
-  x <- sub("^([^:]+:)+", "", x)
-  parts <- strsplit(x, "\\.", fixed = FALSE)[[1]]
-  parts <- parts[nzchar(parts)]
-  if (!length(parts)) {
-    return(NA_character_)
-  }
-  tail(parts, 1)
-}
-
-#' @keywords internal
 .j_field_from_expr <- function(node) {
   if (inherits(node, "xml_missing")) {
     return(NA_character_)
@@ -42,7 +15,7 @@
   raw <- cand[which.max(nchar(cand))]
   m <- stringr::str_extract_all(raw, "\\[[^\\]]+\\]")[[1]]
   token <- if (length(m)) m[length(m)] else raw
-  .j_clean_field(token)
+  .twb_clean_field(token)
 }
 
 #' Extract Tableau join clauses from \verb{<relation type="join">} nodes
@@ -99,10 +72,10 @@ extract_joins <- function(xml_doc) {
       op <- attr_safe_get(xml2::xml_attrs(cl), "op", "=")
       cols <- xml2::xml_find_all(cl, ".//column")
       if (length(cols) == 2) {
-        left_tbl <- .j_clean_table(attr_safe_get(xml2::xml_attrs(cols[[1]]), "table"))
-        left_fld <- .j_clean_field(attr_safe_get(xml2::xml_attrs(cols[[1]]), "name"))
-        right_tbl <- .j_clean_table(attr_safe_get(xml2::xml_attrs(cols[[2]]), "table"))
-        right_fld <- .j_clean_field(attr_safe_get(xml2::xml_attrs(cols[[2]]), "name"))
+        left_tbl <- .twb_clean_table(attr_safe_get(xml2::xml_attrs(cols[[1]]), "table"))
+        left_fld <- .twb_clean_field(attr_safe_get(xml2::xml_attrs(cols[[1]]), "name"))
+        right_tbl <- .twb_clean_table(attr_safe_get(xml2::xml_attrs(cols[[2]]), "table"))
+        right_fld <- .twb_clean_field(attr_safe_get(xml2::xml_attrs(cols[[2]]), "name"))
 
         tibble::tibble(
           join_type   = join_type,
@@ -132,8 +105,8 @@ extract_joins <- function(xml_doc) {
       }
 
       # Optional table hints on child expressions (rare)
-      lt <- .j_clean_table(xml2::xml_attr(kids[[1]], "table"))
-      rt <- .j_clean_table(xml2::xml_attr(kids[[2]], "table"))
+      lt <- .twb_clean_table(xml2::xml_attr(kids[[1]], "table"))
+      rt <- .twb_clean_table(xml2::xml_attr(kids[[2]], "table"))
 
       tibble::tibble(
         join_type   = join_type,

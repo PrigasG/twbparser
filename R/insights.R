@@ -206,7 +206,7 @@ NULL
         page_type = "story", page_name = xml2::xml_attr(s, "name"),
         component_type = character(), zone_id = character(), target = character(),
         field = character(), presentation = character(),
-        x = integer(), y = integer(), w = integer(), h = integer_
+        x = integer(), y = integer(), w = integer(), h = integer()
       )
     )
     out <- purrr::map_dfr(seq_along(pts), function(i) {

@@ -1,11 +1,4 @@
 #' @keywords internal
-.clean_name <- function(x) {
-  x <- gsub("\\[|\\]", "", x) # strip brackets
-  x <- sub("_[0-9A-Fa-f]{32}$", "", x) # drop 32-char Tableau suffix
-  x
-}
-
-#' @keywords internal
 .normalize_token <- function(tok) {
   if (is.na(tok) || !nzchar(tok)) {
     return(NA_character_)
@@ -205,13 +198,13 @@ plot_source_join_graph <- function(joins_df, relationships_df = NULL, seed = NUL
 
     rel_edges <- if (has_operator) {
       relationships_df |>
-        dplyr::transmute(from = left_source, to = right_source, label = operator) |>
+        dplyr::transmute(from = left_table, to = right_table, label = operator) |>
         dplyr::distinct()
     } else {
       relationships_df |>
         dplyr::transmute(
-          from = left_source,
-          to = right_source,
+          from  = left_table,
+          to    = right_table,
           label = paste0(left_field, " = ", right_field)
         ) |>
         dplyr::distinct()
@@ -264,8 +257,8 @@ plot_relationship_graph <- function(relationships_df, seed = NULL) {
 
   edges <- relationships_df |>
     dplyr::mutate(
-      from = paste0(.clean_name(left_table), ".", right_field),
-      to = paste0(.clean_name(right_table), ".", right_field),
+      from  = paste0(.twb_clean_table(left_table),  ".", left_field),
+      to    = paste0(.twb_clean_table(right_table), ".", right_field),
       label = if ("operator" %in% names(relationships_df)) operator else "="
     ) |>
     dplyr::select(from, to, label) |>

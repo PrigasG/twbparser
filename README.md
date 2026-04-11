@@ -8,7 +8,7 @@
 [![License:MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/PrigasG/twbparser/blob/master/LICENSE)
 [![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
-Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationships, fields, and calculated fields**, plus inspect and unpack **TWBX** assets. Built for large workbooks and Shiny integration.
+Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationships, fields, calculated fields, worksheet configuration, and dashboard structure**, plus inspect and unpack **TWBX** assets. Built for large workbooks and Shiny integration.
 
 ## Features
 
@@ -16,6 +16,8 @@ Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationshi
 -   **Relationships & joins**: parse legacy joins and modern (2020.2+) relationships
 -   **Calculated fields / parameters**: list formulas, datatypes, roles, and parameter metadata
 -   **Datasources**: connection classes/targets, inferred locations, field counts
+-   **Worksheet intelligence**: shelves (rows/cols/encodings), filters, axes, and sorts per worksheet
+-   **Dashboard intelligence**: sheet positions, full zone layout tree, and filter/URL actions
 -   **Dependency graph**: build/plot field dependency DAGs
 -   **TWBX assets**: list/extract images, extracts, text files, etc.
 -   **Ergonomics**: `parser$summary` (no parens), `parser$overview`, `parser$pages`, `parser$pages_summary`
@@ -102,6 +104,37 @@ twb_colors(parser)
 
 ```
 
+Worksheet-level detail (new in 0.4.0)
+
+```r
+# Fields on rows, cols, color, size, label … per worksheet
+parser$get_sheet_shelves()
+# or: twb_sheet_shelves(parser, sheet = "Sales")
+
+# Worksheet filters — categorical members, range min/max
+parser$get_sheet_filters()
+
+# Axis configuration — reversed, include-zero, scale type
+parser$get_sheet_axes()
+
+# Sort directives — direction and method
+parser$get_sheet_sorts()
+```
+
+Dashboard structure (new in 0.4.0)
+
+```r
+# Which sheets are on a dashboard and where?
+parser$get_dashboard_sheets()
+# or: twb_dashboard_sheets(parser, dashboard = "Overview")
+
+# Full zone tree — parent zones, component types, tiled vs floating
+parser$get_dashboard_layout()
+
+# Filter and URL actions — source/target sheets, trigger, URL
+parser$get_dashboard_actions()
+```
+
 Relationships/Joins 
 
 ```r
@@ -150,11 +183,11 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 -   Power BI: Export calculated field logic to replicate measures in DAX.
 -   Data lineage: Combine with DiagrammeR or visNetwork for workflow diagrams.
 
-## What’s new (0.3.1)
+## What’s new (0.4.0)
 
-- Page insights (pages, composition, summaries), filter positions on dashboards
-- No-parens parser$summary plus read-only properties (overview, pages, pages_summary, dashboard_summary)
-- Calculated fields exclude parameters by default; opt-in with include_parameters = TRUE
+- **Worksheet intelligence**: `twb_sheet_shelves()`, `twb_sheet_filters()`, `twb_sheet_axes()`, `twb_sheet_sorts()` — extract the full shelf configuration, filter predicates, axis settings, and sort rules for every worksheet
+- **Dashboard intelligence**: `twb_dashboard_sheets()`, `twb_dashboard_layout()`, `twb_dashboard_actions()` — inspect which sheets appear where, the full zone hierarchy, and all filter/URL actions
+- **Bug fixes**: corrected edge direction in `plot_relationship_graph()`, fixed column references in `plot_source_join_graph()`, eliminated Cartesian-product explosion in `infer_implicit_relationships()`
 
 ## Contributing
 

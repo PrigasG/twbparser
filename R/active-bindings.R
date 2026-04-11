@@ -91,6 +91,15 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind("twbx_extracts_tbl",  wrap_cache("twbx_extracts_tbl",  function() x$get_twbx_extracts()))
   rebind("twbx_images_tbl",    wrap_cache("twbx_images_tbl",    function() x$get_twbx_images()))
 
+  ## Phase 2/3: sheet & dashboard intelligence
+  rebind("sheet_shelves",      wrap_cache("sheet_shelves",      function() x$get_sheet_shelves()))
+  rebind("sheet_filters",      wrap_cache("sheet_filters",      function() x$get_sheet_filters()))
+  rebind("sheet_axes",         wrap_cache("sheet_axes",         function() x$get_sheet_axes()))
+  rebind("sheet_sorts",        wrap_cache("sheet_sorts",        function() x$get_sheet_sorts()))
+  rebind("dashboard_sheets",   wrap_cache("dashboard_sheets",   function() x$get_dashboard_sheets()))
+  rebind("dashboard_layout",   wrap_cache("dashboard_layout",   function() x$get_dashboard_layout()))
+  rebind("dashboard_actions",  wrap_cache("dashboard_actions",  function() x$get_dashboard_actions()))
+
   ## Validation snapshot (read-only)
   rebind(
     "validation",

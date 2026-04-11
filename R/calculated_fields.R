@@ -3,18 +3,6 @@
   ifelse(is.na(x), NA_character_, gsub("\\[|\\]", "", x))
 }
 
-#' @keywords internal
-.clean_table <- function(x) {
-  if (is.null(x) || is.na(x)) {
-    return(NA_character_)
-  }
-  x <- gsub("^\\[.*?\\]\\.", "", x) # drop [Extract]. / [Connection].
-  x <- gsub("\\[|\\]", "", x) # strip [ ]
-  x <- sub("_[0-9A-Fa-f]{32}$", "", x) # drop 32-hex suffix
-  x <- trimws(x)
-  if (!nzchar(x)) NA_character_ else x
-}
-
 #' Extract calculated fields from a TWB
 #'
 #' Finds columns that contain \code{<calculation>}nodes and returns metadata and
@@ -103,7 +91,7 @@ extract_calculated_fields <- function(xml_doc, include_parameters = FALSE) {
         calc_class            = calc_class,
         is_table_calc         = is_tbl,
         table                 = raw_tbl,
-        table_clean           = .clean_table(raw_tbl)
+        table_clean           = .twb_clean_table(raw_tbl)
       )
     })
   }) |>
@@ -181,7 +169,7 @@ extract_parameters <- function(xml_doc) {
         current_value         = cur_val,
         is_parameter          = TRUE,
         table                 = raw_tbl,
-        table_clean           = .clean_table(raw_tbl)
+        table_clean           = .twb_clean_table(raw_tbl)
       )
     })
   }) |>
@@ -251,7 +239,7 @@ extract_raw_fields <- function(xml_doc) {
         is_hidden             = attr_safe_get(a, "hidden", "false") %in% c("true", "1"),
         is_parameter          = FALSE,
         table                 = raw_tbl,
-        table_clean           = .clean_table(raw_tbl)
+        table_clean           = .twb_clean_table(raw_tbl)
       )
     })
   }) |>

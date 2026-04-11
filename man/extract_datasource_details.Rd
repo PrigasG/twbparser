@@ -32,7 +32,7 @@ if (nzchar(twb) && file.exists(twb)) {
   head(res$data_sources)
 }
 
-\dontshow{if (nzchar(system.file("extdata","test_for_zip.twbx", package = "twbparser"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (nzchar(system.file("extdata","test_for_zip.twbx", package = "twbparser"))) withAutoprint(\{ # examplesIf}
 # Alternative: from a tiny .twbx (guarded)
 twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
 if (nzchar(twbx) && file.exists(twbx)) {

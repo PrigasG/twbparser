@@ -16,7 +16,7 @@ Tibble with columns: \code{name}, \code{size_bytes}, \code{modified}, \code{type
 List contents of a Tableau .twbx
 }
 \examples{
-\dontshow{if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (nzchar(system.file("extdata", "test_for_zip.twbx", package = "twbparser"))) withAutoprint(\{ # examplesIf}
 twbx <- system.file("extdata", "test_for_zip.twbx", package = "twbparser")
 twbx_list(twbx)
 \dontshow{\}) # examplesIf}

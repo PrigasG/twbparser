@@ -197,15 +197,59 @@ TwbParser <- R6::R6Class(
     get_pages            = function() safe_call(.ins_pages(self$xml_doc), tibble::tibble()),
     get_pages_summary    = function() safe_call(.ins_pages_summary(self$xml_doc), tibble::tibble()),
     get_page_composition = function(name) {
-      stopifnot(is.character(name), length(name)==1L)
-      safe_call(.ins_page_composition(self$xml_doc, name), tibble::tibble()) },
-    get_charts           = function() safe_call(.ins_charts(self$xml_doc), tibble::tibble()),
-    get_colors           = function() safe_call(.ins_colors(self$xml_doc), tibble::tibble()),
-    get_dashboards       = function() safe_call(.ins_dashboards(self$xml_doc), tibble::tibble()),
+      stopifnot(is.character(name), length(name) == 1L)
+      safe_call(.ins_page_composition(self$xml_doc, name), tibble::tibble())
+    },
+    get_charts            = function() safe_call(.ins_charts(self$xml_doc), tibble::tibble()),
+    get_colors            = function() safe_call(.ins_colors(self$xml_doc), tibble::tibble()),
+    get_dashboards        = function() safe_call(.ins_dashboards(self$xml_doc), tibble::tibble()),
     get_dashboard_filters = function(dashboard = NULL) {
       safe_call(.ins_dashboard_filters(self$xml_doc, dashboard = dashboard), tibble::tibble())
     },
-    get_dashboard_summary= function() safe_call(.ins_dashboard_summary(self$xml_doc), tibble::tibble()),
+    get_dashboard_summary = function() safe_call(.ins_dashboard_summary(self$xml_doc), tibble::tibble()),
+
+    # --- Phase 2/3: sheet & dashboard intelligence ---
+    #' @description Fields placed on visual shelves for one or all worksheets.
+    #' @param sheet Optional worksheet name.
+    get_sheet_shelves = function(sheet = NULL) {
+      safe_call(.ins_sheet_shelves(self$xml_doc, sheet), .empty_shelves())
+    },
+
+    #' @description Detailed filter configuration for one or all worksheets.
+    #' @param sheet Optional worksheet name.
+    get_sheet_filters = function(sheet = NULL) {
+      safe_call(.ins_sheet_filters(self$xml_doc, sheet), .empty_filters())
+    },
+
+    #' @description Axis configuration for one or all worksheets.
+    #' @param sheet Optional worksheet name.
+    get_sheet_axes = function(sheet = NULL) {
+      safe_call(.ins_sheet_axes(self$xml_doc, sheet), .empty_axes())
+    },
+
+    #' @description Sort directives for one or all worksheets.
+    #' @param sheet Optional worksheet name.
+    get_sheet_sorts = function(sheet = NULL) {
+      safe_call(.ins_sheet_sorts(self$xml_doc, sheet), .empty_sorts())
+    },
+
+    #' @description Worksheets embedded in one or all dashboards.
+    #' @param dashboard Optional dashboard name.
+    get_dashboard_sheets = function(dashboard = NULL) {
+      safe_call(.ins_dashboard_sheets(self$xml_doc, dashboard), tibble::tibble())
+    },
+
+    #' @description Full zone layout with container hierarchy.
+    #' @param dashboard Optional dashboard name.
+    get_dashboard_layout = function(dashboard = NULL) {
+      safe_call(.ins_dashboard_layout(self$xml_doc, dashboard), .empty_layout())
+    },
+
+    #' @description Dashboard and workbook actions.
+    #' @param dashboard Optional dashboard name to filter by.
+    get_dashboard_actions = function(dashboard = NULL) {
+      safe_call(.ins_dashboard_actions(self$xml_doc, dashboard), .empty_actions())
+    },
 
 
 

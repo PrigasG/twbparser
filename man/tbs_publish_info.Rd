@@ -28,7 +28,7 @@ A tibble with columns like \code{content_id}, \code{site}, \code{project}, \code
 Returns an empty tibble when credentials are missing or the item is not found.
 }
 \examples{
-\dontshow{if (all(nzchar(Sys.getenv(c("TABLEAU_BASE_URL","TABLEAU_SITE","TABLEAU_PAT"))))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{if (all(nzchar(Sys.getenv(c("TABLEAU_BASE_URL","TABLEAU_SITE","TABLEAU_PAT"))))) withAutoprint(\{ # examplesIf}
 tbs_publish_info("abc-123")
 \dontshow{\}) # examplesIf}
 }

@@ -18,6 +18,10 @@ An R6 class generator.
 
 \item{exdir}{Output directory (defaults to parser's twbx dir or tempdir()).}
 
+\item{sheet}{Optional worksheet name.}
+
+\item{dashboard}{Optional dashboard name to filter by.}
+
 \item{error}{If \code{TRUE}, \code{stop()} when validation fails.}
 }
 \description{
@@ -30,6 +34,20 @@ Return TWBX extract entries.
 Return TWBX image entries.
 
 Extract files from the TWBX to disk.
+
+Fields placed on visual shelves for one or all worksheets.
+
+Detailed filter configuration for one or all worksheets.
+
+Axis configuration for one or all worksheets.
+
+Sort directives for one or all worksheets.
+
+Worksheets embedded in one or all dashboards.
+
+Full zone layout with container hierarchy.
+
+Dashboard and workbook actions.
 
 Validate relationships; optionally stop on failure.
 

@@ -19,3 +19,5 @@ cran_examples_sanitizer.R
 ^check/
 ^twbparser.Rcheck$
 ^\.Rd2pdf20656$
+^\.git$
+^\.claude$
