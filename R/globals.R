@@ -27,5 +27,12 @@ utils::globalVariables(c(
   # dashboard_details
   "action_name", "action_type", "source_sheets", "target_sheet", "run_on",
   "url", "layout_type", "parent_zone_id", "component_type", "zone_id",
-  "sheet"
+  "sheet",
+  # analytics (Phase 4)
+  "is_table_calc",
+  "calc_type", "lod_type", "dep_depth", "n_deps",
+  "n_appearances", "context",
+  "workbook_file", "n_datasources", "n_worksheets", "n_dashboards",
+  "n_calculated_fields", "n_parameters", "generated_at",
+  "formula_pretty"
 ))

@@ -2,16 +2,28 @@
 % Please edit documentation in R/sql.R
 \name{twb_initial_sql}
 \alias{twb_initial_sql}
-\title{Extract Initial SQL statements from connections (if present)}
+\title{Extract Initial SQL statements from Tableau connections}
 \usage{
-twb_initial_sql(xml_doc)
+twb_initial_sql(x)
 }
 \arguments{
-\item{xml_doc}{An xml2 document for a .twb}
+\item{x}{A \code{TwbParser} object \strong{or} an \code{xml2} document.}
 }
 \value{
-tibble with connection_id, initial_sql
+A tibble with columns:
+\describe{
+\item{connection_id}{Name or caption of the parent connection element.}
+\item{initial_sql}{SQL text of the initial statement.}
+}
 }
 \description{
-Extract Initial SQL statements from connections (if present)
+Returns any \verb{<initial-sql>} nodes found inside connection or
+named-connection elements.
+}
+\examples{
+twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+stopifnot(nzchar(twb), file.exists(twb))
+xml <- xml2::read_xml(twb)
+twb_initial_sql(xml)
+
 }

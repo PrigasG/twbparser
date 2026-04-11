@@ -251,7 +251,52 @@ TwbParser <- R6::R6Class(
       safe_call(.ins_dashboard_actions(self$xml_doc, dashboard), .empty_actions())
     },
 
+    # --- Phase 4: analytics ---
 
+    #' @description Calculated field complexity classifications.
+    #' @param include_parameters Logical; include parameter fields. Default `FALSE`.
+    get_calc_complexity = function(include_parameters = FALSE) {
+      safe_call(
+        twb_calc_complexity(self$xml_doc, include_parameters = include_parameters),
+        .empty_calc_complexity()
+      )
+    },
+
+    #' @description Field usage matrix across worksheets.
+    #' @param include_filters Include filter appearances. Default `TRUE`.
+    #' @param include_shelves Include shelf appearances. Default `TRUE`.
+    #' @param wide Return wide format (one col per sheet). Default `FALSE`.
+    get_field_usage = function(include_filters  = TRUE,
+                               include_shelves  = TRUE,
+                               wide             = FALSE) {
+      safe_call(
+        twb_field_usage(self$xml_doc,
+                        include_filters = include_filters,
+                        include_shelves = include_shelves,
+                        wide            = wide),
+        .empty_field_usage()
+      )
+    },
+
+    #' @description Full replication brief for the workbook or a single dashboard.
+    #' @param dashboard Optional dashboard name to scope the brief.
+    #' @param include_sql Include custom SQL blocks. Default `TRUE`.
+    #' @param include_formulas Add `formula_pretty` to calculated fields.
+    #'   Default `TRUE`.
+    #' @param format `"list"` (default) or `"text"`.
+    get_replication_brief = function(dashboard        = NULL,
+                                     include_sql      = TRUE,
+                                     include_formulas = TRUE,
+                                     format           = c("list", "text")) {
+      safe_call(
+        twb_replication_brief(self,
+                              dashboard        = dashboard,
+                              include_sql      = include_sql,
+                              include_formulas = include_formulas,
+                              format           = match.arg(format)),
+        list()
+      )
+    },
 
     # --- validator bridge ---
     #' @description Validate relationships; optionally stop on failure.

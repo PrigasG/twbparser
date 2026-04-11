@@ -1,0 +1,576 @@
+% twbparser R Package Cheatsheet
+% Compile with: pdflatex twbparser-cheatsheet.tex (twice)
+% Requires: geometry, multicol, tcolorbox, listings, xcolor, hyperref, fontenc, inputenc
+
+\documentclass[10pt,landscape]{article}
+
+% ---- Page geometry -----------------------------------------------------------
+\usepackage[
+  landscape,
+  top=6mm, bottom=6mm,
+  left=6mm, right=6mm,
+  includehead=false
+]{geometry}
+
+% ---- Encoding & fonts --------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+
+% ---- Colours -----------------------------------------------------------------
+\usepackage{xcolor}
+\definecolor{twbBlue}   {HTML}{1F4E79}   % deep navy
+\definecolor{twbMid}    {HTML}{2E75B6}   % mid blue
+\definecolor{twbLight}  {HTML}{DDEEFF}   % pale blue fill
+\definecolor{twbGreen}  {HTML}{1E6B3C}   % dark green
+\definecolor{twbGreenL} {HTML}{D6F0E0}   % pale green fill
+\definecolor{twbOrange} {HTML}{BF4A00}   % orange / warning
+\definecolor{twbOrangeL}{HTML}{FFE8D6}   % pale orange
+\definecolor{twbPurple} {HTML}{5B2D8E}   % purple
+\definecolor{twbPurpleL}{HTML}{EDE0F5}   % pale purple
+\definecolor{twbGray}   {HTML}{4A4A4A}   % body text
+\definecolor{codeBack}  {HTML}{F5F5F5}   % code background
+\definecolor{codeFore}  {HTML}{1A1A1A}   % code text
+
+% ---- Code listings -----------------------------------------------------------
+\usepackage{listings}
+\lstset{
+  language=R,
+  basicstyle=\ttfamily\scriptsize\color{codeFore},
+  backgroundcolor=\color{codeBack},
+  frame=none,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  keepspaces=true,
+  showstringspaces=false,
+  keywordstyle=\color{twbMid}\bfseries,
+  commentstyle=\color{twbGray}\itshape,
+  stringstyle=\color{twbGreen},
+  literate={<-}{{{\color{twbOrange}<-}}}2
+            {|}{{{\color{twbOrange}|}}}1,
+}
+
+% ---- Boxes -------------------------------------------------------------------
+\usepackage[most]{tcolorbox}
+
+% Section header box
+\newtcolorbox{secbox}[2][twbBlue]{
+  colback=#1, colframe=#1,
+  coltext=white,
+  fonttitle=\bfseries\small,
+  title=#2,
+  top=1pt, bottom=1pt, left=3pt, right=3pt,
+  boxsep=0pt, arc=2pt,
+  before skip=3pt, after skip=2pt
+}
+
+% Sub-section box (lighter fill, dark border)
+\newtcolorbox{subbox}[2][twbLight]{
+  colback=#1, colframe=twbMid,
+  coltext=twbGray,
+  fonttitle=\bfseries\scriptsize\color{twbBlue},
+  title=#2,
+  top=1pt, bottom=1pt, left=3pt, right=3pt,
+  boxsep=0pt, arc=2pt,
+  before skip=2pt, after skip=1pt,
+  leftrule=2pt, rightrule=0pt, toprule=0pt, bottomrule=0pt
+}
+
+% Tip / note box
+\newtcolorbox{tipbox}{
+  colback=twbOrangeL, colframe=twbOrange,
+  coltext=twbGray,
+  fonttitle=\bfseries\scriptsize\color{twbOrange},
+  title=TIP,
+  top=1pt, bottom=1pt, left=3pt, right=3pt,
+  boxsep=0pt, arc=2pt,
+  before skip=2pt, after skip=1pt,
+  leftrule=2pt, rightrule=0pt, toprule=0pt, bottomrule=0pt
+}
+
+% ---- Layout helpers ----------------------------------------------------------
+\usepackage{multicol}
+\setlength{\columnsep}{4mm}
+\setlength{\columnseprule}{0.3pt}
+\def\columnseprulecolor{\color{twbMid!40}}
+
+\usepackage{parskip}
+\setlength{\parskip}{1pt}
+\setlength{\parindent}{0pt}
+
+\usepackage{enumitem}
+\setlist[itemize]{
+  leftmargin=8pt, itemsep=0pt, parsep=0pt, topsep=0pt,
+  label=\textcolor{twbMid}{\textbullet}
+}
+
+% ---- Hyperref ----------------------------------------------------------------
+\usepackage{hyperref}
+\hypersetup{colorlinks, urlcolor=twbMid, linkcolor=twbMid}
+
+% ---- Helpers -----------------------------------------------------------------
+\newcommand{\fn}[1]{\texttt{\textbf{\color{twbBlue}#1}}}
+\newcommand{\pkg}[1]{\texttt{\color{twbGreen}#1}}
+\newcommand{\ret}[1]{\textit{\scriptsize\color{twbGray}→ #1}}
+\newcommand{\opt}[1]{\textcolor{twbOrange}{\texttt{#1}}}
+\newcommand{\sep}{\vspace{1pt}\hrule\vspace{2pt}}
+
+\pagestyle{empty}
+
+% ==============================================================================
+\begin{document}
+% ==============================================================================
+
+% ---- Header ------------------------------------------------------------------
+\begin{tcolorbox}[
+  colback=twbBlue, colframe=twbBlue,
+  coltext=white, arc=3pt,
+  top=4pt, bottom=4pt, left=6pt, right=6pt,
+  before skip=0pt, after skip=4pt
+]
+  \begin{minipage}{0.72\linewidth}
+    {\Large\bfseries twbparser}\quad
+    {\normalsize\color{twbLight} v0.4.0 \quad|\quad Parse Tableau .twb/.twbx files into tidy data}\\[1pt]
+    {\scriptsize\color{twbLight}%
+      \texttt{pak::pak("PrigasG/twbparser")} \quad
+      \texttt{devtools::install\_github("PrigasG/twbparser")} \quad
+      \href{https://prigasg.github.io/twbparser/}{prigasg.github.io/twbparser}}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.26\linewidth}\raggedleft
+    {\scriptsize\color{twbLight}
+      All \texttt{twb\_*()} functions accept\\
+      a \pkg{TwbParser} object \textbf{or} an \texttt{xml2} document.\\
+      Active bindings available as \texttt{parser\$property}.}
+  \end{minipage}
+\end{tcolorbox}
+
+% ---- Three-column body -------------------------------------------------------
+\begin{multicols}{3}
+
+%% ============================================================
+%% COLUMN 1
+%% ============================================================
+
+% ---- Getting Started ---------------------------------------------------------
+\begin{secbox}[twbBlue]{Getting Started}
+\end{secbox}
+
+\begin{lstlisting}
+library(twbparser)
+
+# Parse a .twb or .twbx file
+parser <- TwbParser$new("dashboard.twbx")
+
+# Quick console summary (no parens needed)
+parser$summary
+
+# 1-row overview tibble
+parser$overview
+\end{lstlisting}
+
+\begin{subbox}[twbLight]{Key active bindings (no parens)}
+\begin{lstlisting}
+parser$overview          # 1-row summary tibble
+parser$pages             # all pages
+parser$pages_summary     # per-page counts
+parser$dashboard_summary # per-dashboard stats
+parser$datasources       # datasource details
+parser$parameters_tbl    # parameter fields
+parser$fields_tbl        # raw fields
+\end{lstlisting}
+\end{subbox}
+
+\sep
+
+% ---- Data Model --------------------------------------------------------------
+\begin{secbox}[twbMid]{Data Model}
+\end{secbox}
+
+\textbf{Datasources \& parameters}
+
+\begin{lstlisting}
+# Named connections (server, file, db ...)
+parser$get_datasources()      # -> tibble
+parser$get_parameters()       # -> tibble
+parser$get_datasources_all()  # combined
+
+# Detect published vs. embedded sources
+twb_published_refs(parser)
+\end{lstlisting}
+
+\textbf{Fields}
+
+\begin{lstlisting}
+# All raw (non-calc) fields
+parser$get_fields()
+
+# Calculated fields + formulas
+parser$get_calculated_fields(
+  pretty           = TRUE,   # add formula_pretty
+  strip_brackets   = FALSE,
+  wrap             = 100L,
+  include_parameters = FALSE
+)
+
+# Low-level helpers (accept xml_doc)
+extract_raw_fields(xml_doc)
+extract_calculated_fields(xml_doc)
+extract_parameters(xml_doc)
+extract_columns_with_table_source(xml_doc)
+\end{lstlisting}
+
+\textbf{SQL}
+
+\begin{lstlisting}
+twb_custom_sql(parser)   # Custom SQL blocks
+twb_initial_sql(parser)  # Initial SQL per conn
+\end{lstlisting}
+
+\sep
+
+% ---- Relationships & Joins ---------------------------------------------------
+\begin{secbox}[twbGreen]{Relationships \& Joins}
+\end{secbox}
+
+\begin{lstlisting}
+# Modern logical-model relationships (2020.2+)
+parser$get_relationships()   # -> tibble
+
+# Legacy SQL joins
+parser$get_joins()           # -> tibble
+parser$get_relations()       # raw <relation> nodes
+
+# Infer implicit pairs by field-name / role
+infer_implicit_relationships(
+  fields_df,          # from get_fields()
+  max_pairs = 50000L
+)
+
+# Validate endpoints + predicate fields
+validate_relationships(parser, strict = FALSE)
+\end{lstlisting}
+
+\begin{subbox}[twbGreenL]{Returned columns}
+\begin{lstlisting}
+# get_relationships() ->
+#  left_table | left_field | operator
+#  right_table | right_field | datasource_left
+
+# get_joins() ->
+#  left_table | left_field | right_table
+#  right_field | join_type | operator
+\end{lstlisting}
+\end{subbox}
+
+%% ============================================================
+%% COLUMN 2
+%% ============================================================
+\columnbreak
+
+% ---- Worksheet Intelligence --------------------------------------------------
+\begin{secbox}[twbPurple]{Worksheet Intelligence}
+\end{secbox}
+
+All four accept \opt{sheet = "Sheet1"} to restrict to one worksheet.
+
+\textbf{Shelf assignments}
+
+\begin{lstlisting}
+twb_sheet_shelves(parser)
+# sheet | shelf | field_clean | datasource
+# shelf: "rows","cols","color","size",
+#        "label","detail","tooltip","shape"
+
+# also: parser$get_sheet_shelves()
+#        parser$sheet_shelves
+\end{lstlisting}
+
+\textbf{Worksheet filters}
+
+\begin{lstlisting}
+twb_sheet_filters(parser, sheet = "Sales")
+# sheet | field_clean | datasource
+# filter_class | include_mode
+# members      | range_min | range_max
+\end{lstlisting}
+
+\textbf{Axis configuration}
+
+\begin{lstlisting}
+twb_sheet_axes(parser)
+# sheet | axis | field_clean
+# scale_type | reversed | include_zero
+\end{lstlisting}
+
+\textbf{Sort directives}
+
+\begin{lstlisting}
+twb_sheet_sorts(parser)
+# sheet | field_clean | datasource
+# sort_order | sort_by
+# sort_by: "field","alphabetic","manual"
+\end{lstlisting}
+
+\sep
+
+% ---- Dashboard Intelligence --------------------------------------------------
+\begin{secbox}[twbPurple]{Dashboard Intelligence}
+\end{secbox}
+
+All three accept \opt{dashboard = "Overview"} to scope to one dashboard.
+
+\textbf{Sheet positions}
+
+\begin{lstlisting}
+twb_dashboard_sheets(parser)
+# dashboard | sheet | zone_id
+# x | y | w | h   (pixel coords)
+
+twb_dashboards(parser)   # high-level overview
+twb_dashboard_summary(parser) # filter + chart counts
+\end{lstlisting}
+
+\textbf{Full zone layout tree}
+
+\begin{lstlisting}
+twb_dashboard_layout(parser, dashboard = "Exec")
+# dashboard | zone_id | parent_zone_id
+# component_type | layout_type | x | y | w | h
+# component_type: "worksheet","filter",
+#   "container","legend","parameter_control",
+#   "text","image","blank"
+# layout_type: "tiled" or "floating"
+\end{lstlisting}
+
+\textbf{Actions}
+
+\begin{lstlisting}
+twb_dashboard_actions(parser)
+# action_name | action_type | source_sheets
+# target_sheet | run_on | url
+# action_type: "filter","url","highlight","parameter"
+# run_on: "select","menu","hover"
+\end{lstlisting}
+
+\textbf{Filters on dashboards}
+
+\begin{lstlisting}
+twb_dashboard_filters(parser)  # filter positions
+twb_page_composition(parser, "Executive Dashboard")
+twb_pages(parser)          # all pages list
+twb_pages_summary(parser)  # per-page stats
+\end{lstlisting}
+
+\sep
+
+% ---- Chart types & Colors ----------------------------------------------------
+\begin{secbox}[twbMid]{Mark Types \& Colors}
+\end{secbox}
+
+\begin{lstlisting}
+twb_charts(parser)  # worksheet | mark_types
+twb_colors(parser)  # palette_name | kind | colors
+\end{lstlisting}
+
+%% ============================================================
+%% COLUMN 3
+%% ============================================================
+\columnbreak
+
+% ---- Analytics (Phase 4) ----------------------------------------------------
+\begin{secbox}[twbOrange]{Analytics — Port to Another Tool}
+\end{secbox}
+
+\textbf{Calculated field complexity}
+
+\begin{lstlisting}
+twb_calc_complexity(parser)
+# datasource | name | datatype | role
+# calc_type  | lod_type | is_table_calc
+# dep_depth  | n_deps   | formula
+#
+# calc_type values (precedence order):
+#  "lod"        FIXED/INCLUDE/EXCLUDE
+#  "table_calc" RUNNING_SUM, WINDOW_*, RANK, ...
+#  "aggregate"  SUM, COUNT, MEDIAN, ...
+#  "raw"        string ops, IF/THEN, literals
+#
+# lod_type: "fixed" | "include" | "exclude" | NA
+# dep_depth: calc-on-calc chain length (0 = raw deps)
+
+# also: parser$get_calc_complexity()
+#        parser$calc_complexity
+\end{lstlisting}
+
+\textbf{Field usage matrix}
+
+\begin{lstlisting}
+# Long form (default)
+twb_field_usage(parser)
+# field_clean | datasource | sheet
+# context     | n_appearances
+# context: "shelf:rows","shelf:color","filter",...
+
+# Wide form — one column per sheet
+twb_field_usage(parser, wide = TRUE)
+
+# Limit to shelves or filters only
+twb_field_usage(parser, include_filters = FALSE)
+twb_field_usage(parser, include_shelves = FALSE)
+
+# also: parser$get_field_usage(wide = TRUE)
+#        parser$field_usage
+\end{lstlisting}
+
+\textbf{Full replication brief}
+
+\begin{lstlisting}
+# Named list — all 11 sections assembled
+brief <- twb_replication_brief(parser)
+names(brief)
+# meta | datasources | parameters | custom_sql
+# calculated_fields | field_usage | filters
+# sorts | chart_types | dashboard_layout | actions
+
+# Scope to one dashboard
+brief <- twb_replication_brief(
+  parser,
+  dashboard        = "Overview",
+  include_sql      = TRUE,
+  include_formulas = TRUE   # adds formula_pretty
+)
+
+# Human-readable text output
+cat(twb_replication_brief(parser, format = "text"))
+
+# also: parser$get_replication_brief(dashboard = "X")
+\end{lstlisting}
+
+\sep
+
+% ---- Dependency Graphs -------------------------------------------------------
+\begin{secbox}[twbGreen]{Dependency Graphs}
+\end{secbox}
+
+\begin{lstlisting}
+calcs <- parser$get_calculated_fields()
+
+# Build igraph DAG (input -> output field)
+g <- build_dependency_graph(calcs)
+
+# Plot with base graphics
+plot_dependency_graph(g, calcs, seed = 42)
+
+# Plot field-level relationship DAG
+plot_relationship_graph(
+  parser$get_relationships(), seed = 42)
+
+# Plot source join structure
+plot_source_join_graph(
+  parser$get_joins(),
+  relationships_df = parser$get_relationships())
+\end{lstlisting}
+
+\sep
+
+% ---- TWBX Handling -----------------------------------------------------------
+\begin{secbox}[twbBlue]{TWBX Handling}
+\end{secbox}
+
+\begin{lstlisting}
+# List all files in the archive
+twbx_list("dashboard.twbx")
+# Name | Length | Date | type
+# type: "workbook","extract","image","text",...
+
+# Extract the embedded .twb
+extract_twb_from_twbx(
+  "dashboard.twbx",
+  extract_dir = tempdir())
+
+# Extract specific files by type / pattern
+twbx_extract_files(
+  "dashboard.twbx",
+  types   = "image",          # or "extract"
+  pattern = "^Data/.*\\.hyper$",
+  exdir   = "out/")
+
+# TwbParser handles .twbx automatically
+parser <- TwbParser$new("dashboard.twbx")
+parser$twbx_manifest   # contents tibble
+parser$get_twbx_extracts()
+parser$get_twbx_images()
+\end{lstlisting}
+
+\sep
+
+% ---- Formula Utilities -------------------------------------------------------
+\begin{secbox}[twbMid]{Formula Utilities}
+\end{secbox}
+
+\begin{lstlisting}
+# Pretty-print a single formula string
+tableau_formula_pretty(
+  "IF [Sales] > 0 THEN [Sales] ELSE 0 END",
+  strip_brackets = FALSE,
+  wrap           = 80L)
+
+# Add formula_pretty column to a tibble
+prettify_calculated_fields(
+  calcs,           # tibble with 'formula' col
+  strip_brackets = FALSE,
+  wrap           = 100L)
+\end{lstlisting}
+
+\sep
+
+% ---- Tableau Server (optional) -----------------------------------------------
+\begin{secbox}[twbGray]{Tableau Server / Cloud (optional)}
+\end{secbox}
+
+\begin{lstlisting}
+# Publish info via REST API
+tbs_publish_info(
+  content_id = "abc123",
+  base_url   = "https://server",
+  site       = "MySite",
+  token      = Sys.getenv("TABLEAU_TOKEN"))
+
+# Custom SQL via Metadata GraphQL API
+tbs_custom_sql_graphql(
+  content_id = "abc123",
+  base_url   = "https://server",
+  site       = "MySite",
+  token      = Sys.getenv("TABLEAU_TOKEN"))
+\end{lstlisting}
+
+\begin{tipbox}
+\textbf{All \texttt{twb\_*()} functions} also work with a raw
+\texttt{xml2} document: \texttt{xml <- xml2::read\_xml("file.twb")}.
+Use the \texttt{TwbParser} class for caching, \texttt{.twbx} support,
+and the no-parens active bindings.
+\end{tipbox}
+
+\end{multicols}
+
+% ---- Footer ------------------------------------------------------------------
+\begin{tcolorbox}[
+  colback=twbBlue!10, colframe=twbBlue!30,
+  coltext=twbGray, arc=2pt,
+  top=2pt, bottom=2pt, left=4pt, right=4pt,
+  before skip=2pt, after skip=0pt
+]
+  \scriptsize
+  \textbf{twbparser} \textcolor{twbMid}{0.4.0} \quad
+  MIT License \quad
+  \href{https://github.com/PrigasG/twbparser}{github.com/PrigasG/twbparser} \quad
+  \href{https://prigasg.github.io/twbparser/}{prigasg.github.io/twbparser} \quad
+  Bugs: \href{https://github.com/PrigasG/twbparser/issues}{github.com/PrigasG/twbparser/issues}
+  \hfill
+  \textit{Cheatsheet compiled with \LaTeX{} — see \texttt{inst/cheatsheet/}}
+\end{tcolorbox}
+
+\end{document}

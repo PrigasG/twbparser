@@ -2,16 +2,31 @@
 % Please edit documentation in R/sql.R
 \name{twb_custom_sql}
 \alias{twb_custom_sql}
-\title{Extract Custom SQL relations from a TWB XML}
+\title{Extract Custom SQL relations from a Tableau workbook}
 \usage{
-twb_custom_sql(xml_doc)
+twb_custom_sql(x)
 }
 \arguments{
-\item{xml_doc}{An xml2 document for a .twb}
+\item{x}{A \code{TwbParser} object \strong{or} an \code{xml2} document.}
 }
 \value{
-tibble with relation_name, relation_type, custom_sql
+A tibble with columns:
+\describe{
+\item{relation_name}{Name attribute of the relation node.}
+\item{relation_type}{Type attribute (e.g. \code{"text"}, \code{"table"}).}
+\item{custom_sql}{Full SQL text.}
+\item{is_custom_sql}{\code{TRUE} when the text begins with \code{SELECT} or \code{WITH}.}
+}
 }
 \description{
-Extract Custom SQL relations from a TWB XML
+Finds every \verb{<relation formula="...">} node that looks like a SQL statement
+and returns its name, type, raw SQL text, and a flag for whether it starts
+with \code{SELECT} or \code{WITH}.
+}
+\examples{
+twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+stopifnot(nzchar(twb), file.exists(twb))
+xml <- xml2::read_xml(twb)
+twb_custom_sql(xml)
+
 }

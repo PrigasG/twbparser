@@ -2,16 +2,32 @@
 % Please edit documentation in R/published.R
 \name{twb_published_refs}
 \alias{twb_published_refs}
-\title{Detect likely references to published data sources (vs embedded)}
+\title{Detect references to published data sources}
 \usage{
-twb_published_refs(xml_doc)
+twb_published_refs(x)
 }
 \arguments{
-\item{xml_doc}{An xml2 document for a .twb}
+\item{x}{A \code{TwbParser} object \strong{or} an \code{xml2} document.}
 }
 \value{
-tibble with datasource name, caption, likely_published, hints
+A tibble with columns:
+\describe{
+\item{name}{Internal datasource name.}
+\item{caption}{User-visible caption.}
+\item{hasconn}{Value of the \code{hasconnection} attribute.}
+\item{likely_published}{\code{TRUE} when \code{hasconnection = false} or when the
+node text contains published-source markers.}
+\item{hints}{Short explanation of the classification.}
+}
 }
 \description{
-Detect likely references to published data sources (vs embedded)
+Inspects datasource nodes and heuristically flags those that reference a
+published (server-side) source rather than an embedded one.
+}
+\examples{
+twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+stopifnot(nzchar(twb), file.exists(twb))
+xml <- xml2::read_xml(twb)
+twb_published_refs(xml)
+
 }
