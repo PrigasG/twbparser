@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,16 +95,75 @@ cases.</p>
 <code class="sourceCode R"><span><span class="va">parser</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; TWB PARSER SUMMARY</span></span>
 <span><span class="co">#&gt; ------------------</span></span>
-<span><span class="co">#&gt; File: test_for_wenjie.twb</span></span>
-<span><span class="co">#&gt; Datasources: 2</span></span>
-<span><span class="co">#&gt; Parameters: 0</span></span>
-<span><span class="co">#&gt; Relationships: 1</span></span>
-<span><span class="co">#&gt; Calculated fields: 1</span></span>
-<span><span class="co">#&gt; Raw fields: 55</span></span>
-<span><span class="co">#&gt; Inferred joins: 0</span></span>
-<span><span class="co">#&gt; Dashboards: 0</span></span>
-<span><span class="co">#&gt; Total filters: 0</span></span>
-<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; File:                test_for_wenjie.twb</span></span>
+<span><span class="co">#&gt; Datasources:         2</span></span>
+<span><span class="co">#&gt; Parameters:          0</span></span>
+<span><span class="co">#&gt; Worksheets:          1</span></span>
+<span><span class="co">#&gt; Dashboards:          0</span></span>
+<span><span class="co">#&gt; Stories:             0</span></span>
+<span><span class="co">#&gt; Relationships:       1</span></span>
+<span><span class="co">#&gt; Calculated fields:   1</span></span>
+<span><span class="co">#&gt; Raw fields:          55</span></span>
+<span><span class="co">#&gt; Worksheet filters:   0</span></span>
+<span><span class="co">#&gt; Dashboard filters:   0</span></span>
+<span><span class="co">#&gt; Custom SQL blocks:   0</span></span>
+<span><span class="co">#&gt; Initial SQL blocks:  0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Datasources</span></span>
+<span><span class="co">#&gt; -----------</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">#&gt;   datasource_name                        connection_type field_count</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Municipal_Boundaries_of_NJ (1)         ogrdirect                 0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> federated.0grgaor1pd01yy1f0yr380of1ags federated               110</span></span>
+<span><span class="co">#&gt;   location                                     </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Shapefile: Municipal_Boundaries_of_NJ (1).zip</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Federated: &lt;unknown&gt;                         </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Pages</span></span>
+<span><span class="co">#&gt; -----</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   page_type name    mark_types n_filters n_legends n_parameter_controls</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> worksheet Sheet 1 <span style="color: #949494;">""</span>                 0         0                    0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Worksheet Shelves</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">#&gt;   sheet   shelves                         </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Sheet 1 color, cols, geometry, lod, rows</span></span>
+<span><span class="co">#&gt;   fields                                                                        </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Calculation_2139209847776120832, Longitude (generated), Geometry, counts, Lat…</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Worksheet Filters</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; No worksheet filters found.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Dashboard Filters</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; No dashboard filters found.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Calculated Fields</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; 1. no data</span></span>
+<span><span class="co">#&gt; Datasource:          federated.0grgaor1pd01yy1f0yr380of1ags</span></span>
+<span><span class="co">#&gt; Type:                string dimension</span></span>
+<span><span class="co">#&gt; Calculation:         raw</span></span>
+<span><span class="co">#&gt; Table calc:          FALSE</span></span>
+<span><span class="co">#&gt; Dependencies:        1</span></span>
+<span><span class="co">#&gt; Formula:</span></span>
+<span><span class="co">#&gt;   if ISNULL([counts])</span></span>
+<span><span class="co">#&gt;   THEN "missing"</span></span>
+<span><span class="co">#&gt;   ELSE "available"</span></span>
+<span><span class="co">#&gt;   END</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SQL</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; No custom or initial SQL found.</span></span>
 <span><span class="va">parser</span><span class="op">$</span><span class="va">overview</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
 <span><span class="co">#&gt;   file         datasources parameters relationships calculated_fields raw_fields</span></span>
@@ -129,9 +188,7 @@ cases.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: connection_target &lt;chr&gt;, datasource_name &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   field_count &lt;int&gt;, connection_type &lt;chr&gt;, location &lt;chr&gt;</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">parameters</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 5</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 variables: datasource_name &lt;chr&gt;, primary_table &lt;chr&gt;, field_count &lt;int&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   connection_type &lt;chr&gt;, location &lt;chr&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 0</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="fields-and-calculated-fields">Fields and calculated fields<a class="anchor" aria-label="anchor" href="#fields-and-calculated-fields"></a>
@@ -189,7 +246,9 @@ cases.</p>
 <p>Filters and their positions across dashboards</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/twb_dashboard_filters.html">twb_dashboard_filters</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 0</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 9</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 variables: dashboard &lt;chr&gt;, zone_id &lt;chr&gt;, zone_type &lt;chr&gt;, field &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   presentation &lt;chr&gt;, x &lt;int&gt;, y &lt;int&gt;, w &lt;int&gt;, h &lt;int&gt;</span></span></span></code></pre></div>
 <p>Chart (mark) types per worksheet and colors/palettes</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/twb_charts.html">twb_charts</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>

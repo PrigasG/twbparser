@@ -11,6 +11,11 @@ twb_workbook_report <- function(parser) {
   validation <- parser$last_validation %||%
     safe_call(parser$validate(error = FALSE), list(ok = NA, issues = tibble::tibble()))
 
+  calculated_fields <- safe_call(parser$get_calc_complexity(), .empty_calc_complexity())
+  if (NROW(calculated_fields)) {
+    calculated_fields <- prettify_calculated_fields(calculated_fields, wrap = 100L)
+  }
+
   structure(
     list(
       overview          = parser$get_overview(),
@@ -27,7 +32,7 @@ twb_workbook_report <- function(parser) {
       dashboard_actions = parser$get_dashboard_actions(),
       datasources       = parser$get_datasources(),
       parameters        = parser$get_parameters(),
-      calculated_fields = parser$get_calculated_fields(),
+      calculated_fields = calculated_fields,
       custom_sql        = parser$get_custom_sql(),
       initial_sql       = parser$get_initial_sql(),
       published_refs    = parser$get_published_refs(),
@@ -92,12 +97,7 @@ print.twbparser_report <- function(x, ...) {
     empty = "No dashboard filters found."
   )
 
-  .print_report_section(
-    "Calculated Fields",
-    x$calculated_fields,
-    c("datasource", "name", "datatype", "role", "is_table_calc", "formula"),
-    empty = "No calculated fields found."
-  )
+  .print_calc_section(x$calculated_fields)
 
   .print_report_section(
     "SQL",
@@ -149,6 +149,51 @@ print.twbparser_report <- function(x, ...) {
     cat(sprintf("... and %d more rows\n", NROW(out) - n))
   }
   invisible(NULL)
+}
+
+.print_calc_section <- function(calcs, n = 8L) {
+  cat("\nCalculated Fields\n")
+  cat("-----------------\n")
+
+  if (is.null(calcs) || !NROW(calcs)) {
+    cat("No calculated fields found.\n")
+    return(invisible(NULL))
+  }
+
+  rows <- utils::head(calcs, n)
+  for (i in seq_len(NROW(rows))) {
+    row <- rows[i, , drop = FALSE]
+    name <- .first_non_empty(row$name, row$tableau_internal_name, paste0("Calculation ", i))
+    formula <- .first_non_empty(row$formula_pretty, row$formula, "")
+    formula <- tableau_formula_pretty(formula, wrap = 100L)
+
+    cat(sprintf("%d. %s\n", i, name))
+    .cat_kv("Datasource", .first_non_empty(row$datasource, ""))
+    .cat_kv("Type", trimws(paste(.first_non_empty(row$datatype, ""),
+                                 .first_non_empty(row$role, ""))))
+    .cat_kv("Calculation", .first_non_empty(row$calc_type, ""))
+    .cat_kv("Table calc", .first_non_empty(row$is_table_calc, ""))
+    .cat_kv("Dependencies", .first_non_empty(row$n_deps, ""))
+    cat("Formula:\n")
+    cat(paste0("  ", strsplit(.brief_formula_text(formula), "\n", fixed = TRUE)[[1L]]), sep = "\n")
+    cat("\n")
+    if (i < NROW(rows)) cat("\n")
+  }
+
+  if (NROW(calcs) > n) {
+    cat(sprintf("... and %d more calculated fields\n", NROW(calcs) - n))
+  }
+  invisible(NULL)
+}
+
+.first_non_empty <- function(...) {
+  values <- list(...)
+  for (value in values) {
+    if (is.null(value)) next
+    value <- value[[1]]
+    if (!is.na(value) && nzchar(as.character(value))) return(as.character(value))
+  }
+  NA_character_
 }
 
 .collapse_unique <- function(x, empty = "") {

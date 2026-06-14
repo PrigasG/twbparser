@@ -9,6 +9,10 @@ test_that("no-parens properties work and originals are preserved", {
   expect_s3_class(p$report, "twbparser_report")
   expect_output(print(p$summary), "TWB PARSER SUMMARY")
   expect_output(print(p$summary), "Worksheet Shelves")
+  expect_output(print(p$summary), "Formula:")
+  expect_output(print(p$summary), "THEN \"missing\"")
+  summary_text <- paste(utils::capture.output(print(p$summary)), collapse = "\n")
+  expect_false(grepl("\\\\\"", summary_text))
 
   # read-only properties
   expect_s3_class(p$overview, "tbl_df")

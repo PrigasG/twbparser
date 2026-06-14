@@ -6,6 +6,7 @@
 ^Meta$
 ^_pkgdown\.yml$
 ^docs$
+^deploy$
 ^pkgdown$
 ^\.github$
 ^\.lintr$

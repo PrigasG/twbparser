@@ -178,7 +178,7 @@ twbp_r_scaffold <- function(parser) {
   add("# library(bslib)   # for the dashboard layout")
   add("# library(shiny)")
   add("")
-  add("# TODO: load your data (Tableau extract / SQL export) into `data`.")
+  add("# Load your data (Tableau extract or SQL export) into `data`.")
   add("# data <- readr::read_csv('your_data.csv')")
   add("")
   add("# ============================ Worksheets ============================")
@@ -603,6 +603,7 @@ ui <- fluidPage(
           tabPanel("Shelves", section_table("shelves_table")),
           tabPanel("Fields", section_table("fields_table")),
           tabPanel("Datasources", section_table("datasources_table")),
+          tabPanel("Parameters", section_table("parameters_table")),
           tabPanel("Calculations", section_table("calcs_table")),
           tabPanel("SQL", section_table("sql_table")),
           tabPanel("TWBX Assets", section_table("twbx_table")),
@@ -1003,6 +1004,19 @@ server <- function(input, output, session) {
   output$datasources_table <- render_section_table(
     function() report()$datasources,
     "No datasource details found."
+  )
+
+  output$parameters_table <- render_section_table(
+    function() {
+      pr <- report()$parameters
+      if (!NROW(pr)) return(pr)
+      keep <- intersect(
+        c("name", "datatype", "role", "parameter_type", "allowable_type", "current_value"),
+        names(pr)
+      )
+      if (length(keep)) dplyr::select(pr, dplyr::all_of(keep)) else pr
+    },
+    "No parameters found."
   )
 
   output$calcs_table <- render_section_table(

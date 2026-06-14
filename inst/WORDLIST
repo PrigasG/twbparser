@@ -30,6 +30,7 @@ datatypes
 DAX
 DiagrammeR
 dir
+Dockerfile
 ELSEIF
 ggraph
 graphql
@@ -53,6 +54,7 @@ tempdir
 tibble
 Tibble
 tibbles
+UI
 twb
 TWB
 twbx

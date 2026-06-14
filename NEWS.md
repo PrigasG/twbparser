@@ -1,3 +1,17 @@
+# twbparser 0.4.1
+
+## Release polish
+
+* `parser$summary` now prints calculated fields as readable formula blocks
+  instead of escaped tibble cells.
+* Replication brief calculated fields now retain one clean row per calculation
+  and render formulas in fenced Tableau blocks.
+* Removed timestamped backup scripts from `R/` before release.
+* Hugging Face Space deployment now installs the tagged package release for
+  reproducible rebuilds.
+
+---
+
 # twbparser 0.4.0
 
 ## New features

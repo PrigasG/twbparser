@@ -11,3 +11,6 @@ docs
 .lintr
 .Rd2pdf*
 *-manual.tex
+check/
+*.Rcheck/
+*.tar.gz

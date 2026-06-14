@@ -13,15 +13,15 @@ extract_datasource_details(xml_doc)
 A named list with:
 \describe{
 \item{data_sources}{Tibble of datasources joined with connection metadata.}
-\item{parameters}{Tibble of parameter datasources (if present).}
+\item{parameters}{Tibble of parameter fields from \code{\link[=extract_parameters]{extract_parameters()}}.}
 \item{all_sources}{Same as \code{data_sources} (placeholder for future variants).}
 }
 }
 \description{
 Gathers runtime tables (from the object graph), merges in named-connection
 metadata (class, caption, targets), and augments with top-level datasource
-definitions (field counts, connection type, location). Also returns a
-filtered table of parameter datasources.
+definitions (field counts, connection type, location). Also returns the
+workbook's parameter fields via \code{\link[=extract_parameters]{extract_parameters()}}.
 }
 \examples{
 # Preferred: from a tiny .twb
