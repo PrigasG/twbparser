@@ -1,6 +1,7 @@
 # twbparser-intro
 
 ``` r
+
 library(twbparser)
 ok <- FALSE
 twb_path <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
@@ -27,19 +28,74 @@ demonstrates common use cases.
 ## Parse a Tableau Workbook
 
 ``` r
+
 parser$summary
 #> TWB PARSER SUMMARY
 #> ------------------
-#> File: test_for_wenjie.twb
-#> Datasources: 2
-#> Parameters: 0
-#> Relationships: 1
-#> Calculated fields: 1
-#> Raw fields: 55
-#> Inferred joins: 0
-#> Dashboards: 0
-#> Total filters: 0
-#> NULL
+#> File:                test_for_wenjie.twb
+#> Datasources:         2
+#> Parameters:          0
+#> Worksheets:          1
+#> Dashboards:          0
+#> Stories:             0
+#> Relationships:       1
+#> Calculated fields:   1
+#> Raw fields:          55
+#> Worksheet filters:   0
+#> Dashboard filters:   0
+#> Custom SQL blocks:   0
+#> Initial SQL blocks:  0
+#> 
+#> Datasources
+#> -----------
+#> # A tibble: 2 × 4
+#>   datasource_name                        connection_type field_count
+#>   <chr>                                  <chr>                 <int>
+#> 1 Municipal_Boundaries_of_NJ (1)         ogrdirect                 0
+#> 2 federated.0grgaor1pd01yy1f0yr380of1ags federated               110
+#>   location                                     
+#>   <chr>                                        
+#> 1 Shapefile: Municipal_Boundaries_of_NJ (1).zip
+#> 2 Federated: <unknown>                         
+#> 
+#> Pages
+#> -----
+#> # A tibble: 1 × 6
+#>   page_type name    mark_types n_filters n_legends n_parameter_controls
+#>   <chr>     <chr>   <chr>          <int>     <int>                <int>
+#> 1 worksheet Sheet 1 ""                 0         0                    0
+#> 
+#> Worksheet Shelves
+#> -----------------
+#> # A tibble: 1 × 3
+#>   sheet   shelves                         
+#>   <chr>   <chr>                           
+#> 1 Sheet 1 color, cols, geometry, lod, rows
+#>   fields                                                                        
+#>   <chr>                                                                         
+#> 1 Calculation_2139209847776120832, Longitude (generated), Geometry, counts, Lat…
+#> 
+#> Worksheet Filters
+#> -----------------
+#> No worksheet filters found.
+#> 
+#> Dashboard Filters
+#> -----------------
+#> No dashboard filters found.
+#> 
+#> Calculated Fields
+#> -----------------
+#> # A tibble: 1 × 6
+#>   datasource                             name    datatype role     
+#>   <chr>                                  <chr>   <chr>    <chr>    
+#> 1 federated.0grgaor1pd01yy1f0yr380of1ags no data string   dimension
+#>   is_table_calc formula                                                      
+#>   <lgl>         <chr>                                                        
+#> 1 FALSE         "if ISNULL([counts]) THEN \"missing\" ELSE \"available\" END"
+#> 
+#> SQL
+#> ---
+#> No custom or initial SQL found.
 parser$overview
 #> # A tibble: 1 × 9
 #>   file         datasources parameters relationships calculated_fields raw_fields
@@ -52,6 +108,7 @@ parser$overview
 ## Extracting Datasources and Parameters
 
 ``` r
+
 datasources <- parser$get_datasources()
 parameters <- parser$get_parameters()
 
@@ -75,6 +132,7 @@ Parameters are excluded by default from calculated fields; opt-in via
 `include_parameters = TRUE`.
 
 ``` r
+
 head(parser$get_fields())
 #> # A tibble: 6 × 10
 #>   datasource        name  caption datatype role  semantic_role table table_clean
@@ -99,6 +157,7 @@ head(parser$get_calculated_fields(pretty = TRUE, wrap = 120))
 List all pages and summarize each page
 
 ``` r
+
 twb_pages(parser)
 #> # A tibble: 1 × 2
 #>   page_type name   
@@ -116,6 +175,7 @@ Inspect what a specific page contains
 ``` r
 
 
+
 pg <- twb_pages(parser)
 nm <- if (nrow(pg)) pg$name[[1]] else NA_character_
 if (!is.na(nm)) {
@@ -131,13 +191,17 @@ if (!is.na(nm)) {
 Filters and their positions across dashboards
 
 ``` r
+
 twb_dashboard_filters(parser)
-#> # A tibble: 0 × 0
+#> # A tibble: 0 × 9
+#> # ℹ 9 variables: dashboard <chr>, zone_id <chr>, zone_type <chr>, field <chr>,
+#> #   presentation <chr>, x <int>, y <int>, w <int>, h <int>
 ```
 
 Chart (mark) types per worksheet and colors/palettes
 
 ``` r
+
 twb_charts(parser)
 #> # A tibble: 1 × 2
 #>   worksheet mark_types
@@ -156,6 +220,7 @@ restrict output to a single worksheet.
 ### Shelves — what fields are on rows, cols, and encodings?
 
 ``` r
+
 shelves <- twb_sheet_shelves(parser)
 head(shelves)
 #> # A tibble: 6 × 7
@@ -175,6 +240,7 @@ The `shelf` column distinguishes `"rows"`, `"cols"`, `"color"`,
 ### Filters
 
 ``` r
+
 filters <- twb_sheet_filters(parser)
 head(filters)
 #> # A tibble: 0 × 9
@@ -189,6 +255,7 @@ filters populate `range_min` / `range_max`.
 ### Axis configuration
 
 ``` r
+
 axes <- twb_sheet_axes(parser)
 head(axes)
 #> # A tibble: 0 × 7
@@ -199,6 +266,7 @@ head(axes)
 ### Sort directives
 
 ``` r
+
 sorts <- twb_sheet_sorts(parser)
 head(sorts)
 #> # A tibble: 0 × 6
@@ -211,6 +279,7 @@ head(sorts)
 ### Sheet positions
 
 ``` r
+
 db_sheets <- twb_dashboard_sheets(parser)
 head(db_sheets)
 #> # A tibble: 0 × 7
@@ -223,6 +292,7 @@ head(db_sheets)
 ### Zone layout tree
 
 ``` r
+
 layout <- twb_dashboard_layout(parser)
 head(layout)
 #> # A tibble: 0 × 10
@@ -239,6 +309,7 @@ or `"blank"`.
 ### Actions
 
 ``` r
+
 actions <- twb_dashboard_actions(parser)
 head(actions)
 #> # A tibble: 0 × 6
@@ -253,6 +324,7 @@ actions.
 ## Relationships and Joins
 
 ``` r
+
 relations <- parser$get_relationships()
 
 head(relations)
@@ -266,6 +338,7 @@ head(relations)
 ## Working with TWBX Files (if applicable)
 
 ``` r
+
 parser$get_twbx_manifest()
 parser$get_twbx_extracts()
 parser$get_twbx_images()
@@ -274,6 +347,7 @@ parser$get_twbx_images()
 ## Validation of Relationships
 
 ``` r
+
 v <- parser$validate()
 if (isTRUE(v$ok)) {
 cat("Relationships validated successfully.\n")

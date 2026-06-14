@@ -12,8 +12,8 @@
 <link rel="icon" sizes="any" href="../favicon.ico">
 <link rel="manifest" href="../site.webmanifest">
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.4.10/font.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="twbparser-intro">
@@ -65,7 +65,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://prigasg.github.io/twbparser/" class="external-link">twbparser</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://prigasg.github.io/twbparser/">twbparser</a></span><span class="op">)</span></span>
 <span><span class="va">ok</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
 <span><span class="va">twb_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"test_for_wenjie.twb"</span>, package <span class="op">=</span> <span class="st">"twbparser"</span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">twb_path</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">twb_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
@@ -95,16 +95,70 @@ cases.</p>
 <code class="sourceCode R"><span><span class="va">parser</span><span class="op">$</span><span class="va">summary</span></span>
 <span><span class="co">#&gt; TWB PARSER SUMMARY</span></span>
 <span><span class="co">#&gt; ------------------</span></span>
-<span><span class="co">#&gt; File: test_for_wenjie.twb</span></span>
-<span><span class="co">#&gt; Datasources: 2</span></span>
-<span><span class="co">#&gt; Parameters: 0</span></span>
-<span><span class="co">#&gt; Relationships: 1</span></span>
-<span><span class="co">#&gt; Calculated fields: 1</span></span>
-<span><span class="co">#&gt; Raw fields: 55</span></span>
-<span><span class="co">#&gt; Inferred joins: 0</span></span>
-<span><span class="co">#&gt; Dashboards: 0</span></span>
-<span><span class="co">#&gt; Total filters: 0</span></span>
-<span><span class="co">#&gt; NULL</span></span>
+<span><span class="co">#&gt; File:                test_for_wenjie.twb</span></span>
+<span><span class="co">#&gt; Datasources:         2</span></span>
+<span><span class="co">#&gt; Parameters:          0</span></span>
+<span><span class="co">#&gt; Worksheets:          1</span></span>
+<span><span class="co">#&gt; Dashboards:          0</span></span>
+<span><span class="co">#&gt; Stories:             0</span></span>
+<span><span class="co">#&gt; Relationships:       1</span></span>
+<span><span class="co">#&gt; Calculated fields:   1</span></span>
+<span><span class="co">#&gt; Raw fields:          55</span></span>
+<span><span class="co">#&gt; Worksheet filters:   0</span></span>
+<span><span class="co">#&gt; Dashboard filters:   0</span></span>
+<span><span class="co">#&gt; Custom SQL blocks:   0</span></span>
+<span><span class="co">#&gt; Initial SQL blocks:  0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Datasources</span></span>
+<span><span class="co">#&gt; -----------</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 4</span></span></span>
+<span><span class="co">#&gt;   datasource_name                        connection_type field_count</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Municipal_Boundaries_of_NJ (1)         ogrdirect                 0</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> federated.0grgaor1pd01yy1f0yr380of1ags federated               110</span></span>
+<span><span class="co">#&gt;   location                                     </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Shapefile: Municipal_Boundaries_of_NJ (1).zip</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Federated: &lt;unknown&gt;                         </span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Pages</span></span>
+<span><span class="co">#&gt; -----</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   page_type name    mark_types n_filters n_legends n_parameter_controls</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;int&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> worksheet Sheet 1 <span style="color: #949494;">""</span>                 0         0                    0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Worksheet Shelves</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 3</span></span></span>
+<span><span class="co">#&gt;   sheet   shelves                         </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                           </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Sheet 1 color, cols, geometry, lod, rows</span></span>
+<span><span class="co">#&gt;   fields                                                                        </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                                         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Calculation_2139209847776120832, Longitude (generated), Geometry, counts, Lat…</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Worksheet Filters</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; No worksheet filters found.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Dashboard Filters</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; No dashboard filters found.</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; Calculated Fields</span></span>
+<span><span class="co">#&gt; -----------------</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
+<span><span class="co">#&gt;   datasource                             name    datatype role     </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> federated.0grgaor1pd01yy1f0yr380of1ags no data string   dimension</span></span>
+<span><span class="co">#&gt;   is_table_calc formula                                                      </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE         <span style="color: #949494;">"</span>if ISNULL([counts]) THEN \"missing\" ELSE \"available\" END<span style="color: #949494;">"</span></span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; SQL</span></span>
+<span><span class="co">#&gt; ---</span></span>
+<span><span class="co">#&gt; No custom or initial SQL found.</span></span>
 <span><span class="va">parser</span><span class="op">$</span><span class="va">overview</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 9</span></span></span>
 <span><span class="co">#&gt;   file         datasources parameters relationships calculated_fields raw_fields</span></span>
@@ -189,7 +243,9 @@ cases.</p>
 <p>Filters and their positions across dashboards</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/twb_dashboard_filters.html">twb_dashboard_filters</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 0</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 9</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 9 variables: dashboard &lt;chr&gt;, zone_id &lt;chr&gt;, zone_type &lt;chr&gt;, field &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   presentation &lt;chr&gt;, x &lt;int&gt;, y &lt;int&gt;, w &lt;int&gt;, h &lt;int&gt;</span></span></span></code></pre></div>
 <p>Chart (mark) types per worksheet and colors/palettes</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/twb_charts.html">twb_charts</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>

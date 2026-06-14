@@ -15,7 +15,7 @@ plot_dependency_graph(g, fields_df = NULL, seed = NULL)
 - g:
 
   An `igraph` directed graph from
-  [`build_dependency_graph()`](https://PrigasG.github.io/twbparser/reference/build_dependency_graph.md).
+  [`build_dependency_graph()`](https://prigasg.github.io/twbparser/reference/build_dependency_graph.md).
 
 - fields_df:
 

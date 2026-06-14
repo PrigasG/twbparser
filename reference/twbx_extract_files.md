@@ -31,7 +31,7 @@ twbx_extract_files(
 - types:
 
   Subset by `.twbx` entry `type` (see
-  [`twbx_list()`](https://PrigasG.github.io/twbparser/reference/twbx_list.md))
+  [`twbx_list()`](https://prigasg.github.io/twbparser/reference/twbx_list.md))
   (optional).
 
 - exdir:
@@ -51,5 +51,5 @@ head(files)
 #> # A tibble: 1 × 3
 #>   name             type     out_path                                            
 #>   <chr>            <chr>    <chr>                                               
-#> 1 test-for_zip.twb workbook /tmp/RtmpcFYft2/twbx_extract_20260411034818/test-fo…
+#> 1 test-for_zip.twb workbook /tmp/RtmpYU0k06/twbx_extract_20260614230333/test-fo…
 ```

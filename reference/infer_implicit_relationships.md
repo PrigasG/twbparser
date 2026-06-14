@@ -17,7 +17,7 @@ infer_implicit_relationships(fields_df, max_pairs = 50000L)
 - fields_df:
 
   A data frame like the output of
-  [`extract_columns_with_table_source()`](https://PrigasG.github.io/twbparser/reference/extract_columns_with_table_source.md).
+  [`extract_columns_with_table_source()`](https://prigasg.github.io/twbparser/reference/extract_columns_with_table_source.md).
 
 - max_pairs:
 

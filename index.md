@@ -7,7 +7,7 @@ TWB/TWBX](https://img.shields.io/badge/Tableau-TWB%2FTWBX-blue)](https://prigasg
 [![pkgdown](https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master)](https://prigasg.github.io/twbparser/)
 [![Codecov](https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg)](https://app.codecov.io/gh/PrigasG/twbparser)
 [![License:MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/PrigasG/twbparser/blob/master/LICENSE)
-[![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![Lifecycle:stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
 Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins,
 relationships, fields, calculated fields, worksheet configuration, and
@@ -30,12 +30,15 @@ for large workbooks and Shiny integration.
   and filter/URL actions
 - **Dependency graph**: build/plot field dependency DAGs
 - **TWBX assets**: list/extract images, extracts, text files, etc.
-- **Ergonomics**: `parser$summary` (no parens), `parser$overview`,
-  `parser$pages`, `parser$pages_summary`
+- **Workbook report**: `parser$summary` / `parser$report` provide a
+  structured inspection summary for console use or UI rendering
+- **Interactive app**: launch the bundled Shiny workbook inspector
+  locally or deploy it as a Docker Space
 
 ## Installation
 
 ``` r
+
 # Install from GitHub (using pak)
 install.packages("pak")
 pak::pak("PrigasG/twbparser")
@@ -50,6 +53,7 @@ devtools::install_github("PrigasG/twbparser")
 Summary for twb workbook
 
 ``` r
+
 library(twbparser)
 library(fs)
 
@@ -66,9 +70,34 @@ parser$summary
 parser$overview
 ```
 
+## Interactive Shiny App
+
+Launch the bundled workbook inspector from R:
+
+``` r
+
+library(twbparser)
+
+run_twbparser_app()
+```
+
+The app lets users upload `.twb` / `.twbx` files, shows a clean loading
+overlay while parsing, and organizes the workbook report into tabs for
+overview, pages, filters, shelves, fields, datasources, calculations,
+SQL, TWBX assets, and validation.
+
+For Hugging Face Docker Space deployment, use the files in
+[`deploy/huggingface`](https://prigasg.github.io/twbparser/deploy/huggingface):
+
+- `Dockerfile` installs `twbparser` from GitHub and serves the bundled
+  Shiny app.
+- `README.md` is the Space card and records runtime settings.
+- `DEPLOYING.md` documents the push/build workflow and version pinning.
+
 With a “.twbx” file
 
 ``` r
+
 parser <- TWBParser$new("path/to/workbook.twbx")
 
 # Inspect manifest
@@ -78,6 +107,7 @@ parser$twbx_manifest
 Peek inside
 
 ``` r
+
 # Datasources / parameters / all sources
 parser$get_datasources()
 parser$get_parameters()
@@ -91,6 +121,7 @@ parser$get_calculated_fields(pretty = TRUE, wrap = 120)
 Page insights (dashboards, worksheets, stories)
 
 ``` r
+
 # What pages exist?
 parser$pages
 # Or functional: twb_pages(parser)
@@ -114,6 +145,7 @@ twb_colors(parser)
 Worksheet-level detail (new in 0.4.0)
 
 ``` r
+
 # Fields on rows, cols, color, size, label … per worksheet
 parser$get_sheet_shelves()
 # or: twb_sheet_shelves(parser, sheet = "Sales")
@@ -131,6 +163,7 @@ parser$get_sheet_sorts()
 Dashboard structure (new in 0.4.0)
 
 ``` r
+
 # Which sheets are on a dashboard and where?
 parser$get_dashboard_sheets()
 # or: twb_dashboard_sheets(parser, dashboard = "Overview")
@@ -145,6 +178,7 @@ parser$get_dashboard_actions()
 Relationships/Joins
 
 ``` r
+
 library(dplyr)
 library(tidyr)
 
@@ -164,6 +198,7 @@ rel_df
 Nice tabular view for calculated fields
 
 ``` r
+
 library(dplyr)
 
 calcs <- parser$get_calculated_fields(pretty = TRUE, wrap = 120) |>
@@ -192,24 +227,34 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 ## What’s new (0.4.0)
 
 - **Worksheet intelligence**:
-  [`twb_sheet_shelves()`](https://PrigasG.github.io/twbparser/reference/twb_sheet_shelves.md),
-  [`twb_sheet_filters()`](https://PrigasG.github.io/twbparser/reference/twb_sheet_filters.md),
-  [`twb_sheet_axes()`](https://PrigasG.github.io/twbparser/reference/twb_sheet_axes.md),
-  [`twb_sheet_sorts()`](https://PrigasG.github.io/twbparser/reference/twb_sheet_sorts.md)
+  [`twb_sheet_shelves()`](https://prigasg.github.io/twbparser/reference/twb_sheet_shelves.md),
+  [`twb_sheet_filters()`](https://prigasg.github.io/twbparser/reference/twb_sheet_filters.md),
+  [`twb_sheet_axes()`](https://prigasg.github.io/twbparser/reference/twb_sheet_axes.md),
+  [`twb_sheet_sorts()`](https://prigasg.github.io/twbparser/reference/twb_sheet_sorts.md)
   — extract the full shelf configuration, filter predicates, axis
   settings, and sort rules for every worksheet
 - **Dashboard intelligence**:
-  [`twb_dashboard_sheets()`](https://PrigasG.github.io/twbparser/reference/twb_dashboard_sheets.md),
-  [`twb_dashboard_layout()`](https://PrigasG.github.io/twbparser/reference/twb_dashboard_layout.md),
-  [`twb_dashboard_actions()`](https://PrigasG.github.io/twbparser/reference/twb_dashboard_actions.md)
+  [`twb_dashboard_sheets()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_sheets.md),
+  [`twb_dashboard_layout()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_layout.md),
+  [`twb_dashboard_actions()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_actions.md)
   — inspect which sheets appear where, the full zone hierarchy, and all
   filter/URL actions
+- **Interactive Shiny app**:
+  [`run_twbparser_app()`](https://prigasg.github.io/twbparser/reference/run_twbparser_app.md)
+  launches a bundled workbook inspector with upload support, loading
+  overlays, report tabs, and CSV/brief export in the deployed app.
+- **Docker Space deployment**: `deploy/huggingface/` contains the
+  Dockerfile, Space card, and deployment notes for hosting the Shiny
+  app.
+- **Workbook report**: `parser$summary` and `parser$report` expose a
+  structured workbook report that powers both console output and the
+  app.
 - **Bug fixes**: corrected edge direction in
-  [`plot_relationship_graph()`](https://PrigasG.github.io/twbparser/reference/plot_relationship_graph.md),
+  [`plot_relationship_graph()`](https://prigasg.github.io/twbparser/reference/plot_relationship_graph.md),
   fixed column references in
-  [`plot_source_join_graph()`](https://PrigasG.github.io/twbparser/reference/plot_source_join_graph.md),
+  [`plot_source_join_graph()`](https://prigasg.github.io/twbparser/reference/plot_source_join_graph.md),
   eliminated Cartesian-product explosion in
-  [`infer_implicit_relationships()`](https://PrigasG.github.io/twbparser/reference/infer_implicit_relationships.md)
+  [`infer_implicit_relationships()`](https://prigasg.github.io/twbparser/reference/infer_implicit_relationships.md)
 
 ## Contributing
 

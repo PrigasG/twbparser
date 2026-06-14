@@ -24,6 +24,12 @@ Full zone layout with container hierarchy.
 
 Dashboard and workbook actions.
 
+Calculated field complexity classifications.
+
+Field usage matrix across worksheets.
+
+Full replication brief for the workbook or a single dashboard.
+
 Validate relationships; optionally stop on failure.
 
 Print a concise summary of parsed content.
@@ -58,9 +64,37 @@ An R6 class generator.
 
   Optional worksheet name.
 
+- include_parameters:
+
+  Logical; include parameter fields. Default `FALSE`.
+
+- include_filters:
+
+  Include filter appearances. Default `TRUE`.
+
+- include_shelves:
+
+  Include shelf appearances. Default `TRUE`.
+
+- wide:
+
+  Return wide format (one col per sheet). Default `FALSE`.
+
 - dashboard:
 
-  Optional dashboard name to filter by.
+  Optional dashboard name to scope the brief.
+
+- include_sql:
+
+  Include custom SQL blocks. Default `TRUE`.
+
+- include_formulas:
+
+  Add `formula_pretty` to calculated fields. Default `TRUE`.
+
+- format:
+
+  `"list"` (default) or `"text"`.
 
 - error:
 
@@ -95,22 +129,22 @@ calculated fields, inferred relationships, and datasource details. For
 - twbx_manifest:
 
   Tibble of `.twbx` contents from
-  [`twbx_list()`](https://PrigasG.github.io/twbparser/reference/twbx_list.md).
+  [`twbx_list()`](https://prigasg.github.io/twbparser/reference/twbx_list.md).
 
 - relations:
 
   Tibble of `<relation>` nodes from
-  [`extract_relations()`](https://PrigasG.github.io/twbparser/reference/extract_relations.md).
+  [`extract_relations()`](https://prigasg.github.io/twbparser/reference/extract_relations.md).
 
 - joins:
 
   Tibble of join clauses from
-  [`extract_joins()`](https://PrigasG.github.io/twbparser/reference/extract_joins.md).
+  [`extract_joins()`](https://prigasg.github.io/twbparser/reference/extract_joins.md).
 
 - relationships:
 
   Tibble of modern relationships from
-  [`extract_relationships()`](https://PrigasG.github.io/twbparser/reference/extract_relationships.md).
+  [`extract_relationships()`](https://prigasg.github.io/twbparser/reference/extract_relationships.md).
 
 - inferred_relationships:
 

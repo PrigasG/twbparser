@@ -1,11 +1,11 @@
-# Safely evaluate and return fallback on error (with warning)
+# Safely evaluate and return fallback on error
 
-Safely evaluate and return fallback on error (with warning)
+Safely evaluate and return fallback on error
 
 ## Usage
 
 ``` r
-safe_call(expr, fallback)
+safe_call(expr, fallback, warn = FALSE)
 ```
 
 ## Arguments
@@ -17,6 +17,10 @@ safe_call(expr, fallback)
 - fallback:
 
   Value if an error occurs
+
+- warn:
+
+  If `TRUE`, emit a warning with the caught error message.
 
 ## Value
 

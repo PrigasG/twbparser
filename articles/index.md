@@ -2,4 +2,4 @@
 
 ### Get Started
 
-- [twbparser-intro](https://PrigasG.github.io/twbparser/articles/twbparser-intro.md):
+- [twbparser-intro](https://prigasg.github.io/twbparser/articles/twbparser-intro.md):

@@ -24,6 +24,7 @@ represent dependencies (input → output).
 ## Examples
 
 ``` r
+
 fields <- tibble::tibble(
 name = c("X_plus_Y", "Z"),
 formula = c("[X] + [Y]", "[X_plus_Y] * 2")

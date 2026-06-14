@@ -1,9 +1,9 @@
-pandoc: 3.1.11
+pandoc: 3.8.3
 pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   twbparser-intro: twbparser-intro.html
-last_built: 2026-04-11T03:48Z
+last_built: 2026-06-14T23:03Z
 urls:
-  reference: https://PrigasG.github.io/twbparser/reference
-  article: https://PrigasG.github.io/twbparser/articles
+  reference: https://prigasg.github.io/twbparser/reference
+  article: https://prigasg.github.io/twbparser/articles
