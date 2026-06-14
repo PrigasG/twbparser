@@ -38,6 +38,212 @@ metric_card <- function(label, value) {
   )
 }
 
+# Map a single Tableau mark type to a suggested ggplot2 geom.
+twbp_mark_to_geom <- function(mark) {
+  m <- tolower(trimws(mark %||% ""))
+  if (!nzchar(m)) return("geom_blank()")
+  switch(
+    m,
+    bar        = "geom_col()",
+    line       = "geom_line()",
+    area       = "geom_area()",
+    circle     = "geom_point()",
+    point      = "geom_point()",
+    square     = "geom_tile()",
+    shape      = "geom_point(aes(shape = ...))",
+    text       = "geom_text(aes(label = ...))",
+    gantt      = "geom_segment()",
+    polygon    = "geom_polygon()",
+    map        = "geom_sf()",
+    pie        = "geom_col() + coord_polar(theta = 'y')",
+    automatic  = "geom_point()  # mark: automatic",
+    multiple   = "# multiple marks: build one layer per pane",
+    paste0("# mark: ", m, " (choose a geom)")
+  )
+}
+
+# Map a comma-separated mark_types string to combined geom suggestions.
+twbp_marks_to_geoms <- function(mark_types) {
+  if (is.null(mark_types) || is.na(mark_types) || !nzchar(mark_types)) return(NA_character_)
+  marks <- trimws(strsplit(mark_types, ",", fixed = TRUE)[[1]])
+  marks <- marks[nzchar(marks)]
+  if (!length(marks)) return(NA_character_)
+  paste(unique(vapply(marks, twbp_mark_to_geom, character(1))), collapse = " + ")
+}
+
+# Static colours per dashboard component type (light-themed canvas).
+twbp_comp_palette <- function(ct) {
+  switch(
+    ct %||% "",
+    worksheet         = c(bg = "#e0f2fe", bd = "#0284c7", fg = "#075985", icon = "▣"),
+    filter            = c(bg = "#fef3c7", bd = "#d97706", fg = "#92400e", icon = "▼"),
+    parameter_control = c(bg = "#fae8ff", bd = "#a21caf", fg = "#86198f", icon = "◈"),
+    legend            = c(bg = "#dcfce7", bd = "#16a34a", fg = "#166534", icon = "☰"),
+    text              = c(bg = "#f1f5f9", bd = "#94a3b8", fg = "#475569", icon = "T"),
+    image             = c(bg = "#ecfeff", bd = "#0891b2", fg = "#155e75", icon = "▦"),
+    c(bg = "#f8fafc", bd = "#cbd5e1", fg = "#64748b", icon = "□")
+  )
+}
+
+# Build an HTML wireframe (to scale) for one dashboard's layout tibble.
+twbp_layout_html <- function(ld) {
+  if (is.null(ld) || !NROW(ld)) {
+    return(div(class = "empty-state", "No layout zones found for this dashboard."))
+  }
+
+  # Render only leaf zones (drop container zones whose id is a parent).
+  parents <- unique(ld$parent_zone_id[!is.na(ld$parent_zone_id)])
+  leaves <- ld[!(ld$zone_id %in% parents), , drop = FALSE]
+  leaves <- leaves[
+    !is.na(leaves$x) & !is.na(leaves$y) & !is.na(leaves$w) & !is.na(leaves$h),
+    , drop = FALSE
+  ]
+  if (!NROW(leaves)) {
+    return(div(class = "empty-state",
+               "This dashboard's zones do not carry pixel coordinates, so it can't be drawn to scale. See the table below."))
+  }
+
+  minx <- min(leaves$x); miny <- min(leaves$y)
+  spanw <- max(leaves$x + leaves$w) - minx
+  spanh <- max(leaves$y + leaves$h) - miny
+  if (!is.finite(spanw) || spanw <= 0 || !is.finite(spanh) || spanh <= 0) {
+    return(div(class = "empty-state", "Could not determine a drawable canvas for this dashboard."))
+  }
+
+  boxes <- lapply(seq_len(nrow(leaves)), function(i) {
+    z <- leaves[i, ]
+    pal <- twbp_comp_palette(z$component_type)
+    left <- (z$x - minx) / spanw * 100
+    top  <- (z$y - miny) / spanh * 100
+    wpc  <- z$w / spanw * 100
+    hpc  <- z$h / spanh * 100
+    label <- if (!is.na(z$target) && nzchar(z$target)) z$target else z$component_type
+    dims <- sprintf("%s,%s · %s×%s", z$x, z$y, z$w, z$h)
+    float_badge <- if (identical(z$layout_type, "floating")) " · floating" else ""
+    div(
+      style = sprintf(
+        paste0("position:absolute; left:%.3f%%; top:%.3f%%; width:%.3f%%; height:%.3f%%;",
+               "background:%s; border:1px solid %s; border-radius:6px; padding:5px 7px;",
+               "overflow:hidden; box-sizing:border-box;"),
+        left, top, wpc, hpc, pal[["bg"]], pal[["bd"]]
+      ),
+      div(style = sprintf("font-size:11px; font-weight:600; color:%s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;", pal[["fg"]]),
+          paste0(pal[["icon"]], " ", label)),
+      div(style = sprintf("font-size:10px; color:%s; opacity:0.8;", pal[["fg"]]),
+          paste0(z$component_type, float_badge)),
+      div(style = sprintf("position:absolute; bottom:3px; right:6px; font-size:9px; color:%s; opacity:0.7;", pal[["fg"]]),
+          dims)
+    )
+  })
+
+  div(
+    style = sprintf(
+      "position:relative; width:100%%; aspect-ratio:%s / %s; max-height:620px; border:1px solid var(--line); border-radius:8px; background:#fff;",
+      spanw, spanh
+    ),
+    boxes
+  )
+}
+
+# Generate a starter R script from a parsed workbook.
+twbp_r_scaffold <- function(parser) {
+  L <- character()
+  add <- function(...) L[[length(L) + 1L]] <<- paste0(...)
+  slugify <- function(x) {
+    s <- gsub("[^A-Za-z0-9]+", "_", x %||% "")
+    s <- gsub("^_|_$", "", s)
+    if (!nzchar(s)) "sheet" else s
+  }
+  bt <- function(x) if (is.null(x) || !length(x)) NULL else paste0("`", x[1], "`")
+
+  ch <- tryCatch(parser$get_charts(), error = function(e) tibble::tibble())
+  sh <- tryCatch(parser$get_sheet_shelves(), error = function(e) tibble::tibble())
+  layout <- tryCatch(parser$get_dashboard_layout(), error = function(e) tibble::tibble())
+  field_for <- function(sheet, shelf) {
+    if (!NROW(sh)) return(NULL)
+    v <- sh$field_clean[sh$sheet == sheet & sh$shelf == shelf]
+    v <- unique(v[!is.na(v) & nzchar(v)])
+    if (length(v)) v else NULL
+  }
+
+  add("# -----------------------------------------------------------------")
+  add("# R starter scaffold generated by twbparser")
+  add("# Source workbook: ", basename(parser$path %||% "workbook"))
+  add("# Generated:       ", format(Sys.time(), "%Y-%m-%d %H:%M:%S"))
+  add("# Review before use: wire up `data`, adjust field names and aesthetics.")
+  add("# -----------------------------------------------------------------")
+  add("")
+  add("library(ggplot2)")
+  add("library(dplyr)")
+  add("# library(bslib)   # for the dashboard layout")
+  add("# library(shiny)")
+  add("")
+  add("# TODO: load your data (Tableau extract / SQL export) into `data`.")
+  add("# data <- readr::read_csv('your_data.csv')")
+  add("")
+  add("# ============================ Worksheets ============================")
+  if (NROW(ch)) {
+    for (i in seq_len(nrow(ch))) {
+      ws    <- ch$worksheet[i]
+      marks <- ch$mark_types[i]
+      cols  <- field_for(ws, "cols")
+      rows  <- field_for(ws, "rows")
+      color <- field_for(ws, "color")
+      size  <- field_for(ws, "size")
+      slug  <- slugify(ws)
+      add("")
+      add("# ---- ", ws, "  (mark: ", marks %||% "NA", ") ----")
+      aes_parts <- character()
+      if (!is.null(cols))  aes_parts <- c(aes_parts, paste0("x = ", bt(cols)))
+      if (!is.null(rows))  aes_parts <- c(aes_parts, paste0("y = ", bt(rows)))
+      if (!is.null(color)) aes_parts <- c(aes_parts, paste0("colour = ", bt(color)))
+      if (!is.null(size))  aes_parts <- c(aes_parts, paste0("size = ", bt(size)))
+      aes_str <- if (length(aes_parts)) paste(aes_parts, collapse = ", ") else "x = ..., y = ..."
+      geom <- twbp_marks_to_geoms(marks)
+      if (is.null(geom) || is.na(geom)) geom <- "geom_blank()  # no mark type recorded"
+      add("p_", slug, " <- ggplot(data, aes(", aes_str, ")) +")
+      add("  ", geom, " +")
+      add("  labs(title = \"", ws, "\")")
+    }
+  } else {
+    add("# (no worksheets found)")
+  }
+  add("")
+  add("# ============================ Dashboards ============================")
+  if (NROW(layout)) {
+    for (dn in unique(layout$dashboard)) {
+      ld <- layout[layout$dashboard == dn, , drop = FALSE]
+      ws_zones <- ld[!is.na(ld$target) & nzchar(ld$target), , drop = FALSE]
+      ext_w <- suppressWarnings(max(ld$x + ld$w, na.rm = TRUE))
+      ext_h <- suppressWarnings(max(ld$y + ld$h, na.rm = TRUE))
+      add("")
+      add("# ---- Dashboard: ", dn, " ----")
+      if (is.finite(ext_w) && is.finite(ext_h)) {
+        add("# Inferred canvas extent (workbook units): ", ext_w, " x ", ext_h)
+      }
+      if (nrow(ws_zones)) {
+        add("# Worksheet zones (target @ x,y wxh):")
+        for (j in seq_len(nrow(ws_zones))) {
+          add("#   ", ws_zones$target[j], " @ ", ws_zones$x[j], ",", ws_zones$y[j],
+              " ", ws_zones$w[j], "x", ws_zones$h[j])
+        }
+        add("# ui_", slugify(dn), " <- bslib::page_fillable(")
+        for (j in seq_len(nrow(ws_zones))) {
+          add("#   bslib::card(bslib::card_header('", ws_zones$target[j],
+              "'), shiny::plotOutput('", slugify(ws_zones$target[j]), "')),")
+        }
+        add("# )")
+      } else {
+        add("# (no worksheet zones found)")
+      }
+    }
+  } else {
+    add("# (no dashboards found)")
+  }
+
+  paste(unlist(L), collapse = "\n")
+}
+
 ui <- fluidPage(
   tags$head(
     tags$title("twbparser workbook inspector"),
@@ -361,6 +567,8 @@ ui <- fluidPage(
         class = "panel",
         div(class = "panel-title", "Export"),
         downloadButton("download_brief", "Replication brief (.md)", class = "btn-primary"),
+        tags$div(style = "height: 8px;"),
+        downloadButton("download_rscript", "R starter script (.R)"),
         tags$div(style = "height: 10px;"),
         selectInput("export_table", "Table", choices = NULL),
         downloadButton("download_csv", "Download CSV")
@@ -376,6 +584,20 @@ ui <- fluidPage(
           id = "section",
           tabPanel("Overview", verbatimTextOutput("summary_text")),
           tabPanel("Replication Brief", verbatimTextOutput("brief_text")),
+          tabPanel(
+            "Dashboard Layout",
+            div(
+              style = "display:flex; align-items:flex-end; gap:14px; flex-wrap:wrap; margin-bottom:12px;",
+              div(style = "min-width:240px;", selectInput("layout_dashboard", "Dashboard", choices = NULL, width = "100%")),
+              uiOutput("layout_meta")
+            ),
+            uiOutput("layout_legend"),
+            uiOutput("layout_canvas"),
+            tags$div(style = "height:14px;"),
+            div(class = "panel-title", "Objects on this dashboard"),
+            section_table("layout_table")
+          ),
+          tabPanel("Charts", section_table("charts_table")),
           tabPanel("Pages", section_table("pages_table")),
           tabPanel("Filters", section_table("filters_table")),
           tabPanel("Shelves", section_table("shelves_table")),
@@ -597,6 +819,127 @@ server <- function(input, output, session) {
       sel <- input$export_table
       df <- if (!is.null(sel) && sel %in% names(tbls)) tbls[[sel]] else data.frame()
       utils::write.csv(df, file, row.names = FALSE, na = "")
+    }
+  )
+
+  # ---- Dashboard Layout ----
+  layout_all <- reactive({
+    req(data())
+    data()$parser$get_dashboard_layout()
+  })
+
+  observe({
+    la <- layout_all()
+    dn <- if (NROW(la)) unique(la$dashboard) else character()
+    updateSelectInput(session, "layout_dashboard", choices = dn)
+  })
+
+  layout_selected <- reactive({
+    la <- layout_all()
+    if (!NROW(la)) return(la)
+    sel <- input$layout_dashboard
+    if (is.null(sel) || !nzchar(sel)) return(la[la$dashboard == la$dashboard[1], , drop = FALSE])
+    la[la$dashboard == sel, , drop = FALSE]
+  })
+
+  output$layout_meta <- renderUI({
+    if (is.null(data())) return(NULL)
+    ld <- layout_selected()
+    if (!NROW(ld)) return(div(class = "status", "No dashboards in this workbook."))
+    ext_w <- suppressWarnings(max(ld$x + ld$w, na.rm = TRUE))
+    ext_h <- suppressWarnings(max(ld$y + ld$h, na.rm = TRUE))
+    n_ws  <- sum(!is.na(ld$target) & nzchar(ld$target))
+    size_txt <- if (is.finite(ext_w) && is.finite(ext_h)) {
+      sprintf("%g × %g (workbook units, inferred from zones)", ext_w, ext_h)
+    } else {
+      "unknown"
+    }
+    div(
+      class = "status",
+      tags$strong("Canvas: "), size_txt, tags$br(),
+      sprintf("%d zones · %d worksheet placements", NROW(ld), n_ws)
+    )
+  })
+
+  output$layout_legend <- renderUI({
+    if (is.null(data()) || !NROW(layout_selected())) return(NULL)
+    item <- function(ct, label) {
+      pal <- twbp_comp_palette(ct)
+      span(
+        style = "display:inline-flex; align-items:center; gap:5px; margin-right:14px; font-size:12px; color:var(--muted);",
+        span(style = sprintf("width:12px; height:12px; border-radius:3px; background:%s; border:1px solid %s; display:inline-block;",
+                             pal[["bg"]], pal[["bd"]])),
+        label
+      )
+    }
+    div(
+      style = "margin-bottom:10px;",
+      item("worksheet", "worksheet"), item("filter", "filter"),
+      item("parameter_control", "parameter"), item("legend", "legend"),
+      item("text", "text"), item("image", "image")
+    )
+  })
+
+  output$layout_canvas <- renderUI({
+    if (is.null(data())) return(div(class = "empty-state", "No workbook loaded yet."))
+    ld <- layout_selected()
+    if (!NROW(ld)) return(div(class = "empty-state", "This workbook has no dashboards to draw."))
+    twbp_layout_html(ld)
+  })
+
+  output$layout_table <- render_section_table(
+    function() {
+      ld <- layout_selected()
+      if (!NROW(ld)) return(ld)
+      dplyr::select(ld, zone_id, parent_zone_id, component_type, target, layout_type, x, y, w, h)
+    },
+    "No layout zones found."
+  )
+
+  # ---- Charts + ggplot2 hints ----
+  charts_data <- reactive({
+    req(data())
+    p <- data()$parser
+    ch <- p$get_charts()
+    if (!NROW(ch)) return(ch)
+    sh <- p$get_sheet_shelves()
+    pick <- function(sheet_name, shelf_name) {
+      if (!NROW(sh)) return(NA_character_)
+      v <- sh$field_clean[sh$sheet == sheet_name & sh$shelf == shelf_name]
+      v <- unique(v[!is.na(v) & nzchar(v)])
+      if (length(v)) paste(v, collapse = ", ") else NA_character_
+    }
+    ch |>
+      dplyr::mutate(
+        suggested_ggplot = vapply(.data$mark_types, twbp_marks_to_geoms, character(1)),
+        cols  = vapply(.data$worksheet, pick, character(1), shelf_name = "cols"),
+        rows  = vapply(.data$worksheet, pick, character(1), shelf_name = "rows"),
+        color = vapply(.data$worksheet, pick, character(1), shelf_name = "color"),
+        size  = vapply(.data$worksheet, pick, character(1), shelf_name = "size")
+      ) |>
+      dplyr::select(worksheet, mark_types, suggested_ggplot, cols, rows, color, size)
+  })
+
+  output$charts_table <- render_section_table(
+    function() charts_data(),
+    "No worksheets with mark types found."
+  )
+
+  output$download_rscript <- downloadHandler(
+    filename = function() {
+      base <- tools::file_path_sans_ext(data()$name %||% "workbook")
+      paste0(base, "_scaffold.R")
+    },
+    content = function(file) {
+      txt <- if (is.null(data())) {
+        "# No workbook loaded."
+      } else {
+        tryCatch(
+          twbp_r_scaffold(data()$parser),
+          error = function(e) paste("# Could not generate scaffold:", conditionMessage(e))
+        )
+      }
+      writeLines(txt, file, useBytes = TRUE)
     }
   )
 

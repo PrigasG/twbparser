@@ -46,8 +46,8 @@ with a \code{formula_pretty} column.}
 \item{actions}{Dashboard actions from \code{\link[=twb_dashboard_actions]{twb_dashboard_actions()}}.}
 }
 
-\strong{\code{format = "text"}}: a single \code{character(1)} with section headers and
-tabular output.
+\strong{\code{format = "text"}}: a single Markdown \code{character(1)} with section
+headers, compact tables, and fenced formula/SQL blocks.
 }
 \description{
 Assembles all extracted intelligence — datasources, parameters, calculated

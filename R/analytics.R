@@ -348,8 +348,8 @@ twb_field_usage <- function(x,
 #'   \item{actions}{Dashboard actions from [twb_dashboard_actions()].}
 #' }
 #'
-#' **`format = "text"`**: a single `character(1)` with section headers and
-#' tabular output.
+#' **`format = "text"`**: a single Markdown `character(1)` with section
+#' headers, compact tables, and fenced formula/SQL blocks.
 #'
 #' @examples
 #' twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
@@ -439,21 +439,9 @@ twb_replication_brief <- function(x,
       error = function(e) NULL
     )
     if (!is.null(pretty) && "formula_pretty" %in% names(pretty)) {
-      calc_fields <- dplyr::bind_rows(
-        calc_fields,
-        tibble::tibble(formula_pretty = pretty$formula_pretty)
-      ) |>
-        # safe merge: join on name to avoid row-count mismatch
-        (\(cf) {
-          cf |> dplyr::select(-"formula_pretty") |>
-            dplyr::bind_cols(
-              tibble::tibble(
-                formula_pretty = pretty$formula_pretty[
-                  match(cf$name, pretty$name)
-                ]
-              )
-            )
-        })()
+      calc_fields$formula_pretty <- pretty$formula_pretty[
+        match(calc_fields$name, pretty$name)
+      ]
     }
   }
 
@@ -528,57 +516,240 @@ twb_replication_brief <- function(x,
 #' @keywords internal
 #' @noRd
 .brief_to_text <- function(brief) {
-  lines <- character()
-
-  .hdr <- function(title) c(paste0("## ", title), "")
-
-  .tbl <- function(tbl) {
-    if (is.null(tbl) || (is.data.frame(tbl) && nrow(tbl) == 0L))
-      return(c("  (none)", ""))
-    c(utils::capture.output(print(as.data.frame(tbl), row.names = FALSE)),
-      "")
-  }
-
-  .kv <- function(label, value) {
-    sprintf("  %-25s %s", paste0(label, ":"), value)
-  }
-
-  # Header
-  lines <- c(lines, "# TWBPARSER REPLICATION BRIEF", "")
-
-  # Meta
   m <- brief$meta
+  title <- paste0("# Replication Brief: ", m$workbook_file[[1]])
+
+  lines <- c(
+    title,
+    "",
+    paste0("_Generated ", m$generated_at[[1]], " by twbparser._"),
+    "",
+    "## At a glance",
+    "",
+    .brief_md_table(tibble::tibble(
+      Metric = c("Datasources", "Worksheets", "Dashboards",
+                 "Calculated fields", "Parameters"),
+      Value = c(m$n_datasources, m$n_worksheets, m$n_dashboards,
+                m$n_calculated_fields, m$n_parameters)
+    )),
+    "## Datasources",
+    "",
+    .brief_md_table(
+      brief$datasources,
+      cols = c("datasource_name", "connection_type", "primary_table",
+               "field_count", "location"),
+      labels = c("Datasource", "Type", "Primary table", "Fields", "Location")
+    ),
+    "## Parameters",
+    "",
+    .brief_md_table(
+      brief$parameters,
+      cols = c("name", "datatype", "parameter_type", "current_value"),
+      labels = c("Parameter", "Type", "Domain", "Current value")
+    )
+  )
+
+  if (!is.null(brief$custom_sql)) {
+    lines <- c(lines, "## Custom SQL", "", .brief_sql_lines(brief$custom_sql))
+  }
+
   lines <- c(
     lines,
-    .hdr("WORKBOOK"),
-    .kv("File",              m$workbook_file),
-    .kv("Generated at",      m$generated_at),
-    .kv("Datasources",       m$n_datasources),
-    .kv("Worksheets",        m$n_worksheets),
-    .kv("Dashboards",        m$n_dashboards),
-    .kv("Calculated fields", m$n_calculated_fields),
-    .kv("Parameters",        m$n_parameters),
-    ""
-  )
-
-  .section <- function(title, tbl) c(.hdr(title), .tbl(tbl))
-
-  lines <- c(lines,
-    .section("DATASOURCES",       brief$datasources),
-    .section("PARAMETERS",        brief$parameters)
-  )
-  if (!is.null(brief$custom_sql))
-    lines <- c(lines, .section("CUSTOM SQL", brief$custom_sql))
-
-  lines <- c(lines,
-    .section("CALCULATED FIELDS (complexity)", brief$calculated_fields),
-    .section("FIELD USAGE",                    brief$field_usage),
-    .section("FILTERS",                        brief$filters),
-    .section("SORTS",                          brief$sorts),
-    .section("CHART TYPES",                    brief$chart_types),
-    .section("DASHBOARD LAYOUT",               brief$dashboard_layout),
-    .section("ACTIONS",                        brief$actions)
+    "## Calculated Fields",
+    "",
+    .brief_calc_lines(brief$calculated_fields),
+    "## Field Usage",
+    "",
+    .brief_md_table(
+      .brief_field_usage_summary(brief$field_usage),
+      cols = c("field_clean", "sheet", "used_as", "n_appearances"),
+      labels = c("Field", "Sheet", "Used as", "Uses")
+    ),
+    "## Filters",
+    "",
+    .brief_md_table(
+      brief$filters,
+      cols = c("sheet", "field_clean", "filter_class", "include_mode",
+               "members", "range_min", "range_max"),
+      labels = c("Sheet", "Field", "Class", "Mode", "Members", "Min", "Max")
+    ),
+    "## Sorts",
+    "",
+    .brief_md_table(
+      brief$sorts,
+      cols = c("sheet", "field_clean", "sort_order", "sort_by"),
+      labels = c("Sheet", "Field", "Order", "Sort by")
+    ),
+    "## Chart Types",
+    "",
+    .brief_md_table(
+      brief$chart_types,
+      cols = c("worksheet", "mark_types"),
+      labels = c("Worksheet", "Mark types")
+    ),
+    "## Dashboard Layout",
+    "",
+    .brief_md_table(
+      brief$dashboard_layout,
+      cols = c("dashboard", "sheet", "zone_id", "x", "y", "w", "h"),
+      labels = c("Dashboard", "Sheet", "Zone", "X", "Y", "W", "H")
+    ),
+    "## Actions",
+    "",
+    .brief_md_table(
+      brief$actions,
+      cols = c("action_name", "action_type", "source_sheets",
+               "target_sheet", "run_on", "url"),
+      labels = c("Action", "Type", "Sources", "Targets", "Run on", "URL")
+    )
   )
 
   paste(lines, collapse = "\n")
+}
+
+#' @keywords internal
+#' @noRd
+.brief_md_table <- function(tbl, cols = NULL, labels = NULL, max_rows = 50L) {
+  if (is.null(tbl) || !is.data.frame(tbl) || nrow(tbl) == 0L) {
+    return(c("_None._", ""))
+  }
+
+  if (is.null(cols)) cols <- names(tbl)
+  cols <- intersect(cols, names(tbl))
+  if (!length(cols)) return(c("_None._", ""))
+
+  df <- as.data.frame(tbl[, cols, drop = FALSE], stringsAsFactors = FALSE)
+  if (!is.null(labels)) {
+    names(df) <- labels[seq_along(cols)]
+  }
+  if (nrow(df) > max_rows) {
+    df <- utils::head(df, max_rows)
+    truncated <- TRUE
+  } else {
+    truncated <- FALSE
+  }
+
+  fmt <- function(x) {
+    x <- as.character(x)
+    x[is.na(x) | x == "<NA>"] <- ""
+    x <- gsub("\\\\n", "<br>", x)
+    x <- gsub("\\r?\\n", "<br>", x, perl = TRUE)
+    x <- gsub("\\|", "\\\\|", x)
+    trimws(x)
+  }
+
+  rows <- apply(df, 1L, function(row) {
+    paste0("| ", paste(fmt(row), collapse = " | "), " |")
+  })
+  out <- c(
+    paste0("| ", paste(fmt(names(df)), collapse = " | "), " |"),
+    paste0("| ", paste(rep("---", ncol(df)), collapse = " | "), " |"),
+    rows,
+    ""
+  )
+  if (truncated) {
+    out <- c(out, sprintf("_Showing first %d rows._", max_rows), "")
+  }
+  out
+}
+
+#' @keywords internal
+#' @noRd
+.brief_clean_context <- function(x) {
+  x <- as.character(x)
+  is_filter <- identical(x, "filter") | x == "filter"
+  x <- sub("^shelf:", "", x)
+  x <- gsub("_", " ", x, fixed = TRUE)
+  ifelse(is_filter, "filter", paste(x, "shelf"))
+}
+
+#' @keywords internal
+#' @noRd
+.brief_field_usage_summary <- function(field_usage) {
+  if (is.null(field_usage) || !is.data.frame(field_usage) || !nrow(field_usage)) {
+    return(tibble::tibble(
+      field_clean = character(), sheet = character(),
+      used_as = character(), n_appearances = integer()
+    ))
+  }
+
+  field_usage |>
+    dplyr::mutate(used_as = .brief_clean_context(.data$context)) |>
+    dplyr::group_by(.data$field_clean, .data$sheet) |>
+    dplyr::summarise(
+      used_as = paste(sort(unique(.data$used_as)), collapse = ", "),
+      n_appearances = sum(.data$n_appearances, na.rm = TRUE),
+      .groups = "drop"
+    ) |>
+    dplyr::arrange(.data$sheet, .data$field_clean)
+}
+
+#' @keywords internal
+#' @noRd
+.brief_formula_text <- function(x) {
+  x <- x %||% ""
+  x <- as.character(x)
+  x[is.na(x) | x == "<NA>"] <- ""
+  gsub("\\\\n", "\n", x)
+}
+
+#' @keywords internal
+#' @noRd
+.brief_calc_lines <- function(calcs) {
+  if (is.null(calcs) || !is.data.frame(calcs) || !nrow(calcs)) {
+    return(c("_None._", ""))
+  }
+
+  unlist(lapply(seq_len(nrow(calcs)), function(i) {
+    row <- calcs[i, , drop = FALSE]
+    formula <- if ("formula_pretty" %in% names(row) &&
+                   !is.na(row$formula_pretty[[1]]) &&
+                   nzchar(row$formula_pretty[[1]])) {
+      row$formula_pretty[[1]]
+    } else {
+      row$formula[[1]]
+    }
+
+    c(
+      paste0("### ", row$name[[1]]),
+      "",
+      .brief_md_table(tibble::tibble(
+        Property = c("Datasource", "Datatype", "Role", "Calculation type",
+                     "Table calculation", "Dependency depth", "Dependencies"),
+        Value = c(row$datasource[[1]], row$datatype[[1]], row$role[[1]],
+                  row$calc_type[[1]], row$is_table_calc[[1]],
+                  row$dep_depth[[1]], row$n_deps[[1]])
+      )),
+      "```tableau",
+      .brief_formula_text(formula),
+      "```",
+      ""
+    )
+  }), use.names = FALSE)
+}
+
+#' @keywords internal
+#' @noRd
+.brief_sql_lines <- function(sql) {
+  if (is.null(sql) || !is.data.frame(sql) || !nrow(sql)) {
+    return(c("_None._", ""))
+  }
+
+  unlist(lapply(seq_len(nrow(sql)), function(i) {
+    row <- sql[i, , drop = FALSE]
+    name <- row$relation_name[[1]] %||% paste0("SQL block ", i)
+    text <- row$custom_sql[[1]] %||% ""
+    c(
+      paste0("### ", name),
+      "",
+      .brief_md_table(tibble::tibble(
+        Property = c("Relation type", "Detected custom SQL"),
+        Value = c(row$relation_type[[1]], row$is_custom_sql[[1]])
+      )),
+      "```sql",
+      .brief_formula_text(text),
+      "```",
+      ""
+    )
+  }), use.names = FALSE)
 }

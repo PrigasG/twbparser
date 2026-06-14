@@ -299,8 +299,21 @@ test_that("twb_replication_brief format=text returns character(1)", {
   txt  <- twb_replication_brief(xml, format = "text")
   expect_type(txt, "character")
   expect_length(txt, 1L)
-  expect_match(txt, "REPLICATION BRIEF")
-  expect_match(txt, "CALCULATED FIELDS")
+  expect_match(txt, "# Replication Brief:")
+  expect_match(txt, "## Calculated Fields")
+})
+
+test_that("twb_replication_brief format=text is readable Markdown", {
+  twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+  skip_if_not(nzchar(twb) && file.exists(twb), "example .twb not found")
+  xml <- xml2::read_xml(twb)
+  txt <- twb_replication_brief(xml, format = "text")
+
+  expect_match(txt, "# Replication Brief:")
+  expect_match(txt, "\\| Metric \\| Value \\|")
+  expect_match(txt, "```tableau", fixed = TRUE)
+  expect_match(txt, "## Field Usage")
+  expect_false(grepl("<NA>", txt, fixed = TRUE))
 })
 
 test_that("twb_replication_brief include_sql=FALSE sets custom_sql to NULL", {
@@ -317,8 +330,10 @@ test_that("twb_replication_brief include_formulas=TRUE adds formula_pretty", {
   xml   <- xml2::read_xml(twb)
   brief <- twb_replication_brief(xml, include_formulas = TRUE)
   cf    <- brief$calculated_fields
-  if (nrow(cf) > 0L)
+  if (nrow(cf) > 0L) {
     expect_true("formula_pretty" %in% names(cf))
+    expect_equal(nrow(cf), nrow(twb_calc_complexity(xml)))
+  }
 })
 
 # ---- TwbParser integration --------------------------------------------------

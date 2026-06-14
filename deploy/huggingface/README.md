@@ -22,10 +22,16 @@ download a **replication brief** for porting the workbook to another tool.
 
 1. Click **Choose file** and upload a `.twb` or `.twbx` (up to 100 MB by
    default — see `TWBPARSER_MAX_UPLOAD_MB`), or click **Load demo workbook**.
-2. Browse the tabs: Overview, Replication Brief, Pages, Filters, Shelves,
-   Fields, Datasources, Calculations, SQL, TWBX Assets, Validation.
-3. Use the **Export** panel to download the replication brief (`.md`) or any
-   table as CSV.
+2. Browse the tabs: Overview, Replication Brief, Dashboard Layout, Charts,
+   Pages, Filters, Shelves, Fields, Datasources, Calculations, SQL,
+   TWBX Assets, Validation.
+   - **Dashboard Layout** reconstructs each dashboard page to scale, showing
+     where every object sits and its dimensions.
+   - **Charts** lists the mark type per worksheet with a suggested `ggplot2`
+     geom and the fields used.
+3. Use the **Export** panel to download the replication brief (`.md`), an R
+   starter script (`.R`) with `ggplot2`/`bslib` scaffolding, or any table as
+   CSV.
 
 ## Configuration
 
