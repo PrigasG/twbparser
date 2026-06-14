@@ -1,4 +1,4 @@
-url: https://PrigasG.github.io/twbparser
+url: https://prigasg.github.io/twbparser
 template:
   bootstrap: 5
   bslib:
@@ -88,10 +88,22 @@ reference:
       - plot_relationship_graph
       - plot_source_join_graph
 
+  - title: "Analytics & replication"
+    contents:
+      - twb_calc_complexity
+      - twb_field_usage
+      - twb_replication_brief
+
   - title: "Formatting & display"
     contents:
       - tableau_formula_pretty
       - prettify_calculated_fields
+
+  - title: "Interactive app"
+    desc: >
+      Launch the bundled Shiny workbook inspector.
+    contents:
+      - run_twbparser_app
 
   - title: "Server/Cloud (optional)"
     contents:

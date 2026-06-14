@@ -20,7 +20,8 @@ Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationshi
 -   **Dashboard intelligence**: sheet positions, full zone layout tree, and filter/URL actions
 -   **Dependency graph**: build/plot field dependency DAGs
 -   **TWBX assets**: list/extract images, extracts, text files, etc.
--   **Ergonomics**: `parser$summary` (no parens), `parser$overview`, `parser$pages`, `parser$pages_summary`
+-   **Workbook report**: `parser$summary` / `parser$report` provide a structured inspection summary for console use or UI rendering
+-   **Interactive app**: launch the bundled Shiny workbook inspector locally or deploy it as a Docker Space
 
 
 ## Installation
@@ -55,6 +56,28 @@ parser$summary
 # summary (one row tibble)
 parser$overview
 ```
+
+## Interactive Shiny App
+
+Launch the bundled workbook inspector from R:
+
+``` r
+library(twbparser)
+
+run_twbparser_app()
+```
+
+The app lets users upload `.twb` / `.twbx` files, shows a clean loading overlay
+while parsing, and organizes the workbook report into tabs for overview, pages,
+filters, shelves, fields, datasources, calculations, SQL, TWBX assets, and
+validation.
+
+For Hugging Face Docker Space deployment, use the files in
+[`deploy/huggingface`](deploy/huggingface):
+
+-   `Dockerfile` installs `twbparser` from GitHub and serves the bundled Shiny app.
+-   `README.md` is the Space card and records runtime settings.
+-   `DEPLOYING.md` documents the push/build workflow and version pinning.
 
 With a ".twbx" file
 
@@ -187,6 +210,9 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 
 - **Worksheet intelligence**: `twb_sheet_shelves()`, `twb_sheet_filters()`, `twb_sheet_axes()`, `twb_sheet_sorts()` — extract the full shelf configuration, filter predicates, axis settings, and sort rules for every worksheet
 - **Dashboard intelligence**: `twb_dashboard_sheets()`, `twb_dashboard_layout()`, `twb_dashboard_actions()` — inspect which sheets appear where, the full zone hierarchy, and all filter/URL actions
+- **Interactive Shiny app**: `run_twbparser_app()` launches a bundled workbook inspector with upload support, loading overlays, report tabs, and CSV/brief export in the deployed app.
+- **Docker Space deployment**: `deploy/huggingface/` contains the Dockerfile, Space card, and deployment notes for hosting the Shiny app.
+- **Workbook report**: `parser$summary` and `parser$report` expose a structured workbook report that powers both console output and the app.
 - **Bug fixes**: corrected edge direction in `plot_relationship_graph()`, fixed column references in `plot_source_join_graph()`, eliminated Cartesian-product explosion in `infer_implicit_relationships()`
 
 ## Contributing

@@ -2,6 +2,18 @@
 
 ## New features
 
+### Interactive workbook inspector
+
+* `run_twbparser_app()` launches the bundled Shiny app for inspecting `.twb`
+  and `.twbx` workbooks.
+* The app supports local uploads, the bundled demo workbook, loading overlays
+  for parse/export work, report tabs, CSV table downloads, and a replication
+  brief download.
+* `deploy/huggingface/` records the Docker Space deployment files and notes:
+  `Dockerfile`, Space `README.md`, and `DEPLOYING.md`.
+* `parser$summary` and `parser$report` now expose a structured workbook report
+  used by both console output and the Shiny app.
+
 ### Per-worksheet intelligence
 
 * `twb_sheet_shelves()` — extract every field placed on rows, cols, or an

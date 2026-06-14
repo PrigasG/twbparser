@@ -6,7 +6,8 @@ Authors@R:
            comment = c(ORCID = "0000-0002-1975-1459"))
 Description: High-performance parsing of 'Tableau' workbook files into
     tidy data frames and dependency graphs for other visualization tools
-    like R 'Shiny' or 'Power BI' replication.
+    like R 'Shiny' or 'Power BI' replication, plus an interactive 'Shiny'
+    workbook inspector for uploaded .twb and .twbx files.
 License: MIT + file LICENSE
 URL: https://prigasg.github.io/twbparser/,
     https://github.com/PrigasG/twbparser
