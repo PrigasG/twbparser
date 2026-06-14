@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/PrigasG/twbparser/blob/master/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/PrigasG/twbparser/blob/v0.4.1/DESCRIPTION)
 
 Arthur G (2026). *twbparser: Parse 'Tableau' Workbooks into Functional
 Data*. R package version 0.4.1, <https://prigasg.github.io/twbparser/>.
