@@ -343,7 +343,7 @@ NULL
     paste0(".//dashboard[@name='", gsub("([\"'])", "", dashboard), "']")
   }
   d_nodes <- xml2::xml_find_all(xml_doc, d_xpath)
-  if (length(d_nodes) == 0) return(tibble::tibble())
+  if (length(d_nodes) == 0) return(.empty_dashboard_filters())
 
   purrr::map_dfr(d_nodes, function(d) {
     d_name <- xml2::xml_attr(d, "name") %||% NA_character_
@@ -381,6 +381,17 @@ NULL
     })
   }) |>
     dplyr::arrange(.data$dashboard, .data$zone_id)
+}
+
+.empty_dashboard_filters <- function() {
+  tibble::tibble(
+    dashboard    = character(),
+    zone_id      = character(),
+    zone_type    = character(),
+    field        = character(),
+    presentation = character(),
+    x = integer(), y = integer(), w = integer(), h = integer()
+  )
 }
 
 # Chart types per worksheet (compat layer)

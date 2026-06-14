@@ -114,14 +114,17 @@ is_xml_missing <- function(node) {
   inherits(node, "xml_missing") || isTRUE(xml2::xml_type(node) != "element")
 }
 
-#' Safely evaluate and return fallback on error (with warning)
+#' Safely evaluate and return fallback on error
 #' @param expr Expression to evaluate
 #' @param fallback Value if an error occurs
+#' @param warn If `TRUE`, emit a warning with the caught error message.
 #' @return Result of `expr` or `fallback`
 #' @keywords internal
-safe_call <- function(expr, fallback) {
+safe_call <- function(expr, fallback, warn = FALSE) {
   tryCatch(expr, error = function(e) {
-    warning(conditionMessage(e), call. = FALSE)
+    if (isTRUE(warn)) {
+      warning(conditionMessage(e), call. = FALSE)
+    }
     fallback
   })
 }
@@ -368,7 +371,7 @@ extract_named_connections <- function(xml_doc) {
         dbname %||% "<catalog>",
         ifelse(!is.na(schema) && nzchar(schema), paste0(".", schema), "")
       ),
-      identical(cls, "ogrdirect") ~ paste0(" Shapefile: ", basename_safe(fn)),
+      identical(cls, "ogrdirect") ~ paste0("Shapefile: ", basename_safe(fn)),
       identical(cls, "excel") ~ paste0("Excel: ", basename_safe(fn)),
       identical(cls, "textscan") ~ paste0("CSV: ", basename_safe(fn)),
       TRUE ~ paste0(

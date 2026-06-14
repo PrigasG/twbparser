@@ -92,6 +92,11 @@ TwbParser <- R6::R6Class(
         self$twbx_manifest <- info$manifest
       } else if (ext != "twb") {
         stop("Unsupported file type: ", ext)
+      } else {
+        self$twbx_manifest <- tibble::tibble(
+          name = character(), size_bytes = double(),
+          modified = as.POSIXct(character()), type = character()
+        )
       }
 
       self$path <- path
@@ -298,6 +303,10 @@ TwbParser <- R6::R6Class(
       )
     },
 
+    get_workbook_report = function() {
+      twb_workbook_report(self)
+    },
+
     # --- validator bridge ---
     #' @description Validate relationships; optionally stop on failure.
     #' @param error If `TRUE`, `stop()` when validation fails.
@@ -313,28 +322,9 @@ TwbParser <- R6::R6Class(
     # --- summary ---
     #' @description Print a concise summary of parsed content.
     summary = function() {
-      ov  <- self$get_overview()
-      cat("TWB PARSER SUMMARY\n")
-      cat("------------------\n")
-      cat(sprintf("File: %s\n", ov$file[1]))
-      cat(sprintf("Datasources: %d\n", ov$datasources[1]))
-      cat(sprintf("Parameters: %d\n", ov$parameters[1]))
-      cat(sprintf("Relationships: %d\n", ov$relationships[1]))
-      cat(sprintf("Calculated fields: %d\n", ov$calculated_fields[1]))
-      cat(sprintf("Raw fields: %d\n", ov$raw_fields[1]))
-      cat(sprintf("Inferred joins: %d\n", ov$inferred_relationships[1]))
-      cat(sprintf("Dashboards: %d\n", ov$dashboards[1]))
-      cat(sprintf("Total filters: %d\n", ov$total_filters[1]))
-
-      ds <- tryCatch(self$get_dashboard_summary(), error = function(e) tibble::tibble())
-      if (nrow(ds)) {
-        cat("\nDashboards overview (first 8):\n")
-        utils::print(utils::head(ds, 8), row.names = FALSE)
-        if (nrow(ds) > 8) {
-          cat(sprintf("... and %d more\n", nrow(ds) - 8))
-        }
-      }
-      invisible(list(overview = ov, dashboard_summary = ds))
+      report <- self$get_workbook_report()
+      print(report)
+      invisible(report)
     },
 
     get_overview = function() {

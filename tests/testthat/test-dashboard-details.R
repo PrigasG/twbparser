@@ -154,6 +154,16 @@ test_that("twb_dashboard_actions returns empty tibble when no actions", {
   expect_equal(nrow(out), 0L)
 })
 
+test_that("twb_dashboard_filters keeps schema when no dashboards exist", {
+  xml <- xml2::read_xml("<workbook><dashboards/></workbook>")
+  out <- twb_dashboard_filters(xml)
+  expect_s3_class(out, "tbl_df")
+  expect_equal(nrow(out), 0L)
+  expect_named(out, c("dashboard", "zone_id", "zone_type", "field",
+                      "presentation", "x", "y", "w", "h"),
+               ignore.order = TRUE)
+})
+
 # ---- TwbParser integration ---------------------------------------------------
 
 test_that("TwbParser exposes new get_* methods without error", {

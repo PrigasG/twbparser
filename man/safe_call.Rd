@@ -2,19 +2,21 @@
 % Please edit documentation in R/utils.R
 \name{safe_call}
 \alias{safe_call}
-\title{Safely evaluate and return fallback on error (with warning)}
+\title{Safely evaluate and return fallback on error}
 \usage{
-safe_call(expr, fallback)
+safe_call(expr, fallback, warn = FALSE)
 }
 \arguments{
 \item{expr}{Expression to evaluate}
 
 \item{fallback}{Value if an error occurs}
+
+\item{warn}{If \code{TRUE}, emit a warning with the caught error message.}
 }
 \value{
 Result of \code{expr} or \code{fallback}
 }
 \description{
-Safely evaluate and return fallback on error (with warning)
+Safely evaluate and return fallback on error
 }
 \keyword{internal}

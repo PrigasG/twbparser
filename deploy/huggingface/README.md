@@ -1,7 +1,7 @@
 ---
 title: twbparser Workbook Inspector
 emoji: 📊
-colorFrom: teal
+colorFrom: indigo
 colorTo: blue
 sdk: docker
 app_port: 7860

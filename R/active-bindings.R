@@ -64,14 +64,19 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   ## summary as a property (prints when accessed)
   rebind(
     "summary",
-    wrap_cache("summary", function() { x$summary_fn(); invisible(NULL) })
+    wrap_cache("summary", function() x$get_workbook_report())
   )
 
   ## High-level read-only conveniences (new names; originals untouched)
+  rebind("report",            wrap_cache("report",            function() x$get_workbook_report()))
   rebind("overview",          wrap_cache("overview",          function() x$get_overview()))
   rebind("pages",             wrap_cache("pages",             function() .ins_pages(x$xml_doc)))
   rebind("pages_summary",     wrap_cache("pages_summary",     function() .ins_pages_summary(x$xml_doc)))
+  rebind("charts",            wrap_cache("charts",            function() x$get_charts()))
+  rebind("colors",            wrap_cache("colors",            function() x$get_colors()))
+  rebind("dashboards",        wrap_cache("dashboards",        function() x$get_dashboards()))
   rebind("dashboard_summary", wrap_cache("dashboard_summary", function() .ins_dashboard_summary(x$xml_doc)))
+  rebind("dashboard_filters", wrap_cache("dashboard_filters", function() x$get_dashboard_filters()))
 
   ## Safe getters as properties (same names; originals stashed as *_fn)
   rebind("relations",              wrap_cache("relations",              function() x$get_relations_fn()))
@@ -108,7 +113,7 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind(
     "validation",
     wrap_cache("validation", function() {
-      if (is.null(x$last_validation)) invisible(x$validate_fn(error = FALSE))
+      if (is.null(x$last_validation)) invisible(x$validate(error = FALSE))
       x$last_validation %||% list(ok = NA, issues = tibble::tibble())
     })
   )

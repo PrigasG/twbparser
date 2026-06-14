@@ -96,10 +96,15 @@ extract_datasource_details <- function(xml_doc) {
       server <- attr_safe_get(a, "server", NA_character_)
       filename <- attr_safe_get(a, "filename", NA_character_)
 
+      server_label <- if (!is.na(server) && nzchar(server)) server else "<unknown>"
+      file_label <- function(x) {
+        if (!is.na(x) && nzchar(x)) base::basename(x) else "<unknown>"
+      }
+
       location <- dplyr::case_when(
-        cls == "excel"     ~ paste0("Excel: ",  base::basename(filename %||% "")),
-        cls == "textscan"  ~ paste0("CSV: ",    base::basename(filename %||% "")),
-        cls == "federated" ~ paste0("Federated: ", server %||% "<unknown>"),
+        cls == "excel"     ~ paste0("Excel: ", file_label(filename)),
+        cls == "textscan"  ~ paste0("CSV: ", file_label(filename)),
+        cls == "federated" ~ paste0("Federated: ", server_label),
         TRUE               ~ "Unknown"
       )
 
