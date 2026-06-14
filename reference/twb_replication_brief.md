@@ -98,8 +98,8 @@ twb_replication_brief(
   Dashboard actions from
   [`twb_dashboard_actions()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_actions.md).
 
-**`format = "text"`**: a single `character(1)` with section headers and
-tabular output.
+**`format = "text"`**: a single Markdown `character(1)` with section
+headers, compact tables, and fenced formula/SQL blocks.
 
 ## Examples
 
