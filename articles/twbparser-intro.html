@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -148,13 +148,18 @@ cases.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Calculated Fields</span></span>
 <span><span class="co">#&gt; -----------------</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 6</span></span></span>
-<span><span class="co">#&gt;   datasource                             name    datatype role     </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> federated.0grgaor1pd01yy1f0yr380of1ags no data string   dimension</span></span>
-<span><span class="co">#&gt;   is_table_calc formula                                                      </span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                                                        </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> FALSE         <span style="color: #949494;">"</span>if ISNULL([counts]) THEN \"missing\" ELSE \"available\" END<span style="color: #949494;">"</span></span></span>
+<span><span class="co">#&gt; 1. no data</span></span>
+<span><span class="co">#&gt; Datasource:          federated.0grgaor1pd01yy1f0yr380of1ags</span></span>
+<span><span class="co">#&gt; Type:                string dimension</span></span>
+<span><span class="co">#&gt; Calculation:         raw</span></span>
+<span><span class="co">#&gt; Table calc:          FALSE</span></span>
+<span><span class="co">#&gt; Dependencies:        1</span></span>
+<span><span class="co">#&gt; Formula:</span></span>
+<span><span class="co">#&gt;   if ISNULL([counts])</span></span>
+<span><span class="co">#&gt;   THEN "missing"</span></span>
+<span><span class="co">#&gt;   ELSE "available"</span></span>
+<span><span class="co">#&gt;   END</span></span>
+<span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; SQL</span></span>
 <span><span class="co">#&gt; ---</span></span>
@@ -183,9 +188,7 @@ cases.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 more variables: connection_target &lt;chr&gt;, datasource_name &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   field_count &lt;int&gt;, connection_type &lt;chr&gt;, location &lt;chr&gt;</span></span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">parameters</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 5</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 5 variables: datasource_name &lt;chr&gt;, primary_table &lt;chr&gt;, field_count &lt;int&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   connection_type &lt;chr&gt;, location &lt;chr&gt;</span></span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 0</span></span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="fields-and-calculated-fields">Fields and calculated fields<a class="anchor" aria-label="anchor" href="#fields-and-calculated-fields"></a>

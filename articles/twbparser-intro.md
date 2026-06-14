@@ -85,13 +85,18 @@ parser$summary
 #> 
 #> Calculated Fields
 #> -----------------
-#> # A tibble: 1 × 6
-#>   datasource                             name    datatype role     
-#>   <chr>                                  <chr>   <chr>    <chr>    
-#> 1 federated.0grgaor1pd01yy1f0yr380of1ags no data string   dimension
-#>   is_table_calc formula                                                      
-#>   <lgl>         <chr>                                                        
-#> 1 FALSE         "if ISNULL([counts]) THEN \"missing\" ELSE \"available\" END"
+#> 1. no data
+#> Datasource:          federated.0grgaor1pd01yy1f0yr380of1ags
+#> Type:                string dimension
+#> Calculation:         raw
+#> Table calc:          FALSE
+#> Dependencies:        1
+#> Formula:
+#>   if ISNULL([counts])
+#>   THEN "missing"
+#>   ELSE "available"
+#>   END
+#> 
 #> 
 #> SQL
 #> ---
@@ -121,9 +126,7 @@ print(head(datasources))
 #> # ℹ 5 more variables: connection_target <chr>, datasource_name <chr>,
 #> #   field_count <int>, connection_type <chr>, location <chr>
 print(head(parameters))
-#> # A tibble: 0 × 5
-#> # ℹ 5 variables: datasource_name <chr>, primary_table <chr>, field_count <int>,
-#> #   connection_type <chr>, location <chr>
+#> # A tibble: 0 × 0
 ```
 
 ## Fields and calculated fields

@@ -3,7 +3,8 @@
 Gathers runtime tables (from the object graph), merges in
 named-connection metadata (class, caption, targets), and augments with
 top-level datasource definitions (field counts, connection type,
-location). Also returns a filtered table of parameter datasources.
+location). Also returns the workbook's parameter fields via
+[`extract_parameters()`](https://prigasg.github.io/twbparser/reference/extract_parameters.md).
 
 ## Usage
 
@@ -27,7 +28,8 @@ A named list with:
 
 - parameters:
 
-  Tibble of parameter datasources (if present).
+  Tibble of parameter fields from
+  [`extract_parameters()`](https://prigasg.github.io/twbparser/reference/extract_parameters.md).
 
 - all_sources:
 
