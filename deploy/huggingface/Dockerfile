@@ -16,9 +16,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # configured, so these install as Linux binaries (fast, no compilation).
 RUN R -e "install.packages(c('remotes','shiny','dplyr','igraph','purrr','R6','rlang','stringr','tibble','tidyr','withr','xml2'))"
 
-# Install twbparser itself (small, pure-R). Pin to a tag/commit for
-# reproducible Space builds, e.g. ref = 'v0.4.0'.
-ARG TWBPARSER_REF=HEAD
+# Install twbparser itself (small, pure-R). Pin to the package commit so Docker
+# rebuilds cannot reuse an older HEAD layer and serve stale parser/report code.
+ARG TWBPARSER_REF=6a5012d
 RUN R -e "remotes::install_github('PrigasG/twbparser', ref = '${TWBPARSER_REF}', upgrade = 'never')"
 
 # Hugging Face Spaces route traffic to this port (see README app_port).
