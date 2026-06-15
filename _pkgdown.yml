@@ -52,6 +52,7 @@ reference:
       Per-dashboard zone layout, sheet positions, and actions.
     contents:
       - twb_dashboard_sheets
+      - twb_dashboard_size
       - twb_dashboard_layout
       - twb_dashboard_actions
 
@@ -98,6 +99,8 @@ reference:
     contents:
       - tableau_formula_pretty
       - prettify_calculated_fields
+      - twb_formatting
+      - twb_tooltips
 
   - title: "Interactive app"
     desc: >

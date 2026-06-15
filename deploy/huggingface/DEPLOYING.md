@@ -29,14 +29,14 @@ git push
 
 ## Pinning a version (recommended)
 
-By default the Dockerfile installs `HEAD` of the GitHub repo. For reproducible
-builds, set the build arg to a tag or commit:
+The Dockerfile installs the pinned GitHub ref. For reproducible builds, set the
+build arg to a tag or commit:
 
 ```dockerfile
-ARG TWBPARSER_REF=v0.4.0
+ARG TWBPARSER_REF=v0.5.0
 ```
 
-or in the Space settings add a build arg `TWBPARSER_REF=v0.4.0`.
+or in the Space settings add a build arg `TWBPARSER_REF=v0.5.0`.
 
 ## Notes
 

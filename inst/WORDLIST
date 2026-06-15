@@ -4,7 +4,9 @@ behaviour
 calc
 calcs
 centric
+colours
 CRAN's
+customised
 Encodings
 encodings
 param
@@ -33,6 +35,7 @@ dir
 Dockerfile
 ELSEIF
 ggraph
+getter
 graphql
 GraphQL
 GUID

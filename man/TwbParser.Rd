@@ -18,6 +18,8 @@ An R6 class generator.
 
 \item{exdir}{Output directory (defaults to parser's twbx dir or tempdir()).}
 
+\item{scope}{Optional \code{"worksheet"}, \code{"dashboard"}, or \code{"workbook"}.}
+
 \item{sheet}{Optional worksheet name.}
 
 \item{include_parameters}{Logical; include parameter fields. Default \code{FALSE}.}
@@ -63,6 +65,12 @@ Worksheets embedded in one or all dashboards.
 Full zone layout with container hierarchy.
 
 Dashboard and workbook actions.
+
+Dashboard page size and sizing mode.
+
+Formatting rules (fonts, colours, number formats, …).
+
+Plain-text worksheet tooltips.
 
 Calculated field complexity classifications.
 

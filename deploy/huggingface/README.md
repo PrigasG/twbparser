@@ -15,20 +15,23 @@ Interactive inspector for Tableau `.twb` / `.twbx` workbooks, built on the
 [twbparser](https://github.com/PrigasG/twbparser) R package.
 
 Upload a workbook (or load the bundled demo) to explore its datasources,
-fields, filters, calculated fields, SQL, dashboards, and packaged assets, and
-download a **replication brief** for porting the workbook to another tool.
+fields, filters, calculated fields, SQL, dashboards, formatting, tooltips, and
+packaged assets, and download a **replication brief** for porting the workbook
+to another tool.
 
 ## Usage
 
 1. Click **Choose file** and upload a `.twb` or `.twbx` (up to 100 MB by
    default — see `TWBPARSER_MAX_UPLOAD_MB`), or click **Load demo workbook**.
 2. Browse the tabs: Overview, Replication Brief, Dashboard Layout, Charts,
-   Pages, Filters, Shelves, Fields, Datasources, Calculations, SQL,
-   TWBX Assets, Validation.
+   Formatting, Tooltips, Pages, Filters, Shelves, Fields, Datasources,
+   Calculations, SQL, TWBX Assets, Validation.
    - **Dashboard Layout** reconstructs each dashboard page to scale, showing
      where every object sits and its dimensions.
    - **Charts** lists the mark type per worksheet with a suggested `ggplot2`
      geom and the fields used.
+   - **Formatting** and **Tooltips** surface number/date formats, fonts,
+     palette mappings, and worksheet tooltip text for faithful rebuilds.
 3. Use the **Export** panel to download the replication brief (`.md`), an R
    starter script (`.R`) with `ggplot2`/`bslib` scaffolding, or any table as
    CSV.
@@ -40,7 +43,7 @@ download a **replication brief** for porting the workbook to another tool.
 | `TWBPARSER_MAX_UPLOAD_MB` | `100` | Maximum upload size in megabytes. |
 
 To pin a specific package version, set the `TWBPARSER_REF` build arg in the
-`Dockerfile` (e.g. `v0.4.0`).
+`Dockerfile` (e.g. `v0.5.0`).
 
 ## ⚠️ Security note (public deployments)
 

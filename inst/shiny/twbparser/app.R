@@ -598,6 +598,8 @@ ui <- fluidPage(
             section_table("layout_table")
           ),
           tabPanel("Charts", section_table("charts_table")),
+          tabPanel("Formatting", section_table("formatting_table")),
+          tabPanel("Tooltips", section_table("tooltips_table")),
           tabPanel("Pages", section_table("pages_table")),
           tabPanel("Filters", section_table("filters_table")),
           tabPanel("Shelves", section_table("shelves_table")),
@@ -708,6 +710,9 @@ server <- function(input, output, session) {
       relationships     = p$get_relationships(),
       joins             = p$get_joins(),
       dashboard_actions = r$dashboard_actions,
+      dashboard_size    = p$get_dashboard_size(),
+      formatting        = p$get_formatting(),
+      tooltips          = p$get_tooltips(),
       twbx_manifest     = p$get_twbx_manifest()
     )
     tbls[!vapply(tbls, function(x) is.null(x) || !NROW(x), logical(1))]
@@ -850,14 +855,23 @@ server <- function(input, output, session) {
     ext_w <- suppressWarnings(max(ld$x + ld$w, na.rm = TRUE))
     ext_h <- suppressWarnings(max(ld$y + ld$h, na.rm = TRUE))
     n_ws  <- sum(!is.na(ld$target) & nzchar(ld$target))
-    size_txt <- if (is.finite(ext_w) && is.finite(ext_h)) {
+
+    # Prefer the declared <size>; fall back to extent inferred from zones.
+    sz <- data()$parser$get_dashboard_size(input$layout_dashboard)
+    size_txt <- if (NROW(sz) && !is.na(sz$max_width[1]) && !is.na(sz$max_height[1])) {
+      sprintf("%d × %d px (%s)", sz$max_width[1], sz$max_height[1],
+              sz$sizing_mode[1] %||% "fixed")
+    } else if (NROW(sz) && !is.na(sz$sizing_mode[1])) {
+      sprintf("%s sizing · %g × %g (inferred from zones)",
+              sz$sizing_mode[1], ext_w, ext_h)
+    } else if (is.finite(ext_w) && is.finite(ext_h)) {
       sprintf("%g × %g (workbook units, inferred from zones)", ext_w, ext_h)
     } else {
       "unknown"
     }
     div(
       class = "status",
-      tags$strong("Canvas: "), size_txt, tags$br(),
+      tags$strong("Page size: "), size_txt, tags$br(),
       sprintf("%d zones · %d worksheet placements", NROW(ld), n_ws)
     )
   })
@@ -924,6 +938,19 @@ server <- function(input, output, session) {
   output$charts_table <- render_section_table(
     function() charts_data(),
     "No worksheets with mark types found."
+  )
+
+  output$formatting_table <- render_section_table(
+    function() data()$parser$get_formatting(),
+    "No explicit formatting rules found."
+  )
+
+  output$tooltips_table <- render_section_table(
+    function() {
+      tt <- data()$parser$get_tooltips()
+      if (NROW(tt)) tt[tt$is_customized, , drop = FALSE] else tt
+    },
+    "No customized tooltips found."
   )
 
   output$download_rscript <- downloadHandler(

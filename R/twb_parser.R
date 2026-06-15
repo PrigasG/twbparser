@@ -256,6 +256,24 @@ TwbParser <- R6::R6Class(
       safe_call(.ins_dashboard_actions(self$xml_doc, dashboard), .empty_actions())
     },
 
+    #' @description Dashboard page size and sizing mode.
+    #' @param dashboard Optional dashboard name to filter by.
+    get_dashboard_size = function(dashboard = NULL) {
+      safe_call(.ins_dashboard_size(self$xml_doc, dashboard), .empty_dashboard_size())
+    },
+
+    #' @description Formatting rules (fonts, colours, number formats, …).
+    #' @param scope Optional `"worksheet"`, `"dashboard"`, or `"workbook"`.
+    get_formatting = function(scope = NULL) {
+      safe_call(.ins_formatting(self$xml_doc, scope), .empty_formatting())
+    },
+
+    #' @description Plain-text worksheet tooltips.
+    #' @param sheet Optional worksheet name.
+    get_tooltips = function(sheet = NULL) {
+      safe_call(.ins_tooltips(self$xml_doc, sheet), .empty_tooltips())
+    },
+
     # --- Phase 4: analytics ---
 
     #' @description Calculated field complexity classifications.

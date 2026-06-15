@@ -18,7 +18,7 @@ RUN R -e "install.packages(c('remotes','shiny','dplyr','igraph','purrr','R6','rl
 
 # Install twbparser itself (small, pure-R). Pin to a package tag so Docker
 # rebuilds cannot reuse an older HEAD layer and serve stale parser/report code.
-ARG TWBPARSER_REF=v0.4.1
+ARG TWBPARSER_REF=v0.5.0
 RUN R -e "remotes::install_github('PrigasG/twbparser', ref = '${TWBPARSER_REF}', upgrade = 'never')"
 
 # Hugging Face Spaces route traffic to this port (see README app_port).
