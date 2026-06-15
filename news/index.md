@@ -1,5 +1,30 @@
 # Changelog
 
+## twbparser 0.5.0
+
+### New features
+
+- New fidelity extractors for faithful replication:
+  [`twb_dashboard_size()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_size.md)
+  (page size and sizing mode),
+  [`twb_formatting()`](https://prigasg.github.io/twbparser/reference/twb_formatting.md)
+  (fonts, colours, number formats, and other style-rule formats), and
+  [`twb_tooltips()`](https://prigasg.github.io/twbparser/reference/twb_tooltips.md)
+  (plain-text worksheet tooltips). Each has a matching `TwbParser`
+  getter (`get_dashboard_size()`, `get_formatting()`, `get_tooltips()`).
+- [`run_twbparser_app()`](https://prigasg.github.io/twbparser/reference/run_twbparser_app.md)
+  launches a bundled Shiny workbook inspector with a to-scale dashboard
+  layout view, chart/`ggplot2` hints, parameter and formatting tabs, a
+  replication brief, and CSV / R-scaffold exports.
+
+### Bug fixes
+
+- `parser$get_parameters()` (and `datasource_details$parameters`) now
+  return the actual parameter fields via
+  [`extract_parameters()`](https://prigasg.github.io/twbparser/reference/extract_parameters.md).
+  Previously it returned a single row of datasource-level metadata, so
+  most parameters were dropped and the overview count was wrong.
+
 ## twbparser 0.4.1
 
 ### Release polish

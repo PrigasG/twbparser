@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,9 +28,23 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/PrigasG/twbparser/blob/v0.4.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/PrigasG/twbparser/blob/master/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="twbparser-050">twbparser 0.5.0<a class="anchor" aria-label="anchor" href="#twbparser-050"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-5-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-0"></a></h3>
+<ul><li>New fidelity extractors for faithful replication: <code><a href="../reference/twb_dashboard_size.html">twb_dashboard_size()</a></code> (page size and sizing mode), <code><a href="../reference/twb_formatting.html">twb_formatting()</a></code> (fonts, colours, number formats, and other style-rule formats), and <code><a href="../reference/twb_tooltips.html">twb_tooltips()</a></code> (plain-text worksheet tooltips). Each has a matching <code>TwbParser</code> getter (<code>get_dashboard_size()</code>, <code>get_formatting()</code>, <code>get_tooltips()</code>).</li>
+<li>
+<code><a href="../reference/run_twbparser_app.html">run_twbparser_app()</a></code> launches a bundled Shiny workbook inspector with a to-scale dashboard layout view, chart/<code>ggplot2</code> hints, parameter and formatting tabs, a replication brief, and CSV / R-scaffold exports.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-5-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-5-0"></a></h3>
+<ul><li>
+<code>parser$get_parameters()</code> (and <code>datasource_details$parameters</code>) now return the actual parameter fields via <code><a href="../reference/extract_parameters.html">extract_parameters()</a></code>. Previously it returned a single row of datasource-level metadata, so most parameters were dropped and the overview count was wrong.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.1" id="twbparser-041">twbparser 0.4.1<a class="anchor" aria-label="anchor" href="#twbparser-041"></a></h2>
 <div class="section level3">

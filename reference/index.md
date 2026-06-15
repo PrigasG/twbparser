@@ -49,6 +49,8 @@ Per-dashboard zone layout, sheet positions, and actions.
 
 - [`twb_dashboard_sheets()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_sheets.md)
   : List worksheets embedded in each dashboard
+- [`twb_dashboard_size()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_size.md)
+  : Dashboard page size and sizing mode
 - [`twb_dashboard_layout()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_layout.md)
   : Full layout of dashboard zones with container hierarchy
 - [`twb_dashboard_actions()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_actions.md)
@@ -140,6 +142,10 @@ Per-dashboard zone layout, sheet positions, and actions.
   : Prettify a Tableau calculation formula for display
 - [`prettify_calculated_fields()`](https://prigasg.github.io/twbparser/reference/prettify_calculated_fields.md)
   : Add a prettified formula column to calculated fields table
+- [`twb_formatting()`](https://prigasg.github.io/twbparser/reference/twb_formatting.md)
+  : Formatting rules (fonts, colours, number formats, …)
+- [`twb_tooltips()`](https://prigasg.github.io/twbparser/reference/twb_tooltips.md)
+  : Worksheet tooltips
 
 ## Interactive app
 

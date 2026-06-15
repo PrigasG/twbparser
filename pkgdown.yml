@@ -3,7 +3,7 @@ pkgdown: 2.2.0
 pkgdown_sha: ~
 articles:
   twbparser-intro: twbparser-intro.html
-last_built: 2026-06-14T23:58Z
+last_built: 2026-06-15T00:17Z
 urls:
   reference: https://prigasg.github.io/twbparser/reference
   article: https://prigasg.github.io/twbparser/articles

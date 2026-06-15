@@ -47,9 +47,11 @@
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_dashboard_filters.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_dashboard_layout.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_dashboard_sheets.html</loc></url>
+<url><loc>https://prigasg.github.io/twbparser/reference/twb_dashboard_size.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_dashboard_summary.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_dashboards.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_field_usage.html</loc></url>
+<url><loc>https://prigasg.github.io/twbparser/reference/twb_formatting.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_initial_sql.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_page_composition.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_pages.html</loc></url>
@@ -60,6 +62,7 @@
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_sheet_filters.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_sheet_shelves.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twb_sheet_sorts.html</loc></url>
+<url><loc>https://prigasg.github.io/twbparser/reference/twb_tooltips.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twbparser-package.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twbx_extract_files.html</loc></url>
 <url><loc>https://prigasg.github.io/twbparser/reference/twbx_list.html</loc></url>

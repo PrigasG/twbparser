@@ -24,6 +24,12 @@ Full zone layout with container hierarchy.
 
 Dashboard and workbook actions.
 
+Dashboard page size and sizing mode.
+
+Formatting rules (fonts, colours, number formats, …).
+
+Plain-text worksheet tooltips.
+
 Calculated field complexity classifications.
 
 Field usage matrix across worksheets.
@@ -59,6 +65,10 @@ An R6 class generator.
 - exdir:
 
   Output directory (defaults to parser's twbx dir or tempdir()).
+
+- scope:
+
+  Optional `"worksheet"`, `"dashboard"`, or `"workbook"`.
 
 - sheet:
 

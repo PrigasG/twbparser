@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -80,6 +80,8 @@
 <li>
 <strong>Dashboard intelligence</strong>: sheet positions, full zone layout tree, and filter/URL actions</li>
 <li>
+<strong>Replication fidelity</strong>: dashboard sizing, style formatting, palette mappings, and worksheet tooltips</li>
+<li>
 <strong>Dependency graph</strong>: build/plot field dependency DAGs</li>
 <li>
 <strong>TWBX assets</strong>: list/extract images, extracts, text files, etc.</li>
@@ -129,7 +131,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://prigasg.github.io/twbparser/">twbparser</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/run_twbparser_app.html">run_twbparser_app</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>The app lets users upload <code>.twb</code> / <code>.twbx</code> files, shows a clean loading overlay while parsing, and organizes the workbook report into tabs for overview, pages, filters, shelves, fields, datasources, calculations, SQL, TWBX assets, and validation.</p>
+<p>The app lets users upload <code>.twb</code> / <code>.twbx</code> files, shows a clean loading overlay while parsing, and organizes the workbook report into tabs for overview, pages, filters, shelves, fields, datasources, calculations, SQL, TWBX assets, and validation, with dedicated views for dashboard layout, chart hints, formatting, and tooltips.</p>
 <p>For Hugging Face Docker Space deployment, use the files in <a href="deploy/huggingface"><code>deploy/huggingface</code></a>:</p>
 <ul>
 <li>
@@ -141,7 +143,7 @@
 </ul>
 <p>With a “.twbx” file</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">parser</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/TwbParser.html">TWBParser</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"path/to/workbook.twbx"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">parser</span> <span class="op">&lt;-</span> <span class="va"><a href="reference/TwbParser.html">TwbParser</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="st">"path/to/workbook.twbx"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Inspect manifest</span></span>
 <span><span class="va">parser</span><span class="op">$</span><span class="va">twbx_manifest</span></span></code></pre></div>
@@ -200,8 +202,20 @@
 <span></span>
 <span><span class="co"># Filter and URL actions — source/target sheets, trigger, URL</span></span>
 <span><span class="va">parser</span><span class="op">$</span><span class="fu">get_dashboard_actions</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Relationships/Joins</p>
+<p>Replication fidelity (new in 0.5.0)</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Declared dashboard page size and sizing mode</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_dashboard_size</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># or: twb_dashboard_size(parser, dashboard = "Overview")</span></span>
+<span></span>
+<span><span class="co"># Style-rule formats: fonts, number/date formats, shading, and palette maps</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_formatting</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># or: twb_formatting(parser, scope = "worksheet")</span></span>
+<span></span>
+<span><span class="co"># Plain-text worksheet tooltip content</span></span>
+<span><span class="va">parser</span><span class="op">$</span><span class="fu">get_tooltips</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Relationships/Joins</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -217,7 +231,7 @@
 <span></span>
 <span><span class="va">rel_df</span></span></code></pre></div>
 <p>Nice tabular view for calculated fields</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">calcs</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_calculated_fields</span><span class="op">(</span>pretty <span class="op">=</span> <span class="cn">TRUE</span>, wrap <span class="op">=</span> <span class="fl">120</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -228,7 +242,7 @@
 <span><span class="co">#   options = list(scrollX = TRUE, pageLength = 50)) |&gt;</span></span>
 <span><span class="co">#   DT::formatStyle("Formula", `white-space` = "pre", `font-family` = "monospace")</span></span></code></pre></div>
 <p>And graph objects (via igraph or ggraph) for visualization:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>Rscript <span class="sc">-</span>e <span class="st">"twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>Rscript <span class="sc">-</span>e <span class="st">"twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="integration-examples">Integration Examples<a class="anchor" aria-label="anchor" href="#integration-examples"></a>
@@ -237,6 +251,18 @@
 <li>R Shiny: Build an interactive dashboard showing calculations, filters, and DAG visualizations.</li>
 <li>Power BI: Export calculated field logic to replicate measures in DAX.</li>
 <li>Data lineage: Combine with DiagrammeR or visNetwork for workflow diagrams.</li>
+</ul>
+</div>
+<div class="section level2">
+<h2 id="whats-new-050">What’s new (0.5.0)<a class="anchor" aria-label="anchor" href="#whats-new-050"></a>
+</h2>
+<ul>
+<li>
+<strong>Fidelity extractors</strong>: <code><a href="reference/twb_dashboard_size.html">twb_dashboard_size()</a></code>, <code><a href="reference/twb_formatting.html">twb_formatting()</a></code>, and <code><a href="reference/twb_tooltips.html">twb_tooltips()</a></code> expose dashboard sizing, fonts, number/date formats, palette mappings, and worksheet tooltip text.</li>
+<li>
+<strong>App fidelity tabs</strong>: the bundled Shiny inspector now includes formatting and tooltip tables alongside the dashboard wireframe and chart hints.</li>
+<li>
+<strong>Parameter fix</strong>: datasource details now return actual parameter fields via <code><a href="reference/extract_parameters.html">extract_parameters()</a></code>.</li>
 </ul>
 </div>
 <div class="section level2">

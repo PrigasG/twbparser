@@ -28,6 +28,8 @@ for large workbooks and Shiny integration.
   axes, and sorts per worksheet
 - **Dashboard intelligence**: sheet positions, full zone layout tree,
   and filter/URL actions
+- **Replication fidelity**: dashboard sizing, style formatting, palette
+  mappings, and worksheet tooltips
 - **Dependency graph**: build/plot field dependency DAGs
 - **TWBX assets**: list/extract images, extracts, text files, etc.
 - **Workbook report**: `parser$summary` / `parser$report` provide a
@@ -84,7 +86,8 @@ run_twbparser_app()
 The app lets users upload `.twb` / `.twbx` files, shows a clean loading
 overlay while parsing, and organizes the workbook report into tabs for
 overview, pages, filters, shelves, fields, datasources, calculations,
-SQL, TWBX assets, and validation.
+SQL, TWBX assets, and validation, with dedicated views for dashboard
+layout, chart hints, formatting, and tooltips.
 
 For Hugging Face Docker Space deployment, use the files in
 [`deploy/huggingface`](https://prigasg.github.io/twbparser/deploy/huggingface):
@@ -98,7 +101,7 @@ With a “.twbx” file
 
 ``` r
 
-parser <- TWBParser$new("path/to/workbook.twbx")
+parser <- TwbParser$new("path/to/workbook.twbx")
 
 # Inspect manifest
 parser$twbx_manifest
@@ -175,6 +178,22 @@ parser$get_dashboard_layout()
 parser$get_dashboard_actions()
 ```
 
+Replication fidelity (new in 0.5.0)
+
+``` r
+
+# Declared dashboard page size and sizing mode
+parser$get_dashboard_size()
+# or: twb_dashboard_size(parser, dashboard = "Overview")
+
+# Style-rule formats: fonts, number/date formats, shading, and palette maps
+parser$get_formatting()
+# or: twb_formatting(parser, scope = "worksheet")
+
+# Plain-text worksheet tooltip content
+parser$get_tooltips()
+```
+
 Relationships/Joins
 
 ``` r
@@ -223,6 +242,22 @@ Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
 - Power BI: Export calculated field logic to replicate measures in DAX.
 - Data lineage: Combine with DiagrammeR or visNetwork for workflow
   diagrams.
+
+## What’s new (0.5.0)
+
+- **Fidelity extractors**:
+  [`twb_dashboard_size()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_size.md),
+  [`twb_formatting()`](https://prigasg.github.io/twbparser/reference/twb_formatting.md),
+  and
+  [`twb_tooltips()`](https://prigasg.github.io/twbparser/reference/twb_tooltips.md)
+  expose dashboard sizing, fonts, number/date formats, palette mappings,
+  and worksheet tooltip text.
+- **App fidelity tabs**: the bundled Shiny inspector now includes
+  formatting and tooltip tables alongside the dashboard wireframe and
+  chart hints.
+- **Parameter fix**: datasource details now return actual parameter
+  fields via
+  [`extract_parameters()`](https://prigasg.github.io/twbparser/reference/extract_parameters.md).
 
 ## What’s new (0.4.0)
 

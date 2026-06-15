@@ -11,6 +11,9 @@ Sort directives for one or all worksheets.
 Worksheets embedded in one or all dashboards.
 Full zone layout with container hierarchy.
 Dashboard and workbook actions.
+Dashboard page size and sizing mode.
+Formatting rules (fonts, colours, number formats, …).
+Plain-text worksheet tooltips.
 Calculated field complexity classifications.
 Field usage matrix across worksheets.
 Full replication brief for the workbook or a single dashboard.
@@ -27,6 +30,9 @@ Sort directives for one or all worksheets.
 Worksheets embedded in one or all dashboards.
 Full zone layout with container hierarchy.
 Dashboard and workbook actions.
+Dashboard page size and sizing mode.
+Formatting rules (fonts, colours, number formats, …).
+Plain-text worksheet tooltips.
 Calculated field complexity classifications.
 Field usage matrix across worksheets.
 Full replication brief for the workbook or a single dashboard.
@@ -39,7 +45,7 @@ Print a concise summary of parsed content."><meta property="og:image" content="h
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -60,7 +66,7 @@ Print a concise summary of parsed content."><meta property="og:image" content="h
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Tableau Workbook Parser (R6)</h1>
-      <small class="dont-index">Source: <a href="https://github.com/PrigasG/twbparser/blob/v0.4.1/R/twb_parser.R" class="external-link"><code>R/twb_parser.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/PrigasG/twbparser/blob/master/R/twb_parser.R" class="external-link"><code>R/twb_parser.R</code></a></small>
       <div class="d-none name"><code>TwbParser.Rd</code></div>
     </div>
 
@@ -77,6 +83,9 @@ Print a concise summary of parsed content."><meta property="og:image" content="h
 <p>Worksheets embedded in one or all dashboards.</p>
 <p>Full zone layout with container hierarchy.</p>
 <p>Dashboard and workbook actions.</p>
+<p>Dashboard page size and sizing mode.</p>
+<p>Formatting rules (fonts, colours, number formats, …).</p>
+<p>Plain-text worksheet tooltips.</p>
 <p>Calculated field complexity classifications.</p>
 <p>Field usage matrix across worksheets.</p>
 <p>Full replication brief for the workbook or a single dashboard.</p>
@@ -111,6 +120,10 @@ Print a concise summary of parsed content."><meta property="og:image" content="h
 
 <dt id="arg-exdir">exdir<a class="anchor" aria-label="anchor" href="#arg-exdir"></a></dt>
 <dd><p>Output directory (defaults to parser's twbx dir or tempdir()).</p></dd>
+
+
+<dt id="arg-scope">scope<a class="anchor" aria-label="anchor" href="#arg-scope"></a></dt>
+<dd><p>Optional <code>"worksheet"</code>, <code>"dashboard"</code>, or <code>"workbook"</code>.</p></dd>
 
 
 <dt id="arg-sheet">sheet<a class="anchor" aria-label="anchor" href="#arg-sheet"></a></dt>
