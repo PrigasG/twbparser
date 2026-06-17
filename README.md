@@ -74,14 +74,10 @@ filters, shelves, fields, datasources, calculations, SQL, TWBX assets, and
 validation, with dedicated views for dashboard layout, chart hints, formatting,
 and tooltips.
 
-For Hugging Face Docker Space deployment, use the files in
-[`deploy/huggingface`](deploy/huggingface):
+For Hugging Face Docker Space deployment, use this access:
+[`twbparser-inspector`](https://huggingface.co/spaces/Prigas89/twbparser-inspector):
 
--   `Dockerfile` installs `twbparser` from GitHub and serves the bundled Shiny app.
--   `README.md` is the Space card and records runtime settings.
--   `DEPLOYING.md` documents the push/build workflow and version pinning.
 
-With a ".twbx" file
 
 ``` r
 parser <- TwbParser$new("path/to/workbook.twbx")
