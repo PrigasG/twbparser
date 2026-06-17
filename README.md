@@ -74,7 +74,7 @@ filters, shelves, fields, datasources, calculations, SQL, TWBX assets, and
 validation, with dedicated views for dashboard layout, chart hints, formatting,
 and tooltips.
 
-For Hugging Face Docker Space deployment, use this access:
+Access here:
 [`twbparser-inspector`](https://huggingface.co/spaces/Prigas89/twbparser-inspector):
 
 
