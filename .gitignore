@@ -1,12 +1,16 @@
+# RStudio
 .Rproj.user
+
+# R build / session artifacts
 inst/doc
 /doc/
 /Meta/
 docs
 .Rhistory
+.RData
 .Rdata
+.Ruserdata
 .httr-oauth
-.DS_Store
 .quarto
 .lintr
 .Rd2pdf*
@@ -14,3 +18,13 @@ docs
 check/
 *.Rcheck/
 *.tar.gz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Agent / tooling artifacts (keep out of the working tree)
+.claude/
+.codex/
+codex/
+*.codex
