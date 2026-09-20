@@ -71,9 +71,11 @@ relationships, fields, dashboards, and filters.}
 \item{sheet_filters}{Tibble of worksheet filters (see \code{get_sheet_filters()}).}
 \item{sheet_axes}{Tibble of axis configuration (see \code{get_sheet_axes()}).}
 \item{sheet_sorts}{Tibble of sort directives (see \code{get_sheet_sorts()}).}
+\item{sheet_spec}{Named list of per-worksheet visualization specs (see \code{get_sheet_spec()}).}
 \item{dashboard_sheets}{Tibble of worksheets per dashboard (see \code{get_dashboard_sheets()}).}
 \item{dashboard_layout}{Tibble of the zone layout tree (see \code{get_dashboard_layout()}).}
 \item{dashboard_actions}{Tibble of dashboard actions (see \code{get_dashboard_actions()}).}
+\item{dashboard_charts}{Tibble of charts placed on dashboards (see \code{get_dashboard_charts()}).}
 \item{calc_complexity}{Tibble of calculated-field complexity (see \code{get_calc_complexity()}).}
 \item{field_usage}{Tibble of field usage across worksheets (see \code{get_field_usage()}).}
 \item{validation}{Last validation result; runs \code{validate()} first if it has
@@ -118,9 +120,13 @@ Return calculated fields tibble. When \code{pretty = TRUE}, includes a
 \item{\code{get_sheet_filters(sheet = NULL)}}{Detailed filter configuration for one or all worksheets.}
 \item{\code{get_sheet_axes(sheet = NULL)}}{Axis configuration for one or all worksheets.}
 \item{\code{get_sheet_sorts(sheet = NULL)}}{Sort directives for one or all worksheets.}
+\item{\code{get_sheet_spec(sheet = NULL)}}{Full visualization spec for one or all worksheets
+(mark type, shelves, dimensions/measures, encodings, tooltips, filters, sorts, axes).}
 \item{\code{get_dashboard_sheets(dashboard = NULL)}}{Worksheets embedded in one or all dashboards.}
 \item{\code{get_dashboard_layout(dashboard = NULL)}}{Full zone layout with container hierarchy.}
 \item{\code{get_dashboard_actions(dashboard = NULL)}}{Dashboard and workbook actions.}
+\item{\code{get_dashboard_charts(dashboard = NULL)}}{One row per worksheet placed on a dashboard:
+mark type, fields, tooltip summary, and layout position.}
 \item{\code{get_dashboard_size(dashboard = NULL)}}{Dashboard page size and sizing mode.}
 \item{\code{get_formatting(scope = NULL)}}{Formatting rules (fonts, colours, number formats, \ldots);
 \code{scope} is one of \code{"worksheet"}, \code{"dashboard"}, or \code{"workbook"}.}

@@ -1,10 +1,22 @@
-# twbparser 0.5.0.9000
+# twbparser 0.5.1
 
 ## New features
 
+* New `twb_sheet_spec()`: a full per-worksheet visualization spec — mark type,
+  rows/columns shelves in order, dimensions vs. measures, every marks-card
+  encoding (color, size, label, detail, shape, tooltip, ...), tooltip
+  configuration, plus the sheet's filters, sorts, and axes. It reduces a
+  worksheet to everything needed to understand and rebuild its visualization
+  in another tool (also available as `parser$sheet_spec` /
+  `parser$get_sheet_spec()`).
+* New `twb_dashboard_charts()`: one row per worksheet placed on each
+  dashboard — mark type, fields, tooltip summary, and layout position — so you
+  can see at a glance what graphs a dashboard page uses (also available as
+  `parser$dashboard_charts` / `parser$get_dashboard_charts()`).
 * New `parse_twb()` batch export: parse a `.twb`/`.twbx` workbook and write a
-  structured report to disk — `report.txt`, one CSV per key table, a
-  plain-text replication brief, and the field dependency graph as GraphML.
+  structured report to disk — `report.txt`, one CSV per key table,
+  per-worksheet visualization specs (`sheet_specs.txt`), a plain-text
+  replication brief, and the field dependency graph as GraphML.
   This delivers the `parse_twb()` entry point the README previously documented
   but which did not exist.
 

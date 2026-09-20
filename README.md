@@ -170,6 +170,23 @@ parser$get_formatting()
 parser$get_tooltips()
 ```
 
+Visualization specs (new in 0.5.1)
+
+```r
+# Full rebuild spec for a worksheet: mark type, rows/cols shelves in order,
+# dimensions vs. measures, every marks-card encoding, tooltip config,
+# plus filters, sorts, and axes
+spec <- twb_sheet_spec(parser, sheet = "Sales")
+spec$Sales$mark_type    # "bar"
+spec$Sales$dimensions   # fields used as dimensions
+spec$Sales$measures     # fields used as measures
+spec$Sales$encodings    # channel -> field tibble (color, size, label, ...)
+
+# What graphs are on a dashboard page? one row per placed worksheet
+twb_dashboard_charts(parser, dashboard = "Overview")
+# or: parser$get_dashboard_charts("Overview")
+```
+
 Relationships/Joins 
 
 ```r
@@ -207,8 +224,9 @@ calcs <- parser$get_calculated_fields(pretty = TRUE, wrap = 120) |>
 
 
 Batch export without writing R code — parse a workbook and write a structured
-report to disk (report text, one CSV per key table, a replication brief, and
-the field dependency graph as GraphML):
+report to disk (report text, one CSV per key table, per-worksheet
+visualization specs, a replication brief, and the field dependency graph as
+GraphML):
 
 ``` r
 out <- twbparser::parse_twb("my_dashboard.twb", output_dir = "results/")

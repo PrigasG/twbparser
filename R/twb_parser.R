@@ -61,9 +61,11 @@
 #'   \item{sheet_filters}{Tibble of worksheet filters (see `get_sheet_filters()`).}
 #'   \item{sheet_axes}{Tibble of axis configuration (see `get_sheet_axes()`).}
 #'   \item{sheet_sorts}{Tibble of sort directives (see `get_sheet_sorts()`).}
+#'   \item{sheet_spec}{Named list of per-worksheet visualization specs (see `get_sheet_spec()`).}
 #'   \item{dashboard_sheets}{Tibble of worksheets per dashboard (see `get_dashboard_sheets()`).}
 #'   \item{dashboard_layout}{Tibble of the zone layout tree (see `get_dashboard_layout()`).}
 #'   \item{dashboard_actions}{Tibble of dashboard actions (see `get_dashboard_actions()`).}
+#'   \item{dashboard_charts}{Tibble of charts placed on dashboards (see `get_dashboard_charts()`).}
 #'   \item{calc_complexity}{Tibble of calculated-field complexity (see `get_calc_complexity()`).}
 #'   \item{field_usage}{Tibble of field usage across worksheets (see `get_field_usage()`).}
 #'   \item{validation}{Last validation result; runs `validate()` first if it has
@@ -106,9 +108,13 @@
 #'   \item{get_sheet_filters(sheet = NULL)}{Detailed filter configuration for one or all worksheets.}
 #'   \item{get_sheet_axes(sheet = NULL)}{Axis configuration for one or all worksheets.}
 #'   \item{get_sheet_sorts(sheet = NULL)}{Sort directives for one or all worksheets.}
+#'   \item{get_sheet_spec(sheet = NULL)}{Full visualization spec for one or all worksheets
+#'     (mark type, shelves, dimensions/measures, encodings, tooltips, filters, sorts, axes).}
 #'   \item{get_dashboard_sheets(dashboard = NULL)}{Worksheets embedded in one or all dashboards.}
 #'   \item{get_dashboard_layout(dashboard = NULL)}{Full zone layout with container hierarchy.}
 #'   \item{get_dashboard_actions(dashboard = NULL)}{Dashboard and workbook actions.}
+#'   \item{get_dashboard_charts(dashboard = NULL)}{One row per worksheet placed on a dashboard:
+#'     mark type, fields, tooltip summary, and layout position.}
 #'   \item{get_dashboard_size(dashboard = NULL)}{Dashboard page size and sizing mode.}
 #'   \item{get_formatting(scope = NULL)}{Formatting rules (fonts, colours, number formats, \ldots);
 #'     `scope` is one of `"worksheet"`, `"dashboard"`, or `"workbook"`.}
@@ -322,6 +328,14 @@ TwbParser <- R6::R6Class(
       safe_call(.ins_sheet_sorts(self$xml_doc, sheet), .empty_sorts())
     },
 
+    # @description Full visualization spec for worksheets: mark type, rows/cols
+    #   shelves, dimensions/measures, encodings, tooltips, filters, sorts, axes.
+    # @param sheet Optional worksheet name.
+    get_sheet_spec = function(sheet = NULL) {
+      safe_call(twb_sheet_spec(self$xml_doc, sheet),
+                structure(list(), class = "twb_sheet_spec"))
+    },
+
     # @description Worksheets embedded in one or all dashboards.
     # @param dashboard Optional dashboard name.
     get_dashboard_sheets = function(dashboard = NULL) {
@@ -344,6 +358,14 @@ TwbParser <- R6::R6Class(
     # @param dashboard Optional dashboard name to filter by.
     get_dashboard_size = function(dashboard = NULL) {
       safe_call(.ins_dashboard_size(self$xml_doc, dashboard), .empty_dashboard_size())
+    },
+
+    # @description One row per worksheet placed on a dashboard: mark type,
+    #   fields, tooltip summary, and layout position.
+    # @param dashboard Optional dashboard name to filter by.
+    get_dashboard_charts = function(dashboard = NULL) {
+      safe_call(twb_dashboard_charts(self$xml_doc, dashboard),
+                .empty_dashboard_charts())
     },
 
     # @description Formatting rules (fonts, colours, number formats, …).

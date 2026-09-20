@@ -143,7 +143,32 @@ sorts <- twb_sheet_sorts(parser)
 head(sorts)
 ```
 
+## Visualization spec — everything needed to rebuild a sheet
+
+```{r sheet-spec, eval=ok}
+spec <- twb_sheet_spec(parser, sheet = "Sheet 1")
+spec
+```
+
+`twb_sheet_spec()` returns one spec per worksheet: the mark type, the
+rows/columns shelves in order, the dimensions and measures in play, every
+marks-card encoding, the tooltip configuration, and the sheet's filters,
+sorts, and axes — the full blueprint for rebuilding the visualization in
+another tool. `parser$sheet_spec` exposes the same specs as a property.
+
 # Dashboard intelligence
+
+## Charts on a dashboard
+
+```{r dashboard-charts, eval=ok}
+charts <- twb_dashboard_charts(parser)
+head(charts)
+```
+
+One row per worksheet placed on each dashboard: mark type, fields
+(`rows`, `cols`, `dimensions`, `measures` as list-columns), tooltip summary,
+and layout position. (The bundled demo workbook has no dashboards, so this
+is empty here.)
 
 ## Sheet positions
 

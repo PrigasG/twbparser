@@ -3,8 +3,9 @@
 #' `parse_twb()` is a convenience wrapper for non-interactive use: it parses a
 #' `.twb`/`.twbx` workbook with [TwbParser] and writes a structured set of
 #' outputs into `output_dir` — a human-readable report, one CSV per key table,
-#' a plain-text replication brief, and the field dependency graph as GraphML
-#' (readable with `igraph`/`ggraph` or any GraphML tool).
+#' per-worksheet visualization specs, a plain-text replication brief, and the
+#' field dependency graph as GraphML (readable with `igraph`/`ggraph` or any
+#' GraphML tool).
 #'
 #' @param path Path to a `.twb` or `.twbx` file.
 #' @param output_dir Directory to write outputs into. Created if needed
@@ -90,6 +91,11 @@ parse_twb <- function(path, output_dir = "results",
   msg("Writing report.txt")
   report <- parser$report
   utils::capture.output(print(report), file = file.path(output_dir, "report.txt"))
+
+  # Per-worksheet visualization specs ----------------------------------------
+  msg("Writing sheet_specs.txt")
+  viz <- parser$get_sheet_spec()
+  utils::capture.output(print(viz), file = file.path(output_dir, "sheet_specs.txt"))
 
   # Replication brief --------------------------------------------------------
   msg("Writing replication_brief.txt")

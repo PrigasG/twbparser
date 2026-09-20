@@ -95,9 +95,11 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind("sheet_filters",      wrap_cache("sheet_filters",      function() x$get_sheet_filters()))
   rebind("sheet_axes",         wrap_cache("sheet_axes",         function() x$get_sheet_axes()))
   rebind("sheet_sorts",        wrap_cache("sheet_sorts",        function() x$get_sheet_sorts()))
+  rebind("sheet_spec",         wrap_cache("sheet_spec",         function() x$get_sheet_spec()))
   rebind("dashboard_sheets",   wrap_cache("dashboard_sheets",   function() x$get_dashboard_sheets()))
   rebind("dashboard_layout",   wrap_cache("dashboard_layout",   function() x$get_dashboard_layout()))
   rebind("dashboard_actions",  wrap_cache("dashboard_actions",  function() x$get_dashboard_actions()))
+  rebind("dashboard_charts",   wrap_cache("dashboard_charts",   function() x$get_dashboard_charts()))
 
   ## Phase 4: analytics
   rebind("calc_complexity",    wrap_cache("calc_complexity",    function() x$get_calc_complexity()))

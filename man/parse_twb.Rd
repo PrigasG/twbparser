@@ -24,7 +24,8 @@ The normalized \code{output_dir}, invisibly.
 \code{parse_twb()} is a convenience wrapper for non-interactive use: it parses a
 \code{.twb}/\code{.twbx} workbook with \link{TwbParser} and writes a structured set of
 outputs into \code{output_dir} — a human-readable report, one CSV per key table,
-a plain-text replication brief, and the field dependency graph as GraphML
+per-worksheet visualization specs (\code{sheet_specs.txt}), a plain-text
+replication brief, and the field dependency graph as GraphML
 (readable with \code{igraph}/\code{ggraph} or any GraphML tool).
 }
 \examples{

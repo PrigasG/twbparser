@@ -46,6 +46,7 @@ reference:
       - twb_sheet_filters
       - twb_sheet_axes
       - twb_sheet_sorts
+      - twb_sheet_spec
 
   - title: "Dashboard intelligence"
     desc: >
@@ -55,6 +56,7 @@ reference:
       - twb_dashboard_size
       - twb_dashboard_layout
       - twb_dashboard_actions
+      - twb_dashboard_charts
 
   - title: "TWBX helpers"
     contents:
