@@ -18,7 +18,7 @@
   parameter that is defined but referenced nowhere (the safe-to-drop list);
   `twb_calc_build_order()` returns calculated fields topologically sorted so
   each formula is rebuilt after the calculations it depends on, flagging
-  dependency cycles instead of silently misordering them; and
+  dependency cycles instead of silently emitting them in the wrong order; and
   `twb_parameter_usage()` maps every parameter to its consumption points —
   formulas, worksheet shelves/filters, and dashboard filter zones. All three
   are also available as parser methods and properties (`parser$unused_fields`,
@@ -62,8 +62,8 @@
 * Removed dead code: the never-firing "safe getter" rebind block in
   `twb_install_active_properties()` and the uncalled internal
   `print_datasource_summary()`.
-* `parse_twb(overwrite = TRUE)` now removes parse_twb's own previous output
-  files before writing, so the export directory reflects the current workbook
+* `parse_twb(overwrite = TRUE)` now removes the previous outputs written by
+  parse_twb before writing, so the export directory reflects the current
   instead of mixing stale and fresh files. Unrelated files are left alone.
 
 ## Tests

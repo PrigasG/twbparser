@@ -337,12 +337,15 @@ twb_calc_build_order <- function(x) {
     for (k in calc_keys[[i]]) key_to_idx[[k]] <- c(key_to_idx[[k]], i)
   }
 
-  # deps[[i]]: indices of calculated fields that calc i directly depends on
+  # deps[[i]]: indices of calculated fields that calc i directly depends on.
+  # NOTE: assign integer(0) (never NULL) for dependency-free calcs: in R,
+  # `deps[[i]] <- NULL` *deletes* the element and shortens the list.
   deps <- vector("list", n)
   for (i in seq_len(n)) {
     toks <- .rebuild_key(.extract_tokens(calcs$formula[i]))
     toks <- toks[!is.na(toks) & nzchar(toks) & !(toks %in% other_keys)]
     hit <- unique(unlist(key_to_idx[toks], use.names = FALSE))
+    if (is.null(hit)) hit <- integer(0)
     deps[[i]] <- sort(hit[!is.na(hit)])
   }
 

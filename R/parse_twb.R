@@ -24,9 +24,9 @@
 #' @param output_dir Directory to write outputs into. Created if needed
 #'   (including parents).
 #' @param overwrite If `FALSE` (default), refuse to write into an existing
-#'   non-empty directory instead of mixing outputs. If `TRUE`, parse_twb's own
-#'   previous output files in the directory are removed first so the export
-#'   reflects the current workbook; unrelated files are left alone.
+#'   non-empty directory instead of mixing outputs. If `TRUE`, the previous
+#'   outputs written by parse_twb in the directory are removed first so the
+#'   export reflects the current workbook; unrelated files are left alone.
 #' @param quiet If `TRUE`, suppress progress messages.
 #'
 #' @return The normalized `output_dir`, invisibly.
@@ -70,7 +70,7 @@ parse_twb <- function(path, output_dir = "results",
     TwbParser$new(path)
   }
 
-  # With overwrite = TRUE, clear parse_twb's own previous outputs so the
+  # With overwrite = TRUE, clear previous outputs written by parse_twb so the
   # directory reflects this export instead of mixing old and new files.
   # Unrelated user files are left alone.
   if (isTRUE(overwrite) && dir.exists(output_dir)) {
