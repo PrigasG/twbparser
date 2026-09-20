@@ -84,7 +84,7 @@
 * Restored the `strict` argument of `validate_relationships()` (present in
   0.5.0, dropped by mistake): it is deprecated and ignored, warning only when
   explicitly supplied.
-* Cheatsheet no longer documents the removed `tbs_*()` server stubs or a
+* The cheat sheet no longer documents the removed `tbs_*()` server stubs or a
   `strict` argument that didn't exist; footer version corrected to 0.5.1.
 
 # twbparser 0.5.0

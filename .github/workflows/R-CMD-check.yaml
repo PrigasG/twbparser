@@ -13,7 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: macos-latest,   r: 'release' }
+          # NOTE: macOS is pinned to R 4.5 because CRAN serves R 4.6 macOS
+          # binaries as zstd-compressed .tgz files, which pak cannot extract
+          # ("unknown archive type"). CRAN's R 4.5 binaries are plain gzip.
+          # Revert to release once CRAN/pak handle zstd.
+          - { os: macos-latest,   r: '4.5' }
           - { os: windows-latest, r: 'release' }
           - { os: ubuntu-latest,  r: 'devel',  http-user-agent: 'release' }
           - { os: ubuntu-latest,  r: 'release' }
@@ -36,14 +40,6 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-
-      # CRAN has started serving some macOS binaries (knitr 1.52) as
-      # zstd-compressed .tgz files, which pak cannot extract
-      # ("unknown archive type"). Pre-install knitr from source so pak
-      # sees it as satisfied and skips the broken binary.
-      - name: Install knitr from source (macOS zstd-binary workaround)
-        if: runner.os == 'macOS'
-        run: Rscript -e 'install.packages("knitr", type = "source", repos = "https://cloud.r-project.org")'
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:

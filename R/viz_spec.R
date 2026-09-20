@@ -182,6 +182,9 @@ print.twb_sheet_spec <- function(x, ...) {
     xml2::xml_attr(xml2::xml_find_all(ws_node, ".//mark[@type]"), "type")
   )))
   mtypes <- mtypes[!is.na(mtypes) & nzchar(mtypes)]
+  # class="Automatic" means "no explicit choice" (Tableau picks the mark), so
+  # it carries no signal: a style rule naming a concrete mark still wins.
+  mtypes <- mtypes[mtypes != "automatic"]
 
   # 2) <style-rule element="..."> naming a mark kind (e.g. element="map")
   els <- tolower(xml2::xml_attr(

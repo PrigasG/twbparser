@@ -99,13 +99,14 @@ test_that("mark type is read from <mark class>, Tableau's real attribute", {
   expect_equal(mt$mark_type, "bar")
   expect_equal(mt$mark_source, "explicit")
 
-  # class="Automatic" is an explicit signal, distinct from "no signal found"
+  # class="Automatic" means "no explicit choice": it is not a signal, so with
+  # nothing else present the mark type is genuinely unknown
   ws_auto <- xml2::read_xml(
     '<worksheet name="Auto"><mark class="Automatic"/></worksheet>'
   )
   mt_auto <- twbparser:::.viz_mark_type(ws_auto)
   expect_equal(mt_auto$mark_type, "automatic")
-  expect_equal(mt_auto$mark_source, "explicit")
+  expect_equal(mt_auto$mark_source, "inferred")
 
   # no mark and no style-rule: genuinely unknown
   ws_none <- xml2::read_xml('<worksheet name="Empty"/>')
