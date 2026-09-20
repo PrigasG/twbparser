@@ -46,10 +46,10 @@ NULL
 #' @keywords internal
 #' @noRd
 .ins_page_composition <- function(xml_doc, name) {
-  safe_name <- gsub("([\"'])", "", as.character(name))
-  if (!nzchar(safe_name)) return(tibble::tibble())
+  name <- as.character(name)
+  if (length(name) != 1L || is.na(name) || !nzchar(name)) return(tibble::tibble())
 
-  d <- xml2::xml_find_first(xml_doc, paste0(".//dashboard[@name='", safe_name, "']"))
+  d <- .twb_find_named(xml_doc, "dashboard", name)
   if (!inherits(d, "xml_missing")) {
     zones <- xml2::xml_find_all(d, ".//zone")
     if (length(zones) == 0) return(
@@ -119,7 +119,7 @@ NULL
              dplyr::arrange(.data$component_type, .data$zone_id))
   }
 
-  w <- xml2::xml_find_first(xml_doc, paste0(".//worksheet[@name='", safe_name, "']"))
+  w <- .twb_find_named(xml_doc, "worksheet", name)
   if (!inherits(w, "xml_missing")) {
     marks <- xml2::xml_find_all(w, ".//mark")
     mtypes <- unique(tolower(xml2::xml_attr(marks, "type")))
@@ -198,7 +198,7 @@ NULL
              dplyr::arrange(.data$component_type, .data$field))
   }
 
-  s <- xml2::xml_find_first(xml_doc, paste0(".//story[@name='", safe_name, "']"))
+  s <- .twb_find_named(xml_doc, "story", name)
   if (!inherits(s, "xml_missing")) {
     pts <- xml2::xml_find_all(s, ".//story-point")
     if (length(pts) == 0) return(
@@ -339,10 +339,11 @@ NULL
 #' @keywords internal
 #' @noRd
 .ins_dashboard_filters <- function(xml_doc, dashboard = NULL) {
-  d_xpath <- if (is.null(dashboard)) ".//dashboard" else {
-    paste0(".//dashboard[@name='", gsub("([\"'])", "", dashboard), "']")
+  d_nodes <- if (is.null(dashboard)) {
+    xml2::xml_find_all(xml_doc, ".//dashboard")
+  } else {
+    .twb_find_all_named(xml_doc, "dashboard", dashboard)
   }
-  d_nodes <- xml2::xml_find_all(xml_doc, d_xpath)
   if (length(d_nodes) == 0) return(.empty_dashboard_filters())
 
   purrr::map_dfr(d_nodes, function(d) {

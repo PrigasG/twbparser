@@ -3,6 +3,46 @@
 #' @noRd
 `%||%` <- function(a, b) if (!is.null(a)) a else b
 
+# ---- Safe node lookup by @name ----------------------------------------------
+
+#' Find workbook nodes by exact `@name` without XPath interpolation
+#'
+#' Sheet/dashboard/story names come from user input and may contain quotes,
+#' brackets, or other characters that would break (or change the meaning of) a
+#' `paste0()` XPath predicate. These helpers compare `xml_attr(..., "name")`
+#' in R instead, so names like `"Bob's Dashboard"` match exactly.
+#'
+#' `.twb_find_named()` mirrors `xml2::xml_find_first()` (an `xml_node`, or an
+#' `xml_missing` node when nothing matches); `.twb_find_all_named()` mirrors
+#' `xml2::xml_find_all()` (a possibly empty nodeset).
+#'
+#' @param xml_doc An `xml2` document.
+#' @param node Node type to search, e.g. `"dashboard"`, `"worksheet"`, `"story"`.
+#' @param name Single name to match exactly.
+#' @keywords internal
+#' @noRd
+.twb_find_all_named <- function(xml_doc, node, name) {
+  name <- as.character(name)
+  if (length(name) != 1L || is.na(name) || !nzchar(name)) {
+    return(xml2::xml_find_all(xml_doc, ".//twbparser_no_such_node__"))
+  }
+  candidates <- xml2::xml_find_all(xml_doc, paste0(".//", node))
+  keep <- xml2::xml_attr(candidates, "name") == name
+  keep[is.na(keep)] <- FALSE
+  candidates[keep]
+}
+
+#' @keywords internal
+#' @noRd
+.twb_find_named <- function(xml_doc, node, name) {
+  nodes <- .twb_find_all_named(xml_doc, node, name)
+  if (length(nodes) == 0L) {
+    # An XPath that cannot match, so callers keep seeing xml_missing.
+    return(xml2::xml_find_first(xml_doc, ".//twbparser_no_such_node__"))
+  }
+  nodes[[1L]]
+}
+
 # ---- Canonical field/table cleaners (single source of truth) ----------------
 
 #' Clean a table reference to a human-readable name (vectorized)
@@ -265,42 +305,6 @@ log_twbx_contents <- function(twbx_path) {
   cat("Contents of .twbx:", basename(twbx_path), "\n")
   print(man |> dplyr::count(type, sort = TRUE), n = 99)
   invisible(man)
-}
-
-#' Print a quick data-source summary from a parser object
-#' @param parser An object with `get_datasources()`, `get_parameters()`, `get_datasources_all()`
-#' @return Invisibly prints summary
-#' @keywords internal
-print_datasource_summary <- function(parser) {
-  cat("DATA SOURCES SUMMARY\n")
-  cat("=======================\n")
-
-  data_sources <- try(parser$get_datasources(), silent = TRUE)
-  parameters <- try(parser$get_parameters(), silent = TRUE)
-  all_sources <- try(parser$get_datasources_all(), silent = TRUE)
-
-  .p <- function(x, title) {
-    cat(title, "\n")
-    if (inherits(x, "try-error") || is.null(x) || NROW(x) == 0) {
-      cat("  (none)\n\n")
-    } else {
-      print(x, n = NROW(x))
-      cat("\n")
-    }
-  }
-
-  .p(data_sources, "Real Data Sources:")
-  .p(parameters, "Parameter Sets:")
-  .p(all_sources, "All Raw Sources (Unfiltered)::")
-
-  n_ds <- if (!inherits(data_sources, "try-error") && !is.null(data_sources)) NROW(data_sources) else 0L
-  n_pa <- if (!inherits(parameters, "try-error") && !is.null(parameters)) NROW(parameters) else 0L
-  n_al <- if (!inherits(all_sources, "try-error") && !is.null(all_sources)) NROW(all_sources) else 0L
-
-  cat("Totals:\n")
-  cat(sprintf("%d real datasource(s)\n", n_ds))
-  cat(sprintf("%d parameter set(s)\n", n_pa))
-  cat(sprintf("%d total source(s) in workbook\n", n_al))
 }
 
 #' Extract \verb{<named-connection>} entries from a TWB

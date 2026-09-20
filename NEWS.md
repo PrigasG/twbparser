@@ -1,3 +1,89 @@
+# twbparser 0.5.1
+
+## New features
+
+* New `twb_sheet_spec()`: a full per-worksheet visualization spec — mark type,
+  rows/columns shelves in order, dimensions vs. measures, every marks-card
+  encoding (color, size, label, detail, shape, tooltip, ...), tooltip
+  configuration, plus the sheet's filters, sorts, and axes. It reduces a
+  worksheet to everything needed to understand and rebuild its visualization
+  in another tool (also available as `parser$sheet_spec` /
+  `parser$get_sheet_spec()`).
+* New `twb_dashboard_charts()`: one row per worksheet placed on each
+  dashboard — mark type, fields, tooltip summary, and layout position — so you
+  can see at a glance what graphs a dashboard page uses (also available as
+  `parser$dashboard_charts` / `parser$get_dashboard_charts()`).
+* New rebuild kit for the "what do I need to recreate?" questions:
+  `twb_unused_fields()` lists every raw field, calculated field, and
+  parameter that is defined but referenced nowhere (the safe-to-drop list);
+  `twb_calc_build_order()` returns calculated fields topologically sorted so
+  each formula is rebuilt after the calculations it depends on, flagging
+  dependency cycles instead of silently emitting them in the wrong order; and
+  `twb_parameter_usage()` maps every parameter to its consumption points —
+  formulas, worksheet shelves/filters, and dashboard filter zones. All three
+  are also available as parser methods and properties (`parser$unused_fields`,
+  `parser$calc_build_order`, `parser$parameter_usage`), are exported as
+  `unused_fields.csv`, `calc_build_order.csv`, and `parameter_usage.csv` by
+  `parse_twb()`, and are exercised by the new `inst/extdata/rebuild_kit.twb`
+  fixture.
+* New `parse_twb()` batch export: parse a `.twb`/`.twbx` workbook and write a
+  structured report to disk — `report.txt`, one CSV per key table,
+  per-worksheet visualization specs (`sheet_specs.txt`), a plain-text
+  replication brief, and the field dependency graph as GraphML.
+  This delivers the `parse_twb()` entry point the README previously documented
+  but which did not exist.
+
+## Breaking changes
+
+* Removed the `tbs_publish_info()` and `tbs_custom_sql_graphql()` stubs. They
+  were exported and documented as querying Tableau Server/Cloud, but never
+  made a network request and always returned empty tibbles. Tableau
+  Server/Cloud integration is planned as a real feature; the premature stubs
+  are gone rather than silently returning no data.
+* `validate_relationships()` loses its unused `strict` argument, which was
+  documented as reserved and never implemented.
+
+## Documentation
+
+* `?TwbParser` rewritten from scratch: it now documents every active-binding
+  property (`parser$summary`, `parser$overview`, `parser$datasources`, ...)
+  as the primary API alongside every `get_*()` method. `summary` is correctly
+  described as a read-only property — the previously documented
+  `parser$summary()` call form never worked at runtime.
+* README Quick Start no longer requires the `fs` package (uses base R), and
+  the lifecycle badge is corrected to experimental while the API is settling.
+
+## Bug fixes
+
+* Sheet/dashboard/story lookup by name no longer interpolates the name into
+  an XPath predicate. Names containing quotes or brackets (e.g. "Bob's
+  Dashboard") now match exactly instead of being mangled or silently missing
+  (new internal `.twb_find_named()` / `.twb_find_all_named()` helpers).
+* Removed dead code: the never-firing "safe getter" rebind block in
+  `twb_install_active_properties()` and the uncalled internal
+  `print_datasource_summary()`.
+* `parse_twb(overwrite = TRUE)` now removes the previous outputs written by
+  parse_twb before writing, so the export directory reflects the current
+  workbook instead of mixing stale and fresh files. Unrelated files are left
+  alone.
+* Fixed `twb_calc_build_order()` crashing with "subscript out of bounds" for
+  calculated fields that reference no other calculated field: a `NULL`
+  dependency hit was deleting the list element instead of recording an empty
+  dependency set.
+* Fixed mark-type detection reading the wrong XML attribute: Tableau writes
+  `<mark class="Bar"/>`, not `<mark type="Bar"/>`, so bar/line/etc. charts
+  were mislabeled as `automatic` unless a style rule happened to name the mark.
+* Restored the `strict` argument of `validate_relationships()` (present in
+  0.5.0, dropped by mistake): it is deprecated and ignored, warning only when
+  explicitly supplied.
+* The cheat sheet no longer documents the removed `tbs_*()` server stubs or a
+  `strict` argument that didn't exist; footer version corrected to 0.5.1.
+
+## Tests
+
+* New tests for the `parse_twb()` batch export and Shiny app smoke tests (the
+  bundled app file parses cleanly and the app object builds headlessly).
+
 # twbparser 0.5.0
 
 ## New features

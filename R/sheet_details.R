@@ -108,12 +108,11 @@ twb_sheet_shelves <- function(x, sheet = NULL) {
 #' @keywords internal
 #' @noRd
 .ins_sheet_shelves <- function(xml_doc, sheet = NULL) {
-  ws_xpath <- if (is.null(sheet)) {
-    ".//worksheet"
+  ws_nodes <- if (is.null(sheet)) {
+    xml2::xml_find_all(xml_doc, ".//worksheet")
   } else {
-    paste0(".//worksheet[@name='", gsub("'", "", sheet, fixed = TRUE), "']")
+    .twb_find_all_named(xml_doc, "worksheet", sheet)
   }
-  ws_nodes <- xml2::xml_find_all(xml_doc, ws_xpath)
 
   if (length(ws_nodes) == 0L) {
     return(.empty_shelves())
@@ -256,12 +255,11 @@ twb_sheet_filters <- function(x, sheet = NULL) {
 #' @keywords internal
 #' @noRd
 .ins_sheet_filters <- function(xml_doc, sheet = NULL) {
-  ws_xpath <- if (is.null(sheet)) {
-    ".//worksheet"
+  ws_nodes <- if (is.null(sheet)) {
+    xml2::xml_find_all(xml_doc, ".//worksheet")
   } else {
-    paste0(".//worksheet[@name='", gsub("'", "", sheet, fixed = TRUE), "']")
+    .twb_find_all_named(xml_doc, "worksheet", sheet)
   }
-  ws_nodes <- xml2::xml_find_all(xml_doc, ws_xpath)
 
   if (length(ws_nodes) == 0L) {
     return(.empty_filters())
@@ -383,12 +381,11 @@ twb_sheet_axes <- function(x, sheet = NULL) {
 #' @keywords internal
 #' @noRd
 .ins_sheet_axes <- function(xml_doc, sheet = NULL) {
-  ws_xpath <- if (is.null(sheet)) {
-    ".//worksheet"
+  ws_nodes <- if (is.null(sheet)) {
+    xml2::xml_find_all(xml_doc, ".//worksheet")
   } else {
-    paste0(".//worksheet[@name='", gsub("'", "", sheet, fixed = TRUE), "']")
+    .twb_find_all_named(xml_doc, "worksheet", sheet)
   }
-  ws_nodes <- xml2::xml_find_all(xml_doc, ws_xpath)
   if (length(ws_nodes) == 0L) return(.empty_axes())
 
   out <- purrr::map_dfr(ws_nodes, function(ws) {
@@ -517,12 +514,11 @@ twb_sheet_sorts <- function(x, sheet = NULL) {
 #' @keywords internal
 #' @noRd
 .ins_sheet_sorts <- function(xml_doc, sheet = NULL) {
-  ws_xpath <- if (is.null(sheet)) {
-    ".//worksheet"
+  ws_nodes <- if (is.null(sheet)) {
+    xml2::xml_find_all(xml_doc, ".//worksheet")
   } else {
-    paste0(".//worksheet[@name='", gsub("'", "", sheet, fixed = TRUE), "']")
+    .twb_find_all_named(xml_doc, "worksheet", sheet)
   }
-  ws_nodes <- xml2::xml_find_all(xml_doc, ws_xpath)
   if (length(ws_nodes) == 0L) return(.empty_sorts())
 
   out <- purrr::map_dfr(ws_nodes, function(ws) {

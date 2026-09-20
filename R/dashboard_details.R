@@ -52,12 +52,11 @@ twb_dashboard_sheets <- function(x, dashboard = NULL) {
 #' @keywords internal
 #' @noRd
 .ins_dashboard_sheets <- function(xml_doc, dashboard = NULL) {
-  d_xpath <- if (is.null(dashboard)) {
-    ".//dashboard"
+  d_nodes <- if (is.null(dashboard)) {
+    xml2::xml_find_all(xml_doc, ".//dashboard")
   } else {
-    paste0(".//dashboard[@name='", gsub("'", "", dashboard, fixed = TRUE), "']")
+    .twb_find_all_named(xml_doc, "dashboard", dashboard)
   }
-  d_nodes <- xml2::xml_find_all(xml_doc, d_xpath)
   if (length(d_nodes) == 0L) {
     return(tibble::tibble(
       dashboard = character(), sheet   = character(), zone_id = character(),
@@ -140,12 +139,11 @@ twb_dashboard_layout <- function(x, dashboard = NULL) {
 #' @keywords internal
 #' @noRd
 .ins_dashboard_layout <- function(xml_doc, dashboard = NULL) {
-  d_xpath <- if (is.null(dashboard)) {
-    ".//dashboard"
+  d_nodes <- if (is.null(dashboard)) {
+    xml2::xml_find_all(xml_doc, ".//dashboard")
   } else {
-    paste0(".//dashboard[@name='", gsub("'", "", dashboard, fixed = TRUE), "']")
+    .twb_find_all_named(xml_doc, "dashboard", dashboard)
   }
-  d_nodes <- xml2::xml_find_all(xml_doc, d_xpath)
   if (length(d_nodes) == 0L) {
     return(.empty_layout())
   }

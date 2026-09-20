@@ -527,27 +527,15 @@ prettify_calculated_fields(
 
 \sep
 
-% ---- Tableau Server (optional) -----------------------------------------------
-\begin{secbox}[twbGray]{Tableau Server / Cloud (optional)}
+% ---- Tableau Server ------------------------------------------------------------
+\begin{secbox}[twbGray]{Tableau Server / Cloud}
 \end{secbox}
 
-\begin{lstlisting}
-# Publish info via REST API
-tbs_publish_info(
-  content_id = "abc123",
-  base_url   = "https://server",
-  site       = "MySite",
-  token      = Sys.getenv("TABLEAU_TOKEN"))
-
-# Custom SQL via Metadata GraphQL API
-tbs_custom_sql_graphql(
-  content_id = "abc123",
-  base_url   = "https://server",
-  site       = "MySite",
-  token      = Sys.getenv("TABLEAU_TOKEN"))
-\end{lstlisting}
-
 \begin{tipbox}
+There is currently \textbf{no Tableau Server/Cloud integration}: the
+\texttt{tbs\_*()} stubs were removed in 0.5.1 because they never made a
+network request. Server support is planned as a real feature.
+
 \textbf{All \texttt{twb\_*()} functions} also work with a raw
 \texttt{xml2} document: \texttt{xml <- xml2::read\_xml("file.twb")}.
 Use the \texttt{TwbParser} class for caching, \texttt{.twbx} support,
@@ -564,7 +552,7 @@ and the no-parens active bindings.
   before skip=2pt, after skip=0pt
 ]
   \scriptsize
-  \textbf{twbparser} \textcolor{twbMid}{0.4.0} \quad
+  \textbf{twbparser} \textcolor{twbMid}{0.5.1} \quad
   MIT License \quad
   \href{https://github.com/PrigasG/twbparser}{github.com/PrigasG/twbparser} \quad
   \href{https://prigasg.github.io/twbparser/}{prigasg.github.io/twbparser} \quad

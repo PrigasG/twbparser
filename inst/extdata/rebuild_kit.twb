@@ -1,0 +1,97 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+  Synthetic fixture for the twbparser "rebuild kit" functions:
+  twb_unused_fields(), twb_calc_build_order(), twb_parameter_usage().
+
+  Designed so every branch is exercised deterministically:
+  * 5 raw fields, one of which ("Unused Field") is never referenced
+  * 5 calculated fields: a chain (Profit Ratio -> Adjusted Ratio),
+    an unused one ("Unused Calc"), and a circular pair (Cycle A <-> Cycle B)
+  * 2 parameters: "Top N" (used in a formula and a worksheet filter),
+    "Unused Param" (never referenced)
+  * 2 worksheets and 1 dashboard with a filter zone
+-->
+<workbook version='18.1'>
+  <datasources>
+    <datasource caption='Sales Data' inline='true' name='sales-data' version='18.1'>
+      <column datatype='string' name='[Order ID]' role='dimension' type='nominal' />
+      <column datatype='string' name='[Region]' role='dimension' type='nominal' />
+      <column datatype='real' name='[Sales]' role='measure' type='quantitative' />
+      <column datatype='real' name='[Profit]' role='measure' type='quantitative' />
+      <column datatype='string' name='[Unused Field]' role='dimension' type='nominal' />
+      <column caption='Profit Ratio' datatype='real' name='[Calculation_0001]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Profit]/[Sales]' />
+      </column>
+      <column caption='Adjusted Ratio' datatype='real' name='[Calculation_0002]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Profit Ratio]*[Top N]' />
+      </column>
+      <column caption='Unused Calc' datatype='real' name='[Calculation_0003]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Sales]*2' />
+      </column>
+      <column caption='Cycle A' datatype='real' name='[Calculation_0004]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Cycle B]+1' />
+      </column>
+      <column caption='Cycle B' datatype='real' name='[Calculation_0005]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[Cycle A]+1' />
+      </column>
+      <column caption='Top N' datatype='integer' name='[Parameter 1]' role='measure' type='quantitative' param-domain-type='range'>
+        <current-value value='5' />
+      </column>
+      <column caption='Unused Param' datatype='string' name='[Parameter 2]' role='dimension' type='nominal' param-domain-type='list' />
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Sales by Region'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Sales Data' name='sales-data' />
+          </datasources>
+        </view>
+        <rows>[sales-data].[Region]</rows>
+        <cols>SUM([sales-data].[Sales])</cols>
+        <panes>
+          <pane>
+            <mark class='Automatic' />
+            <encodings>
+              <color column='[sales-data].[none:Calculation_0001:nk]' />
+              <text column='[sales-data].[none:Calculation_0002:qk]' />
+            </encodings>
+          </pane>
+        </panes>
+        <customized-tooltip><![CDATA[<Region><BR>Sales: <[Sales]><BR>Ratio: <[Profit Ratio]>]]></customized-tooltip>
+      </table>
+      <filter column='[sales-data].[none:Region:nk]' class='categorical' />
+    </worksheet>
+    <worksheet name='Profit Detail'>
+      <table>
+        <view>
+          <datasources>
+            <datasource caption='Sales Data' name='sales-data' />
+          </datasources>
+        </view>
+        <rows>[sales-data].[Profit]</rows>
+        <cols>[sales-data].[Order ID]</cols>
+        <panes>
+          <pane>
+            <mark class='Automatic' />
+            <encodings>
+              <size column='[sales-data].[none:Calculation_0002:qk]' />
+            </encodings>
+          </pane>
+        </panes>
+      </table>
+      <filter column='[sales-data].[Parameter 1]' class='quantitative' />
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Executive Overview'>
+      <zones>
+        <zone h='400' id='1' name='Sales by Region' type='worksheet' w='600' x='0' y='0' />
+        <zone h='400' id='2' type='filter' w='200' x='600' y='0'>
+          <filter field='[Region]' />
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

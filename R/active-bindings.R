@@ -78,12 +78,6 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind("dashboard_summary", wrap_cache("dashboard_summary", function() .ins_dashboard_summary(x$xml_doc)))
   rebind("dashboard_filters", wrap_cache("dashboard_filters", function() x$get_dashboard_filters()))
 
-  ## Safe getters as properties (same names; originals stashed as *_fn)
-  rebind("relations",              wrap_cache("relations",              function() x$get_relations_fn()))
-  rebind("joins",                  wrap_cache("joins",                  function() x$get_joins_fn()))
-  rebind("relationships",          wrap_cache("relationships",          function() x$get_relationships_fn()))
-  rebind("inferred_relationships", wrap_cache("inferred_relationships", function() x$get_inferred_relationships_fn()))
-
   ## Data snapshot properties (NEW names; originals remain callable as get_*())
   rebind("datasources",        wrap_cache("datasources",        function() x$get_datasources()))
   rebind("parameters_tbl",     wrap_cache("parameters_tbl",     function() x$get_parameters()))
@@ -101,13 +95,18 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind("sheet_filters",      wrap_cache("sheet_filters",      function() x$get_sheet_filters()))
   rebind("sheet_axes",         wrap_cache("sheet_axes",         function() x$get_sheet_axes()))
   rebind("sheet_sorts",        wrap_cache("sheet_sorts",        function() x$get_sheet_sorts()))
+  rebind("sheet_spec",         wrap_cache("sheet_spec",         function() x$get_sheet_spec()))
   rebind("dashboard_sheets",   wrap_cache("dashboard_sheets",   function() x$get_dashboard_sheets()))
   rebind("dashboard_layout",   wrap_cache("dashboard_layout",   function() x$get_dashboard_layout()))
   rebind("dashboard_actions",  wrap_cache("dashboard_actions",  function() x$get_dashboard_actions()))
+  rebind("dashboard_charts",   wrap_cache("dashboard_charts",   function() x$get_dashboard_charts()))
 
   ## Phase 4: analytics
   rebind("calc_complexity",    wrap_cache("calc_complexity",    function() x$get_calc_complexity()))
   rebind("field_usage",        wrap_cache("field_usage",        function() x$get_field_usage()))
+  rebind("unused_fields",      wrap_cache("unused_fields",      function() x$get_unused_fields()))
+  rebind("calc_build_order",   wrap_cache("calc_build_order",   function() x$get_calc_build_order()))
+  rebind("parameter_usage",    wrap_cache("parameter_usage",    function() x$get_parameter_usage()))
 
   ## Validation snapshot (read-only)
   rebind(

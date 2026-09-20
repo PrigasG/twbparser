@@ -13,7 +13,11 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: macos-latest,   r: 'release' }
+          # NOTE: macOS is pinned to R 4.5 because CRAN serves R 4.6 macOS
+          # binaries as zstd-compressed .tgz files, which pak cannot extract
+          # ("unknown archive type"). CRAN's R 4.5 binaries are plain gzip.
+          # Revert to release once CRAN/pak handle zstd.
+          - { os: macos-latest,   r: '4.5' }
           - { os: windows-latest, r: 'release' }
           - { os: ubuntu-latest,  r: 'devel',  http-user-agent: 'release' }
           - { os: ubuntu-latest,  r: 'release' }
