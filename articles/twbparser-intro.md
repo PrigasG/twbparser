@@ -277,7 +277,120 @@ head(sorts)
 #> #   datasource <chr>, sort_order <chr>, sort_by <chr>
 ```
 
+### Visualization spec — everything needed to rebuild a sheet
+
+``` r
+
+spec <- twb_sheet_spec(parser, sheet = "Sheet 1")
+spec
+#> Sheet: Sheet 1 
+#>   Mark type: map
+#>   Datasources: federated.0grgaor1pd01yy1f0yr380of1ags 
+#>   Rows (1): Latitude (generated)
+#>   Cols (1): Longitude (generated)
+#>   Dimensions (5): Latitude (generated), Longitude (generated), Calculation_2139209847776120832, Geometry, counts
+#>   Measures: (none)
+#>   Encodings: color -> Calculation_2139209847776120832; geometry -> Geometry; lod -> Geometry; lod -> counts 
+#>   Tooltips:none
+#>   Filters: 0  Sorts: 0  Axes: 0
+```
+
+[`twb_sheet_spec()`](https://prigasg.github.io/twbparser/reference/twb_sheet_spec.md)
+returns one spec per worksheet: the mark type, the rows/columns shelves
+in order, the dimensions and measures in play, every marks-card
+encoding, the tooltip configuration, and the sheet’s filters, sorts, and
+axes — the full blueprint for rebuilding the visualization in another
+tool. `parser$sheet_spec` exposes the same specs as a property.
+
+### Rebuild kit — what do you actually need to recreate?
+
+Three helpers answer the questions that come up when rebuilding a
+workbook in another tool. They are demonstrated on the bundled
+`rebuild_kit.twb` fixture, which contains chained calculations, a
+circular pair, parameters, and deliberately unused fields.
+
+``` r
+
+kit_ok <- FALSE
+kit_path <- system.file("extdata", "rebuild_kit.twb", package = "twbparser")
+if (nzchar(kit_path) && file.exists(kit_path)) {
+  kit <- TwbParser$new(kit_path)
+  kit_ok <- TRUE
+}
+#> TWB loaded: rebuild_kit.twb
+#> TWB parsed and ready
+```
+
+``` r
+
+# Fields defined but never used anywhere: the safe-to-drop list
+twb_unused_fields(kit)
+#> # A tibble: 3 × 7
+#>   datasource field_type name      tableau_internal_name datatype role  is_hidden
+#>   <chr>      <chr>      <chr>     <chr>                 <chr>    <chr> <lgl>    
+#> 1 sales-data calculated Unused C… [Calculation_0003]    real     meas… NA       
+#> 2 sales-data parameter  Unused P… [Parameter 2]         string   dime… NA       
+#> 3 sales-data raw        Unused F… [Unused Field]        string   dime… FALSE
+```
+
+``` r
+
+# Calculations in creation order — "Adjusted Ratio" comes after "Profit Ratio";
+# the Cycle A/B pair is flagged instead of silently misordered
+twb_calc_build_order(kit)
+#> Warning: Circular dependencies detected among calculated fields: Cycle A, Cycle
+#> B. `build_order` is NA for these fields; break the cycle before rebuilding.
+#> # A tibble: 5 × 8
+#>   build_order datasource name           tableau_internal_name formula depends_on
+#>         <int> <chr>      <chr>          <chr>                 <chr>   <chr>     
+#> 1           1 sales-data Profit Ratio   [Calculation_0001]    [Profi… NA        
+#> 2           2 sales-data Unused Calc    [Calculation_0003]    [Sales… NA        
+#> 3           3 sales-data Adjusted Ratio [Calculation_0002]    [Profi… Profit Ra…
+#> 4          NA sales-data Cycle A        [Calculation_0004]    [Cycle… Cycle B   
+#> 5          NA sales-data Cycle B        [Calculation_0005]    [Cycle… Cycle A   
+#> # ℹ 2 more variables: n_calc_deps <int>, is_cyclic <lgl>
+```
+
+``` r
+
+# Where each parameter value flows: formulas, shelves, filters, dashboards
+twb_parameter_usage(kit)
+#> # A tibble: 2 × 6
+#>   parameter datasource datatype current_value context location      
+#>   <chr>     <chr>      <chr>    <chr>         <chr>   <chr>         
+#> 1 Top N     sales-data integer  5             filter  Profit Detail 
+#> 2 Top N     sales-data integer  5             formula Adjusted Ratio
+```
+
+[`twb_unused_fields()`](https://prigasg.github.io/twbparser/reference/twb_unused_fields.md)
+covers raw fields, calculated fields, *and* parameters;
+[`twb_calc_build_order()`](https://prigasg.github.io/twbparser/reference/twb_calc_build_order.md)
+warns and marks `build_order = NA` for fields caught in a dependency
+cycle; parameters with no usages are found via
+[`twb_unused_fields()`](https://prigasg.github.io/twbparser/reference/twb_unused_fields.md)
+rather than appearing empty in
+[`twb_parameter_usage()`](https://prigasg.github.io/twbparser/reference/twb_parameter_usage.md).
+
 ## Dashboard intelligence
+
+### Charts on a dashboard
+
+``` r
+
+charts <- twb_dashboard_charts(parser)
+head(charts)
+#> # A tibble: 0 × 18
+#> # ℹ 18 variables: dashboard <chr>, sheet <chr>, mark_type <chr>,
+#> #   mark_source <chr>, rows <list>, cols <list>, dimensions <list>,
+#> #   measures <list>, tooltip_fields <list>, n_tooltip_fields <int>,
+#> #   has_tooltip <lgl>, n_filters <int>, datasources <list>, zone_id <chr>,
+#> #   x <int>, y <int>, w <int>, h <int>
+```
+
+One row per worksheet placed on each dashboard: mark type, fields
+(`rows`, `cols`, `dimensions`, `measures` as list-columns), tooltip
+summary, and layout position. (The bundled demo workbook has no
+dashboards, so this is empty here.)
 
 ### Sheet positions
 
@@ -358,6 +471,31 @@ cat("Relationships validated successfully.\n")
 print(v$issues)
 }
 #> Relationships validated successfully.
+```
+
+## Batch export
+
+For non-interactive use,
+[`parse_twb()`](https://prigasg.github.io/twbparser/reference/parse_twb.md)
+parses the workbook and writes a structured report to disk — a
+human-readable `report.txt`, one CSV per key table, a plain-text
+replication brief, and the field dependency graph as GraphML:
+
+``` r
+
+out <- parse_twb(parser$path,
+                 output_dir = file.path(tempdir(), "twbparser-vignette"),
+                 overwrite = TRUE, quiet = TRUE)
+list.files(out)
+#>  [1] "calc_build_order.csv"     "calculated_fields.csv"   
+#>  [3] "custom_sql.csv"           "dashboards.csv"          
+#>  [5] "datasources.csv"          "dependency_graph.graphml"
+#>  [7] "fields.csv"               "joins.csv"               
+#>  [9] "overview.csv"             "pages.csv"               
+#> [11] "parameter_usage.csv"      "parameters.csv"          
+#> [13] "relationships.csv"        "replication_brief.txt"   
+#> [15] "report.txt"               "sheet_specs.txt"         
+#> [17] "unused_fields.csv"
 ```
 
 ## Summary

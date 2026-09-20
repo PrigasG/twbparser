@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,7 +32,44 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.5.0" id="twbparser-050">twbparser 0.5.0<a class="anchor" aria-label="anchor" href="#twbparser-050"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.5.1" id="twbparser-051">twbparser 0.5.1<a class="anchor" aria-label="anchor" href="#twbparser-051"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-5-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-1"></a></h3>
+<ul><li>New <code><a href="../reference/twb_sheet_spec.html">twb_sheet_spec()</a></code>: a full per-worksheet visualization spec — mark type, rows/columns shelves in order, dimensions vs. measures, every marks-card encoding (color, size, label, detail, shape, tooltip, …), tooltip configuration, plus the sheet’s filters, sorts, and axes. It reduces a worksheet to everything needed to understand and rebuild its visualization in another tool (also available as <code>parser$sheet_spec</code> / <code>parser$get_sheet_spec()</code>).</li>
+<li>New <code><a href="../reference/twb_sheet_spec.html">twb_dashboard_charts()</a></code>: one row per worksheet placed on each dashboard — mark type, fields, tooltip summary, and layout position — so you can see at a glance what graphs a dashboard page uses (also available as <code>parser$dashboard_charts</code> / <code>parser$get_dashboard_charts()</code>).</li>
+<li>New rebuild kit for the “what do I need to recreate?” questions: <code><a href="../reference/twb_unused_fields.html">twb_unused_fields()</a></code> lists every raw field, calculated field, and parameter that is defined but referenced nowhere (the safe-to-drop list); <code><a href="../reference/twb_calc_build_order.html">twb_calc_build_order()</a></code> returns calculated fields topologically sorted so each formula is rebuilt after the calculations it depends on, flagging dependency cycles instead of silently emitting them in the wrong order; and <code><a href="../reference/twb_parameter_usage.html">twb_parameter_usage()</a></code> maps every parameter to its consumption points — formulas, worksheet shelves/filters, and dashboard filter zones. All three are also available as parser methods and properties (<code>parser$unused_fields</code>, <code>parser$calc_build_order</code>, <code>parser$parameter_usage</code>), are exported as <code>unused_fields.csv</code>, <code>calc_build_order.csv</code>, and <code>parameter_usage.csv</code> by <code><a href="../reference/parse_twb.html">parse_twb()</a></code>, and are exercised by the new <code>inst/extdata/rebuild_kit.twb</code> fixture.</li>
+<li>New <code><a href="../reference/parse_twb.html">parse_twb()</a></code> batch export: parse a <code>.twb</code>/<code>.twbx</code> workbook and write a structured report to disk — <code>report.txt</code>, one CSV per key table, per-worksheet visualization specs (<code>sheet_specs.txt</code>), a plain-text replication brief, and the field dependency graph as GraphML. This delivers the <code><a href="../reference/parse_twb.html">parse_twb()</a></code> entry point the README previously documented but which did not exist.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="breaking-changes-0-5-1">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-5-1"></a></h3>
+<ul><li>Removed the <code>tbs_publish_info()</code> and <code>tbs_custom_sql_graphql()</code> stubs. They were exported and documented as querying Tableau Server/Cloud, but never made a network request and always returned empty tibbles. Tableau Server/Cloud integration is planned as a real feature; the premature stubs are gone rather than silently returning no data.</li>
+<li>
+<code><a href="../reference/validate_relationships.html">validate_relationships()</a></code> loses its unused <code>strict</code> argument, which was documented as reserved and never implemented.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-5-1">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-5-1"></a></h3>
+<ul><li>
+<code><a href="../reference/TwbParser.html">?TwbParser</a></code> rewritten from scratch: it now documents every active-binding property (<code>parser$summary</code>, <code>parser$overview</code>, <code>parser$datasources</code>, …) as the primary API alongside every <code>get_*()</code> method. <code>summary</code> is correctly described as a read-only property — the previously documented <code>parser$summary()</code> call form never worked at runtime.</li>
+<li>README Quick Start no longer requires the <code>fs</code> package (uses base R), and the lifecycle badge is corrected to experimental while the API is settling.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-5-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-5-1"></a></h3>
+<ul><li>Sheet/dashboard/story lookup by name no longer interpolates the name into an XPath predicate. Names containing quotes or brackets (e.g. “Bob’s Dashboard”) now match exactly instead of being mangled or silently missing (new internal <code>.twb_find_named()</code> / <code>.twb_find_all_named()</code> helpers).</li>
+<li>Removed dead code: the never-firing “safe getter” rebind block in <code>twb_install_active_properties()</code> and the uncalled internal <code>print_datasource_summary()</code>.</li>
+<li>
+<code>parse_twb(overwrite = TRUE)</code> now removes the previous outputs written by parse_twb before writing, so the export directory reflects the current workbook instead of mixing stale and fresh files. Unrelated files are left alone.</li>
+<li>Fixed <code><a href="../reference/twb_calc_build_order.html">twb_calc_build_order()</a></code> crashing with “subscript out of bounds” for calculated fields that reference no other calculated field: a <code>NULL</code> dependency hit was deleting the list element instead of recording an empty dependency set.</li>
+<li>Fixed mark-type detection reading the wrong XML attribute: Tableau writes <code>&lt;mark class="Bar"/&gt;</code>, not <code>&lt;mark type="Bar"/&gt;</code>, so bar/line/etc. charts were mislabeled as <code>automatic</code> unless a style rule happened to name the mark.</li>
+<li>Restored the <code>strict</code> argument of <code><a href="../reference/validate_relationships.html">validate_relationships()</a></code> (present in 0.5.0, dropped by mistake): it is deprecated and ignored, warning only when explicitly supplied.</li>
+<li>The cheat sheet no longer documents the removed <code>tbs_*()</code> server stubs or a <code>strict</code> argument that didn’t exist; footer version corrected to 0.5.1.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="tests-0-5-1">Tests<a class="anchor" aria-label="anchor" href="#tests-0-5-1"></a></h3>
+<ul><li>New tests for the <code><a href="../reference/parse_twb.html">parse_twb()</a></code> batch export and Shiny app smoke tests (the bundled app file parses cleanly and the app object builds headlessly).</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.5.0" id="twbparser-050">twbparser 0.5.0<a class="anchor" aria-label="anchor" href="#twbparser-050"></a></h2><p class="text-muted">CRAN release: 2026-06-18</p>
 <div class="section level3">
 <h3 id="new-features-0-5-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-0"></a></h3>
 <ul><li>New fidelity extractors for faithful replication: <code><a href="../reference/twb_dashboard_size.html">twb_dashboard_size()</a></code> (page size and sizing mode), <code><a href="../reference/twb_formatting.html">twb_formatting()</a></code> (fonts, colours, number formats, and other style-rule formats), and <code><a href="../reference/twb_tooltips.html">twb_tooltips()</a></code> (plain-text worksheet tooltips). Each has a matching <code>TwbParser</code> getter (<code>get_dashboard_size()</code>, <code>get_formatting()</code>, <code>get_tooltips()</code>).</li>
@@ -127,7 +164,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

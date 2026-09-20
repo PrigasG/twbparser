@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -148,6 +148,13 @@
 
         </dt>
         <dd>Extract sort configuration for worksheets</dd>
+
+        <dt>
+
+          <code><a href="twb_sheet_spec.html">twb_sheet_spec()</a></code> <code><a href="twb_sheet_spec.html">twb_dashboard_charts()</a></code>
+
+        </dt>
+        <dd>Worksheet visualization specs and dashboard chart inventories</dd>
       </dl></div><div class="section level2">
       <h2 id="dashboard-intelligence">Dashboard intelligence<a class="anchor" aria-label="anchor" href="#dashboard-intelligence"></a></h2>
 
@@ -185,6 +192,13 @@
 
         </dt>
         <dd>Extract dashboard and workbook actions</dd>
+
+        <dt>
+
+          <code><a href="twb_sheet_spec.html">twb_sheet_spec()</a></code> <code><a href="twb_sheet_spec.html">twb_dashboard_charts()</a></code>
+
+        </dt>
+        <dd>Worksheet visualization specs and dashboard chart inventories</dd>
       </dl></div><div class="section level2">
       <h2 id="twbx-helpers">TWBX helpers<a class="anchor" aria-label="anchor" href="#twbx-helpers"></a></h2>
 
@@ -399,6 +413,36 @@
         </dt>
         <dd>Replication brief for a Tableau workbook or dashboard</dd>
       </dl></div><div class="section level2">
+      <h2 id="rebuild-kit">Rebuild kit<a class="anchor" aria-label="anchor" href="#rebuild-kit"></a></h2>
+
+      <div class="section-desc"><p>Answer “what do I need to recreate?” when rebuilding a workbook in another tool: unused fields, calculation build order, parameter usage.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="twb_unused_fields.html">twb_unused_fields()</a></code>
+
+        </dt>
+        <dd>Fields defined in the workbook but never used</dd>
+
+        <dt>
+
+          <code><a href="twb_calc_build_order.html">twb_calc_build_order()</a></code>
+
+        </dt>
+        <dd>Calculated fields in rebuild dependency order</dd>
+
+        <dt>
+
+          <code><a href="twb_parameter_usage.html">twb_parameter_usage()</a></code>
+
+        </dt>
+        <dd>Where each parameter is consumed</dd>
+      </dl></div><div class="section level2">
       <h2 id="formatting-display">Formatting &amp; display<a class="anchor" aria-label="anchor" href="#formatting-display"></a></h2>
 
 
@@ -452,9 +496,9 @@
         </dt>
         <dd>Launch the twbparser Shiny app</dd>
       </dl></div><div class="section level2">
-      <h2 id="server-cloud-optional-">Server/Cloud (optional)<a class="anchor" aria-label="anchor" href="#server-cloud-optional-"></a></h2>
+      <h2 id="batch-export">Batch export<a class="anchor" aria-label="anchor" href="#batch-export"></a></h2>
 
-
+      <div class="section-desc"><p>Parse a workbook and write a structured report to disk.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -463,17 +507,10 @@
 
       <dl><dt>
 
-          <code><a href="tbs_publish_info.html">tbs_publish_info()</a></code>
+          <code><a href="parse_twb.html">parse_twb()</a></code>
 
         </dt>
-        <dd>Publish info for a workbook or datasource on 'Tableau' Server/Cloud</dd>
-
-        <dt>
-
-          <code><a href="tbs_custom_sql_graphql.html">tbs_custom_sql_graphql()</a></code>
-
-        </dt>
-        <dd>Custom SQL (Metadata API) for a published item</dd>
+        <dd>Parse a Tableau workbook and write a batch export to disk</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -484,7 +521,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

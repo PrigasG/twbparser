@@ -51,5 +51,5 @@ head(files)
 #> # A tibble: 1 × 3
 #>   name             type     out_path                                            
 #>   <chr>            <chr>    <chr>                                               
-#> 1 test-for_zip.twb workbook /tmp/RtmpgsL37A/twbx_extract_20260617133936/test-fo…
+#> 1 test-for_zip.twb workbook /tmp/RtmpEvFLmT/twbx_extract_20260920111330/test-fo…
 ```

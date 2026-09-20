@@ -42,6 +42,9 @@ Per-worksheet shelf, filter, axis, and sort details.
   : Extract axis configuration for worksheets
 - [`twb_sheet_sorts()`](https://prigasg.github.io/twbparser/reference/twb_sheet_sorts.md)
   : Extract sort configuration for worksheets
+- [`twb_sheet_spec()`](https://prigasg.github.io/twbparser/reference/twb_sheet_spec.md)
+  [`twb_dashboard_charts()`](https://prigasg.github.io/twbparser/reference/twb_sheet_spec.md)
+  : Worksheet visualization specs and dashboard chart inventories
 
 ## Dashboard intelligence
 
@@ -55,6 +58,9 @@ Per-dashboard zone layout, sheet positions, and actions.
   : Full layout of dashboard zones with container hierarchy
 - [`twb_dashboard_actions()`](https://prigasg.github.io/twbparser/reference/twb_dashboard_actions.md)
   : Extract dashboard and workbook actions
+- [`twb_sheet_spec()`](https://prigasg.github.io/twbparser/reference/twb_sheet_spec.md)
+  [`twb_dashboard_charts()`](https://prigasg.github.io/twbparser/reference/twb_sheet_spec.md)
+  : Worksheet visualization specs and dashboard chart inventories
 
 ## TWBX helpers
 
@@ -136,6 +142,18 @@ Per-dashboard zone layout, sheet positions, and actions.
 - [`twb_replication_brief()`](https://prigasg.github.io/twbparser/reference/twb_replication_brief.md)
   : Replication brief for a Tableau workbook or dashboard
 
+## Rebuild kit
+
+Answer “what do I need to recreate?” when rebuilding a workbook in
+another tool: unused fields, calculation build order, parameter usage.
+
+- [`twb_unused_fields()`](https://prigasg.github.io/twbparser/reference/twb_unused_fields.md)
+  : Fields defined in the workbook but never used
+- [`twb_calc_build_order()`](https://prigasg.github.io/twbparser/reference/twb_calc_build_order.md)
+  : Calculated fields in rebuild dependency order
+- [`twb_parameter_usage()`](https://prigasg.github.io/twbparser/reference/twb_parameter_usage.md)
+  : Where each parameter is consumed
+
 ## Formatting & display
 
 - [`tableau_formula_pretty()`](https://prigasg.github.io/twbparser/reference/tableau_formula_pretty.md)
@@ -154,9 +172,9 @@ Launch the bundled Shiny workbook inspector.
 - [`run_twbparser_app()`](https://prigasg.github.io/twbparser/reference/run_twbparser_app.md)
   : Launch the twbparser Shiny app
 
-## Server/Cloud (optional)
+## Batch export
 
-- [`tbs_publish_info()`](https://prigasg.github.io/twbparser/reference/tbs_publish_info.md)
-  : Publish info for a workbook or datasource on 'Tableau' Server/Cloud
-- [`tbs_custom_sql_graphql()`](https://prigasg.github.io/twbparser/reference/tbs_custom_sql_graphql.md)
-  : Custom SQL (Metadata API) for a published item
+Parse a workbook and write a structured report to disk.
+
+- [`parse_twb()`](https://prigasg.github.io/twbparser/reference/parse_twb.md)
+  : Parse a Tableau workbook and write a batch export to disk

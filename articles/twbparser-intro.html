@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">twbparser</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -320,14 +320,111 @@ column; range filters populate <code>range_min</code> /
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 6 variables: sheet &lt;chr&gt;, field_ref &lt;chr&gt;, field_clean &lt;chr&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   datasource &lt;chr&gt;, sort_order &lt;chr&gt;, sort_by &lt;chr&gt;</span></span></span></code></pre></div>
 </div>
+<div class="section level3">
+<h3 id="visualization-spec-everything-needed-to-rebuild-a-sheet">Visualization spec — everything needed to rebuild a sheet<a class="anchor" aria-label="anchor" href="#visualization-spec-everything-needed-to-rebuild-a-sheet"></a>
+</h3>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">spec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_sheet_spec.html">twb_sheet_spec</a></span><span class="op">(</span><span class="va">parser</span>, sheet <span class="op">=</span> <span class="st">"Sheet 1"</span><span class="op">)</span></span>
+<span><span class="va">spec</span></span>
+<span><span class="co">#&gt; Sheet: Sheet 1 </span></span>
+<span><span class="co">#&gt;   Mark type: map</span></span>
+<span><span class="co">#&gt;   Datasources: federated.0grgaor1pd01yy1f0yr380of1ags </span></span>
+<span><span class="co">#&gt;   Rows (1): Latitude (generated)</span></span>
+<span><span class="co">#&gt;   Cols (1): Longitude (generated)</span></span>
+<span><span class="co">#&gt;   Dimensions (5): Latitude (generated), Longitude (generated), Calculation_2139209847776120832, Geometry, counts</span></span>
+<span><span class="co">#&gt;   Measures: (none)</span></span>
+<span><span class="co">#&gt;   Encodings: color -&gt; Calculation_2139209847776120832; geometry -&gt; Geometry; lod -&gt; Geometry; lod -&gt; counts </span></span>
+<span><span class="co">#&gt;   Tooltips:none</span></span>
+<span><span class="co">#&gt;   Filters: 0  Sorts: 0  Axes: 0</span></span></code></pre></div>
+<p><code><a href="../reference/twb_sheet_spec.html">twb_sheet_spec()</a></code> returns one spec per worksheet: the
+mark type, the rows/columns shelves in order, the dimensions and
+measures in play, every marks-card encoding, the tooltip configuration,
+and the sheet’s filters, sorts, and axes — the full blueprint for
+rebuilding the visualization in another tool.
+<code>parser$sheet_spec</code> exposes the same specs as a property.</p>
+</div>
+<div class="section level3">
+<h3 id="rebuild-kit-what-do-you-actually-need-to-recreate">Rebuild kit — what do you actually need to recreate?<a class="anchor" aria-label="anchor" href="#rebuild-kit-what-do-you-actually-need-to-recreate"></a>
+</h3>
+<p>Three helpers answer the questions that come up when rebuilding a
+workbook in another tool. They are demonstrated on the bundled
+<code>rebuild_kit.twb</code> fixture, which contains chained
+calculations, a circular pair, parameters, and deliberately unused
+fields.</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">kit_ok</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
+<span><span class="va">kit_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"rebuild_kit.twb"</span>, package <span class="op">=</span> <span class="st">"twbparser"</span><span class="op">)</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">kit_path</span><span class="op">)</span> <span class="op">&amp;&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">kit_path</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="va">kit</span> <span class="op">&lt;-</span> <span class="va"><a href="../reference/TwbParser.html">TwbParser</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">kit_path</span><span class="op">)</span></span>
+<span>  <span class="va">kit_ok</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
+<span><span class="op">}</span></span>
+<span><span class="co">#&gt; TWB loaded: rebuild_kit.twb</span></span>
+<span><span class="co">#&gt; TWB parsed and ready</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Fields defined but never used anywhere: the safe-to-drop list</span></span>
+<span><span class="fu"><a href="../reference/twb_unused_fields.html">twb_unused_fields</a></span><span class="op">(</span><span class="va">kit</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 3 × 7</span></span></span>
+<span><span class="co">#&gt;   datasource field_type name      tableau_internal_name datatype role  is_hidden</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> sales-data calculated Unused C… [Calculation_0003]    real     meas… <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> sales-data parameter  Unused P… [Parameter 2]         string   dime… <span style="color: #BB0000;">NA</span>       </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> sales-data raw        Unused F… [Unused Field]        string   dime… FALSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Calculations in creation order — "Adjusted Ratio" comes after "Profit Ratio";</span></span>
+<span><span class="co"># the Cycle A/B pair is flagged instead of silently misordered</span></span>
+<span><span class="fu"><a href="../reference/twb_calc_build_order.html">twb_calc_build_order</a></span><span class="op">(</span><span class="va">kit</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Warning: Circular dependencies detected among calculated fields: Cycle A, Cycle</span></span>
+<span><span class="co">#&gt; B. `build_order` is NA for these fields; break the cycle before rebuilding.</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 5 × 8</span></span></span>
+<span><span class="co">#&gt;   build_order datasource name           tableau_internal_name formula depends_on</span></span>
+<span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>          <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>           1 sales-data Profit Ratio   [Calculation_0001]    [Profi… <span style="color: #BB0000;">NA</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span>           2 sales-data Unused Calc    [Calculation_0003]    [Sales… <span style="color: #BB0000;">NA</span>        </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span>           3 sales-data Adjusted Ratio [Calculation_0002]    [Profi… Profit Ra…</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span>          <span style="color: #BB0000;">NA</span> sales-data Cycle A        [Calculation_0004]    [Cycle… Cycle B   </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span>          <span style="color: #BB0000;">NA</span> sales-data Cycle B        [Calculation_0005]    [Cycle… Cycle A   </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 2 more variables: n_calc_deps &lt;int&gt;, is_cyclic &lt;lgl&gt;</span></span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Where each parameter value flows: formulas, shelves, filters, dashboards</span></span>
+<span><span class="fu"><a href="../reference/twb_parameter_usage.html">twb_parameter_usage</a></span><span class="op">(</span><span class="va">kit</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 2 × 6</span></span></span>
+<span><span class="co">#&gt;   parameter datasource datatype current_value context location      </span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>         </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> Top N     sales-data integer  5             filter  Profit Detail </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> Top N     sales-data integer  5             formula Adjusted Ratio</span></span></code></pre></div>
+<p><code><a href="../reference/twb_unused_fields.html">twb_unused_fields()</a></code> covers raw fields, calculated
+fields, <em>and</em> parameters; <code><a href="../reference/twb_calc_build_order.html">twb_calc_build_order()</a></code>
+warns and marks <code>build_order = NA</code> for fields caught in a
+dependency cycle; parameters with no usages are found via
+<code><a href="../reference/twb_unused_fields.html">twb_unused_fields()</a></code> rather than appearing empty in
+<code><a href="../reference/twb_parameter_usage.html">twb_parameter_usage()</a></code>.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="dashboard-intelligence">Dashboard intelligence<a class="anchor" aria-label="anchor" href="#dashboard-intelligence"></a>
 </h2>
 <div class="section level3">
+<h3 id="charts-on-a-dashboard">Charts on a dashboard<a class="anchor" aria-label="anchor" href="#charts-on-a-dashboard"></a>
+</h3>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">charts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_sheet_spec.html">twb_dashboard_charts</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">charts</span><span class="op">)</span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 18</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 18 variables: dashboard &lt;chr&gt;, sheet &lt;chr&gt;, mark_type &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   mark_source &lt;chr&gt;, rows &lt;list&gt;, cols &lt;list&gt;, dimensions &lt;list&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   measures &lt;list&gt;, tooltip_fields &lt;list&gt;, n_tooltip_fields &lt;int&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   has_tooltip &lt;lgl&gt;, n_filters &lt;int&gt;, datasources &lt;list&gt;, zone_id &lt;chr&gt;,</span></span></span>
+<span><span class="co">#&gt; <span style="color: #949494;">#   x &lt;int&gt;, y &lt;int&gt;, w &lt;int&gt;, h &lt;int&gt;</span></span></span></code></pre></div>
+<p>One row per worksheet placed on each dashboard: mark type, fields
+(<code>rows</code>, <code>cols</code>, <code>dimensions</code>,
+<code>measures</code> as list-columns), tooltip summary, and layout
+position. (The bundled demo workbook has no dashboards, so this is empty
+here.)</p>
+</div>
+<div class="section level3">
 <h3 id="sheet-positions">Sheet positions<a class="anchor" aria-label="anchor" href="#sheet-positions"></a>
 </h3>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">db_sheets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_dashboard_sheets.html">twb_dashboard_sheets</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">db_sheets</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 7</span></span></span>
@@ -339,7 +436,7 @@ pixel coordinates within the dashboard canvas.</p>
 <div class="section level3">
 <h3 id="zone-layout-tree">Zone layout tree<a class="anchor" aria-label="anchor" href="#zone-layout-tree"></a>
 </h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">layout</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_dashboard_layout.html">twb_dashboard_layout</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">layout</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 10</span></span></span>
@@ -356,7 +453,7 @@ root zones have <code>NA</code>. <code>component_type</code> is one of
 <div class="section level3">
 <h3 id="actions">Actions<a class="anchor" aria-label="anchor" href="#actions"></a>
 </h3>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">actions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/twb_dashboard_actions.html">twb_dashboard_actions</a></span><span class="op">(</span><span class="va">parser</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">actions</span><span class="op">)</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 0 × 6</span></span></span>
@@ -371,7 +468,7 @@ comma-separated list; <code>url</code> is populated for URL actions.</p>
 <div class="section level2">
 <h2 id="relationships-and-joins">Relationships and Joins<a class="anchor" aria-label="anchor" href="#relationships-and-joins"></a>
 </h2>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">relations</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">get_relationships</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">relations</span><span class="op">)</span></span>
@@ -384,7 +481,7 @@ comma-separated list; <code>url</code> is populated for URL actions.</p>
 <div class="section level2">
 <h2 id="working-with-twbx-files-if-applicable">Working with TWBX Files (if applicable)<a class="anchor" aria-label="anchor" href="#working-with-twbx-files-if-applicable"></a>
 </h2>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_manifest</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_extracts</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">parser</span><span class="op">$</span><span class="fu">get_twbx_images</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -392,7 +489,7 @@ comma-separated list; <code>url</code> is populated for URL actions.</p>
 <div class="section level2">
 <h2 id="validation-of-relationships">Validation of Relationships<a class="anchor" aria-label="anchor" href="#validation-of-relationships"></a>
 </h2>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">v</span> <span class="op">&lt;-</span> <span class="va">parser</span><span class="op">$</span><span class="fu">validate</span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">ok</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"Relationships validated successfully.\n"</span><span class="op">)</span></span>
@@ -400,6 +497,28 @@ comma-separated list; <code>url</code> is populated for URL actions.</p>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">v</span><span class="op">$</span><span class="va">issues</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span><span class="co">#&gt; Relationships validated successfully.</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="batch-export">Batch export<a class="anchor" aria-label="anchor" href="#batch-export"></a>
+</h2>
+<p>For non-interactive use, <code><a href="../reference/parse_twb.html">parse_twb()</a></code> parses the workbook
+and writes a structured report to disk — a human-readable
+<code>report.txt</code>, one CSV per key table, a plain-text replication
+brief, and the field dependency graph as GraphML:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/parse_twb.html">parse_twb</a></span><span class="op">(</span><span class="va">parser</span><span class="op">$</span><span class="va">path</span>,</span>
+<span>                 output_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">"twbparser-vignette"</span><span class="op">)</span>,</span>
+<span>                 overwrite <span class="op">=</span> <span class="cn">TRUE</span>, quiet <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "calc_build_order.csv"     "calculated_fields.csv"   </span></span>
+<span><span class="co">#&gt;  [3] "custom_sql.csv"           "dashboards.csv"          </span></span>
+<span><span class="co">#&gt;  [5] "datasources.csv"          "dependency_graph.graphml"</span></span>
+<span><span class="co">#&gt;  [7] "fields.csv"               "joins.csv"               </span></span>
+<span><span class="co">#&gt;  [9] "overview.csv"             "pages.csv"               </span></span>
+<span><span class="co">#&gt; [11] "parameter_usage.csv"      "parameters.csv"          </span></span>
+<span><span class="co">#&gt; [13] "relationships.csv"        "replication_brief.txt"   </span></span>
+<span><span class="co">#&gt; [15] "report.txt"               "sheet_specs.txt"         </span></span>
+<span><span class="co">#&gt; [17] "unused_fields.csv"</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="summary">Summary<a class="anchor" aria-label="anchor" href="#summary"></a>
@@ -420,7 +539,7 @@ workflows.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

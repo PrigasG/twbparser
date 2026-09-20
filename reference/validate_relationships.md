@@ -21,8 +21,8 @@ validate_relationships(parser, strict = FALSE)
 
 - strict:
 
-  Logical. Reserved for future table-scoped checks that can be overly
-  conservative with federated sources. Currently not used.
+  Deprecated and ignored. Kept for backward compatibility with twbparser
+  0.5.0, where it was reserved for future table-scoped checks.
 
 ## Value
 
