@@ -64,12 +64,28 @@
   `print_datasource_summary()`.
 * `parse_twb(overwrite = TRUE)` now removes the previous outputs written by
   parse_twb before writing, so the export directory reflects the current
-  instead of mixing stale and fresh files. Unrelated files are left alone.
+  workbook instead of mixing stale and fresh files. Unrelated files are left
+  alone.
 
 ## Tests
 
 * New tests for the `parse_twb()` batch export and Shiny app smoke tests (the
   bundled app file parses cleanly and the app object builds headlessly).
+
+## Bug fixes
+
+* Fixed `twb_calc_build_order()` crashing with "subscript out of bounds" for
+  calculated fields that reference no other calculated field: a `NULL`
+  dependency hit was deleting the list element instead of recording an empty
+  dependency set.
+* Fixed mark-type detection reading the wrong XML attribute: Tableau writes
+  `<mark class="Bar"/>`, not `<mark type="Bar"/>`, so bar/line/etc. charts
+  were mislabeled as `automatic` unless a style rule happened to name the mark.
+* Restored the `strict` argument of `validate_relationships()` (present in
+  0.5.0, dropped by mistake): it is deprecated and ignored, warning only when
+  explicitly supplied.
+* Cheatsheet no longer documents the removed `tbs_*()` server stubs or a
+  `strict` argument that didn't exist; footer version corrected to 0.5.1.
 
 # twbparser 0.5.0
 

@@ -87,3 +87,29 @@ test_that("twb_dashboard_charts() inventories charts placed on dashboards", {
   expect_identical(names(parser$get_dashboard_charts()), names(charts))
   expect_identical(names(parser$dashboard_charts), names(charts))
 })
+
+test_that("mark type is read from <mark class>, Tableau's real attribute", {
+  # Tableau writes <mark class="Bar"/>, not <mark type="Bar"/>: a bar chart
+  # must not be mislabeled "automatic".
+  ws_bar <- xml2::read_xml(
+    '<worksheet name="Bars"><table><panes><pane><view><mark class="Bar"/>
+     </view></pane></panes></table></worksheet>'
+  )
+  mt <- twbparser:::.viz_mark_type(ws_bar)
+  expect_equal(mt$mark_type, "bar")
+  expect_equal(mt$mark_source, "explicit")
+
+  # class="Automatic" is an explicit signal, distinct from "no signal found"
+  ws_auto <- xml2::read_xml(
+    '<worksheet name="Auto"><mark class="Automatic"/></worksheet>'
+  )
+  mt_auto <- twbparser:::.viz_mark_type(ws_auto)
+  expect_equal(mt_auto$mark_type, "automatic")
+  expect_equal(mt_auto$mark_source, "explicit")
+
+  # no mark and no style-rule: genuinely unknown
+  ws_none <- xml2::read_xml('<worksheet name="Empty"/>')
+  mt_none <- twbparser:::.viz_mark_type(ws_none)
+  expect_equal(mt_none$mark_type, "automatic")
+  expect_equal(mt_none$mark_source, "inferred")
+})

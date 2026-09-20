@@ -7,6 +7,8 @@
 #' @param parser A `TwbParser`-like object that exposes:
 #'   `get_relationships()`, `get_datasources()`, `get_fields()`,
 #'   and `get_calculated_fields()`. (S3/R6 both fine.)
+#' @param strict Deprecated and ignored. Kept for backward compatibility with
+#'   twbparser 0.5.0, where it was reserved for future table-scoped checks.
 #'
 #' @return A list with:
 #' \describe{
@@ -30,7 +32,11 @@
 #'
 #' @export
 #' @importFrom dplyr filter mutate select
-validate_relationships <- function(parser) {
+validate_relationships <- function(parser, strict = FALSE) {
+  if (!missing(strict)) {
+    warning("`strict` is deprecated and ignored by `validate_relationships()`.",
+            call. = FALSE)
+  }
   rels <- parser$get_relationships()
   ds <- parser$get_datasources()
   flds <- parser$get_fields()

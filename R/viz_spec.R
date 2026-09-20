@@ -174,9 +174,12 @@ print.twb_sheet_spec <- function(x, ...) {
 #' @keywords internal
 #' @noRd
 .viz_mark_type <- function(ws_node) {
-  # 1) explicit <mark type="..."> inside pane marks
-  mtypes <- unique(tolower(xml2::xml_attr(
-    xml2::xml_find_all(ws_node, ".//mark[@type]"), "type"
+  # 1) explicit <mark class="..."> inside pane marks (Tableau's real schema;
+  #    e.g. class="Bar", class="Automatic"). Also accept a type attribute
+  #    in case a third-party writer emits one.
+  mtypes <- unique(tolower(c(
+    xml2::xml_attr(xml2::xml_find_all(ws_node, ".//mark[@class]"), "class"),
+    xml2::xml_attr(xml2::xml_find_all(ws_node, ".//mark[@type]"), "type")
   )))
   mtypes <- mtypes[!is.na(mtypes) & nzchar(mtypes)]
 

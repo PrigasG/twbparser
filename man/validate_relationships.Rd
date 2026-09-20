@@ -4,12 +4,14 @@
 \alias{validate_relationships}
 \title{Validate relationships against available datasources and fields}
 \usage{
-validate_relationships(parser)
+validate_relationships(parser, strict = FALSE)
 }
 \arguments{
 \item{parser}{A \code{TwbParser}-like object that exposes:
 \code{get_relationships()}, \code{get_datasources()}, \code{get_fields()},
 and \code{get_calculated_fields()}. (S3/R6 both fine.)}
+\item{strict}{Deprecated and ignored. Kept for backward compatibility with
+twbparser 0.5.0, where it was reserved for future table-scoped checks.}
 }
 \value{
 A list with:
