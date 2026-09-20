@@ -66,14 +66,6 @@
   parse_twb before writing, so the export directory reflects the current
   workbook instead of mixing stale and fresh files. Unrelated files are left
   alone.
-
-## Tests
-
-* New tests for the `parse_twb()` batch export and Shiny app smoke tests (the
-  bundled app file parses cleanly and the app object builds headlessly).
-
-## Bug fixes
-
 * Fixed `twb_calc_build_order()` crashing with "subscript out of bounds" for
   calculated fields that reference no other calculated field: a `NULL`
   dependency hit was deleting the list element instead of recording an empty
@@ -86,6 +78,11 @@
   explicitly supplied.
 * The cheat sheet no longer documents the removed `tbs_*()` server stubs or a
   `strict` argument that didn't exist; footer version corrected to 0.5.1.
+
+## Tests
+
+* New tests for the `parse_twb()` batch export and Shiny app smoke tests (the
+  bundled app file parses cleanly and the app object builds headlessly).
 
 # twbparser 0.5.0
 

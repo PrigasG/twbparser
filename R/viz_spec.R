@@ -195,6 +195,10 @@ print.twb_sheet_spec <- function(x, ...) {
   els[els %in% c("crosstab", "table")] <- "text"
 
   found <- unique(c(mtypes, els))
+  # "automatic" is only ever a lack-of-choice placeholder: if any concrete
+  # mark signal was found, it wins and the placeholder is discarded.
+  specific <- setdiff(found, "automatic")
+  if (length(specific)) found <- specific
   if (!length(found)) {
     return(list(mark_type = "automatic", mark_source = "inferred"))
   }

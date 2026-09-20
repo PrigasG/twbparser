@@ -108,6 +108,17 @@ test_that("mark type is read from <mark class>, Tableau's real attribute", {
   expect_equal(mt_auto$mark_type, "automatic")
   expect_equal(mt_auto$mark_source, "inferred")
 
+  # class="Automatic" plus a concrete style rule: the placeholder is
+  # discarded and the concrete mark wins
+  ws_combo <- xml2::read_xml(
+    '<worksheet name="Combo"><mark class="Automatic"/><table><style>
+       <style-rule element="map"/>
+     </style></table></worksheet>'
+  )
+  mt_combo <- twbparser:::.viz_mark_type(ws_combo)
+  expect_equal(mt_combo$mark_type, "map")
+  expect_equal(mt_combo$mark_source, "explicit")
+
   # no mark and no style-rule: genuinely unknown
   ws_none <- xml2::read_xml('<worksheet name="Empty"/>')
   mt_none <- twbparser:::.viz_mark_type(ws_none)
