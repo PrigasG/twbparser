@@ -49,6 +49,9 @@
 * Removed dead code: the never-firing "safe getter" rebind block in
   `twb_install_active_properties()` and the uncalled internal
   `print_datasource_summary()`.
+* `parse_twb(overwrite = TRUE)` now removes parse_twb's own previous output
+  files before writing, so the export directory reflects the current workbook
+  instead of mixing stale and fresh files. Unrelated files are left alone.
 
 ## Tests
 

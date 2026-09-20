@@ -13,7 +13,9 @@ parse_twb(path, output_dir = "results", overwrite = FALSE, quiet = FALSE)
 (including parents).}
 
 \item{overwrite}{If \code{FALSE} (default), refuse to write into an existing
-non-empty directory instead of mixing outputs.}
+non-empty directory instead of mixing outputs. If \code{TRUE}, parse_twb's own
+previous output files in the directory are removed first so the export
+reflects the current workbook; unrelated files are left alone.}
 
 \item{quiet}{If \code{TRUE}, suppress progress messages.}
 }

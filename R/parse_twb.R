@@ -1,3 +1,14 @@
+#' Every file parse_twb() can write into `output_dir`.
+#' @keywords internal
+#' @noRd
+.parse_twb_outputs <- c(
+  "overview.csv", "datasources.csv", "parameters.csv", "fields.csv",
+  "calculated_fields.csv", "relationships.csv", "joins.csv",
+  "custom_sql.csv", "pages.csv", "dashboards.csv",
+  "report.txt", "sheet_specs.txt", "replication_brief.txt",
+  "dependency_graph.graphml"
+)
+
 #' Parse a Tableau workbook and write a batch export to disk
 #'
 #' `parse_twb()` is a convenience wrapper for non-interactive use: it parses a
@@ -11,7 +22,9 @@
 #' @param output_dir Directory to write outputs into. Created if needed
 #'   (including parents).
 #' @param overwrite If `FALSE` (default), refuse to write into an existing
-#'   non-empty directory instead of mixing outputs.
+#'   non-empty directory instead of mixing outputs. If `TRUE`, parse_twb's own
+#'   previous output files in the directory are removed first so the export
+#'   reflects the current workbook; unrelated files are left alone.
 #' @param quiet If `TRUE`, suppress progress messages.
 #'
 #' @return The normalized `output_dir`, invisibly.
@@ -53,6 +66,18 @@ parse_twb <- function(path, output_dir = "results",
     suppressMessages(TwbParser$new(path))
   } else {
     TwbParser$new(path)
+  }
+
+  # With overwrite = TRUE, clear parse_twb's own previous outputs so the
+  # directory reflects this export instead of mixing old and new files.
+  # Unrelated user files are left alone.
+  if (isTRUE(overwrite) && dir.exists(output_dir)) {
+    stale <- file.path(output_dir, .parse_twb_outputs)
+    stale <- stale[file.exists(stale)]
+    if (length(stale) > 0L) {
+      msg("Removing ", length(stale), " previous output file(s).")
+      unlink(stale)
+    }
   }
 
   dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)

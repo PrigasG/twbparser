@@ -44,3 +44,26 @@ test_that("parse_twb() validates its inputs", {
     "File not found"
   )
 })
+
+test_that("parse_twb(overwrite = TRUE) replaces its own outputs, keeps others", {
+  demo <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+  if (!nzchar(demo) || !file.exists(demo)) skip("demo .twb not available")
+
+  out_dir <- file.path(tempdir(), "twbparser-parse-twb-overwrite-test")
+  unlink(out_dir, recursive = TRUE)
+  dir.create(out_dir, recursive = TRUE)
+
+  # a stale parse_twb output from a "previous" run, plus an unrelated user file
+  writeLines("stale", file.path(out_dir, "report.txt"))
+  writeLines("mine", file.path(out_dir, "notes.txt"))
+
+  out <- parse_twb(demo, output_dir = out_dir, overwrite = TRUE, quiet = TRUE)
+
+  # our own stale file was replaced ...
+  report <- paste(readLines(file.path(out, "report.txt")), collapse = "\n")
+  expect_false(grepl("stale", report, fixed = TRUE))
+  # ... while the unrelated file survived
+  expect_equal(readLines(file.path(out, "notes.txt")), "mine")
+
+  unlink(out_dir, recursive = TRUE)
+})
