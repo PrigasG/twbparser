@@ -13,6 +13,19 @@
   dashboard — mark type, fields, tooltip summary, and layout position — so you
   can see at a glance what graphs a dashboard page uses (also available as
   `parser$dashboard_charts` / `parser$get_dashboard_charts()`).
+* New rebuild kit for the "what do I need to recreate?" questions:
+  `twb_unused_fields()` lists every raw field, calculated field, and
+  parameter that is defined but referenced nowhere (the safe-to-drop list);
+  `twb_calc_build_order()` returns calculated fields topologically sorted so
+  each formula is rebuilt after the calculations it depends on, flagging
+  dependency cycles instead of silently misordering them; and
+  `twb_parameter_usage()` maps every parameter to its consumption points —
+  formulas, worksheet shelves/filters, and dashboard filter zones. All three
+  are also available as parser methods and properties (`parser$unused_fields`,
+  `parser$calc_build_order`, `parser$parameter_usage`), are exported as
+  `unused_fields.csv`, `calc_build_order.csv`, and `parameter_usage.csv` by
+  `parse_twb()`, and are exercised by the new `inst/extdata/rebuild_kit.twb`
+  fixture.
 * New `parse_twb()` batch export: parse a `.twb`/`.twbx` workbook and write a
   structured report to disk — `report.txt`, one CSV per key table,
   per-worksheet visualization specs (`sheet_specs.txt`), a plain-text

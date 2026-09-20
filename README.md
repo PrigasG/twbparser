@@ -187,6 +187,23 @@ twb_dashboard_charts(parser, dashboard = "Overview")
 # or: parser$get_dashboard_charts("Overview")
 ```
 
+Rebuild kit (new in 0.5.1)
+
+```r
+# Fields defined but never used anywhere: the safe-to-drop list
+twb_unused_fields(parser)
+# or: parser$get_unused_fields()
+
+# Calculated fields in creation order: rebuild each formula after the
+# calculations it depends on (cycles are flagged, not silently misordered)
+twb_calc_build_order(parser)
+# or: parser$get_calc_build_order()
+
+# Where each parameter is consumed: formulas, shelves, filters, dashboards
+twb_parameter_usage(parser)
+# or: parser$get_parameter_usage()
+```
+
 Relationships/Joins 
 
 ```r

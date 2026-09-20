@@ -97,6 +97,15 @@ reference:
       - twb_field_usage
       - twb_replication_brief
 
+  - title: "Rebuild kit"
+    desc: >
+      Answer "what do I need to recreate?" when rebuilding a workbook in
+      another tool: unused fields, calculation build order, parameter usage.
+    contents:
+      - twb_unused_fields
+      - twb_calc_build_order
+      - twb_parameter_usage
+
   - title: "Formatting & display"
     contents:
       - tableau_formula_pretty

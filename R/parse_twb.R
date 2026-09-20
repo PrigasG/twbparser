@@ -5,6 +5,7 @@
   "overview.csv", "datasources.csv", "parameters.csv", "fields.csv",
   "calculated_fields.csv", "relationships.csv", "joins.csv",
   "custom_sql.csv", "pages.csv", "dashboards.csv",
+  "unused_fields.csv", "calc_build_order.csv", "parameter_usage.csv",
   "report.txt", "sheet_specs.txt", "replication_brief.txt",
   "dependency_graph.graphml"
 )
@@ -13,10 +14,11 @@
 #'
 #' `parse_twb()` is a convenience wrapper for non-interactive use: it parses a
 #' `.twb`/`.twbx` workbook with [TwbParser] and writes a structured set of
-#' outputs into `output_dir` — a human-readable report, one CSV per key table,
-#' per-worksheet visualization specs, a plain-text replication brief, and the
-#' field dependency graph as GraphML (readable with `igraph`/`ggraph` or any
-#' GraphML tool).
+#' outputs into `output_dir` — a human-readable report, one CSV per key table
+#' (including the rebuild kit: unused fields, calculation build order, and
+#' parameter usage), per-worksheet visualization specs, a plain-text
+#' replication brief, and the field dependency graph as GraphML (readable with
+#' `igraph`/`ggraph` or any GraphML tool).
 #'
 #' @param path Path to a `.twb` or `.twbx` file.
 #' @param output_dir Directory to write outputs into. Created if needed
@@ -111,6 +113,9 @@ parse_twb <- function(path, output_dir = "results",
   write_table(parser$get_custom_sql(), "custom_sql.csv")
   write_table(parser$get_pages(), "pages.csv")
   write_table(parser$get_dashboards(), "dashboards.csv")
+  write_table(parser$get_unused_fields(), "unused_fields.csv")
+  write_table(parser$get_calc_build_order(), "calc_build_order.csv")
+  write_table(parser$get_parameter_usage(), "parameter_usage.csv")
 
   # Human-readable report ----------------------------------------------------
   msg("Writing report.txt")

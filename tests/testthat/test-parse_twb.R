@@ -19,7 +19,9 @@ test_that("parse_twb() writes a batch export to output_dir", {
   # key tables
   for (f in c("overview.csv", "datasources.csv", "parameters.csv",
               "fields.csv", "calculated_fields.csv", "relationships.csv",
-              "joins.csv", "custom_sql.csv", "pages.csv", "dashboards.csv")) {
+              "joins.csv", "custom_sql.csv", "pages.csv", "dashboards.csv",
+              "unused_fields.csv", "calc_build_order.csv",
+              "parameter_usage.csv")) {
     expect_true(f %in% written, info = f)
   }
   # the overview csv really is the one-row overview
@@ -64,6 +66,33 @@ test_that("parse_twb(overwrite = TRUE) replaces its own outputs, keeps others", 
   expect_false(grepl("stale", report, fixed = TRUE))
   # ... while the unrelated file survived
   expect_equal(readLines(file.path(out, "notes.txt")), "mine")
+
+  unlink(out_dir, recursive = TRUE)
+})
+
+test_that("parse_twb() rebuild-kit CSVs carry the expected content", {
+  kit <- system.file("extdata", "rebuild_kit.twb", package = "twbparser")
+  if (!nzchar(kit) || !file.exists(kit)) skip("rebuild_kit.twb not available")
+
+  out_dir <- file.path(tempdir(), "twbparser-parse-twb-rebuild-kit-test")
+  unlink(out_dir, recursive = TRUE)
+
+  out <- suppressWarnings(
+    parse_twb(kit, output_dir = out_dir, quiet = TRUE)
+  )
+
+  unused <- utils::read.csv(file.path(out, "unused_fields.csv"))
+  expect_equal(nrow(unused), 3L)
+  expect_setequal(unused$name, c("Unused Field", "Unused Calc", "Unused Param"))
+
+  bo <- utils::read.csv(file.path(out, "calc_build_order.csv"))
+  expect_equal(nrow(bo), 5L)
+  expect_true(bo$build_order[bo$name == "Profit Ratio"] <
+              bo$build_order[bo$name == "Adjusted Ratio"])
+
+  pu <- utils::read.csv(file.path(out, "parameter_usage.csv"))
+  expect_true("Top N" %in% pu$parameter)
+  expect_false("Unused Param" %in% pu$parameter)
 
   unlink(out_dir, recursive = TRUE)
 })

@@ -104,6 +104,9 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   ## Phase 4: analytics
   rebind("calc_complexity",    wrap_cache("calc_complexity",    function() x$get_calc_complexity()))
   rebind("field_usage",        wrap_cache("field_usage",        function() x$get_field_usage()))
+  rebind("unused_fields",      wrap_cache("unused_fields",      function() x$get_unused_fields()))
+  rebind("calc_build_order",   wrap_cache("calc_build_order",   function() x$get_calc_build_order()))
+  rebind("parameter_usage",    wrap_cache("parameter_usage",    function() x$get_parameter_usage()))
 
   ## Validation snapshot (read-only)
   rebind(

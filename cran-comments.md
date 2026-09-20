@@ -8,6 +8,11 @@
   visualization in another tool.
 * New `twb_dashboard_charts()`: one row per worksheet placed on each
   dashboard, with mark type, fields, tooltip summary, and layout position.
+* New rebuild kit for recreating a workbook elsewhere: `twb_unused_fields()`
+  (fields/parameters defined but never used), `twb_calc_build_order()`
+  (calculated fields in creation order, with dependency cycles flagged), and
+  `twb_parameter_usage()` (where each parameter is consumed). All three are
+  also parser methods/properties and `parse_twb()` export targets.
 * New `parse_twb()` batch export: parse a `.twb`/`.twbx` workbook and write a
   structured report to disk (`report.txt`, one CSV per key table, a
   plain-text replication brief, and the field dependency graph as GraphML).

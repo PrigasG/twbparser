@@ -68,6 +68,9 @@
 #'   \item{dashboard_charts}{Tibble of charts placed on dashboards (see `get_dashboard_charts()`).}
 #'   \item{calc_complexity}{Tibble of calculated-field complexity (see `get_calc_complexity()`).}
 #'   \item{field_usage}{Tibble of field usage across worksheets (see `get_field_usage()`).}
+#'   \item{unused_fields}{Tibble of defined-but-never-used fields (see `get_unused_fields()`).}
+#'   \item{calc_build_order}{Tibble of calculated fields in rebuild order (see `get_calc_build_order()`).}
+#'   \item{parameter_usage}{Tibble of parameter consumption points (see `get_parameter_usage()`).}
 #'   \item{validation}{Last validation result; runs `validate()` first if it has
 #'     never been run.}
 #' }
@@ -122,6 +125,9 @@
 #'   \item{get_calc_complexity(include_parameters = FALSE)}{Calculated field complexity classifications.}
 #'   \item{get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)}{
 #'     Field usage matrix across worksheets.}
+#'   \item{get_unused_fields()}{Fields defined but never used anywhere in the workbook.}
+#'   \item{get_calc_build_order()}{Calculated fields topologically sorted for rebuilding.}
+#'   \item{get_parameter_usage()}{Where each parameter is consumed (formulas, shelves, filters).}
 #'   \item{get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))}{
 #'     Full replication brief for the workbook or a single dashboard.}
 #'   \item{get_workbook_report()}{Return the full structured workbook report.}
@@ -404,6 +410,30 @@ TwbParser <- R6::R6Class(
                         include_shelves = include_shelves,
                         wide            = wide),
         .empty_field_usage()
+      )
+    },
+
+    # @description Fields defined but never used (rebuild "safe to drop" list).
+    get_unused_fields = function() {
+      safe_call(
+        twb_unused_fields(self$xml_doc),
+        .empty_unused_fields()
+      )
+    },
+
+    # @description Calculated fields in rebuild dependency order.
+    get_calc_build_order = function() {
+      safe_call(
+        twb_calc_build_order(self$xml_doc),
+        .empty_build_order()
+      )
+    },
+
+    # @description Where each parameter is consumed.
+    get_parameter_usage = function() {
+      safe_call(
+        twb_parameter_usage(self$xml_doc),
+        .empty_parameter_usage()
       )
     },
 

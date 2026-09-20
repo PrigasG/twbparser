@@ -156,6 +156,43 @@ marks-card encoding, the tooltip configuration, and the sheet's filters,
 sorts, and axes — the full blueprint for rebuilding the visualization in
 another tool. `parser$sheet_spec` exposes the same specs as a property.
 
+## Rebuild kit — what do you actually need to recreate?
+
+Three helpers answer the questions that come up when rebuilding a workbook
+in another tool. They are demonstrated on the bundled `rebuild_kit.twb`
+fixture, which contains chained calculations, a circular pair, parameters,
+and deliberately unused fields.
+
+```{r rebuild-kit-setup}
+kit_ok <- FALSE
+kit_path <- system.file("extdata", "rebuild_kit.twb", package = "twbparser")
+if (nzchar(kit_path) && file.exists(kit_path)) {
+  kit <- TwbParser$new(kit_path)
+  kit_ok <- TRUE
+}
+```
+
+```{r unused-fields, eval=kit_ok}
+# Fields defined but never used anywhere: the safe-to-drop list
+twb_unused_fields(kit)
+```
+
+```{r calc-build-order, eval=kit_ok}
+# Calculations in creation order — "Adjusted Ratio" comes after "Profit Ratio";
+# the Cycle A/B pair is flagged instead of silently misordered
+twb_calc_build_order(kit)
+```
+
+```{r parameter-usage, eval=kit_ok}
+# Where each parameter value flows: formulas, shelves, filters, dashboards
+twb_parameter_usage(kit)
+```
+
+`twb_unused_fields()` covers raw fields, calculated fields, *and* parameters;
+`twb_calc_build_order()` warns and marks `build_order = NA` for fields caught
+in a dependency cycle; parameters with no usages are found via
+`twb_unused_fields()` rather than appearing empty in `twb_parameter_usage()`.
+
 # Dashboard intelligence
 
 ## Charts on a dashboard

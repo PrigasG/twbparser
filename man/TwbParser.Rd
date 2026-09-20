@@ -78,6 +78,9 @@ relationships, fields, dashboards, and filters.}
 \item{dashboard_charts}{Tibble of charts placed on dashboards (see \code{get_dashboard_charts()}).}
 \item{calc_complexity}{Tibble of calculated-field complexity (see \code{get_calc_complexity()}).}
 \item{field_usage}{Tibble of field usage across worksheets (see \code{get_field_usage()}).}
+\item{unused_fields}{Tibble of defined-but-never-used fields (see \code{get_unused_fields()}).}
+\item{calc_build_order}{Tibble of calculated fields in rebuild order (see \code{get_calc_build_order()}).}
+\item{parameter_usage}{Tibble of parameter consumption points (see \code{get_parameter_usage()}).}
 \item{validation}{Last validation result; runs \code{validate()} first if it has
 never been run.}
 }
@@ -134,6 +137,9 @@ mark type, fields, tooltip summary, and layout position.}
 \item{\code{get_calc_complexity(include_parameters = FALSE)}}{Calculated field complexity classifications.}
 \item{\code{get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)}}{
 Field usage matrix across worksheets.}
+\item{\code{get_unused_fields()}}{Fields defined but never used anywhere in the workbook.}
+\item{\code{get_calc_build_order()}}{Calculated fields topologically sorted for rebuilding.}
+\item{\code{get_parameter_usage()}}{Where each parameter is consumed (formulas, shelves, filters).}
 \item{\code{get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))}}{
 Full replication brief for the workbook or a single dashboard.}
 \item{\code{get_workbook_report()}}{Return the full structured workbook report.}
