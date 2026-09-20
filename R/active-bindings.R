@@ -78,12 +78,6 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind("dashboard_summary", wrap_cache("dashboard_summary", function() .ins_dashboard_summary(x$xml_doc)))
   rebind("dashboard_filters", wrap_cache("dashboard_filters", function() x$get_dashboard_filters()))
 
-  ## Safe getters as properties (same names; originals stashed as *_fn)
-  rebind("relations",              wrap_cache("relations",              function() x$get_relations_fn()))
-  rebind("joins",                  wrap_cache("joins",                  function() x$get_joins_fn()))
-  rebind("relationships",          wrap_cache("relationships",          function() x$get_relationships_fn()))
-  rebind("inferred_relationships", wrap_cache("inferred_relationships", function() x$get_inferred_relationships_fn()))
-
   ## Data snapshot properties (NEW names; originals remain callable as get_*())
   rebind("datasources",        wrap_cache("datasources",        function() x$get_datasources()))
   rebind("parameters_tbl",     wrap_cache("parameters_tbl",     function() x$get_parameters()))

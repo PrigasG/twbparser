@@ -4,15 +4,12 @@
 \alias{validate_relationships}
 \title{Validate relationships against available datasources and fields}
 \usage{
-validate_relationships(parser, strict = FALSE)
+validate_relationships(parser)
 }
 \arguments{
 \item{parser}{A \code{TwbParser}-like object that exposes:
 \code{get_relationships()}, \code{get_datasources()}, \code{get_fields()},
 and \code{get_calculated_fields()}. (S3/R6 both fine.)}
-
-\item{strict}{Logical. Reserved for future table-scoped checks that can be
-overly conservative with federated sources. Currently not used.}
 }
 \value{
 A list with:

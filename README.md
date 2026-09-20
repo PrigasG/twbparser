@@ -6,7 +6,7 @@
 [![pkgdown](https://github.com/PrigasG/twbparser/actions/workflows/pkgdown.yaml/badge.svg?branch=master)](https://prigasg.github.io/twbparser/)
 [![Codecov](https://codecov.io/gh/PrigasG/twbparser/branch/master/graph/badge.svg)](https://app.codecov.io/gh/PrigasG/twbparser)
 [![License:MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/PrigasG/twbparser/blob/master/LICENSE)
-[![Lifecycle:stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![Lifecycle:experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 
 Parse Tableau **TWB/TWBX** files in R: extract **datasources, joins, relationships, fields, calculated fields, worksheet configuration, and dashboard structure**, plus inspect and unpack **TWBX** assets. Built for large workbooks and Shiny integration.
 
@@ -43,10 +43,9 @@ Summary for twb workbook
 
 ``` r
 library(twbparser)
-library(fs)
 
 # Parse workbook
-path <- fs::path_abs("path/to/workbook.twbx")
+path <- normalizePath("path/to/workbook.twbx", mustWork = FALSE)
 stopifnot(file.exists(path))
 
 parser <- TwbParser$new(path)
@@ -207,10 +206,13 @@ calcs <- parser$get_calculated_fields(pretty = TRUE, wrap = 120) |>
 ```
 
 
-And graph objects (via igraph or ggraph) for visualization:
+Batch export without writing R code — parse a workbook and write a structured
+report to disk (report text, one CSV per key table, a replication brief, and
+the field dependency graph as GraphML):
 
 ``` r
-Rscript -e "twbparser::parse_twb('my_dashboard.twb', output_dir = 'results/')"
+out <- twbparser::parse_twb("my_dashboard.twb", output_dir = "results/")
+list.files(out)
 ```
 
 ## Integration Examples

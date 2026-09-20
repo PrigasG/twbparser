@@ -5,6 +5,11 @@
 #' fields, inferred relationships, and datasource details. For `.twbx`, it also
 #' extracts the largest `.twb` and records a manifest.
 #'
+#' Results are read through **active-binding properties** (no parentheses),
+#' e.g. `parser$summary`, `parser$overview`, `parser$datasources`. The `get_*()`
+#' methods return the same data and are useful when you need to pass arguments
+#' (e.g. `parser$get_sheet_shelves("My Sheet")`) or want an explicit call.
+#'
 #' @format An R6 class generator.
 #'
 #' @section Fields:
@@ -21,16 +26,60 @@
 #'   \item{datasource_details}{List containing `data_sources`, `parameters`, and `all_sources`.}
 #'   \item{fields}{Tibble of raw fields with table information.}
 #'   \item{calculated_fields}{Tibble of calculated fields.}
+#'   \item{custom_sql}{Tibble of custom SQL relations from `twb_custom_sql()`.}
+#'   \item{initial_sql}{Tibble of initial SQL statements from `twb_initial_sql()`.}
+#'   \item{published_refs}{Tibble of published-datasource references from `twb_published_refs()`.}
 #'   \item{last_validation}{Result from `validate()` as list with `ok` and `issues` elements.}
 #' }
 #'
+#' @section Active bindings (read-only properties):
+#' \describe{
+#'   \item{summary}{The workbook report (a `twbparser_report`); accessing it
+#'     prints the summary. Note: this is a property, not a method — use
+#'     `parser$summary`, not `parser$summary()`.}
+#'   \item{report}{Same as `summary`: the full structured workbook report.}
+#'   \item{overview}{One-row tibble with counts of datasources, parameters,
+#'     relationships, fields, dashboards, and filters.}
+#'   \item{pages}{Tibble of workbook pages (worksheets, dashboards, stories).}
+#'   \item{pages_summary}{Tibble summarizing page counts by type.}
+#'   \item{charts}{Tibble of chart/mark information per worksheet.}
+#'   \item{colors}{Tibble of color encodings used across worksheets.}
+#'   \item{dashboards}{Tibble of dashboards in the workbook.}
+#'   \item{dashboard_summary}{Tibble summarizing dashboards and their filters.}
+#'   \item{dashboard_filters}{Tibble of dashboard filter configurations.}
+#'   \item{datasources}{Tibble of datasource details (see `get_datasources()`).}
+#'   \item{parameters_tbl}{Tibble of parameter fields (see `get_parameters()`).}
+#'   \item{datasources_all}{Tibble of all sources (see `get_datasources_all()`).}
+#'   \item{fields_tbl}{Tibble of raw fields (see `get_fields()`).}
+#'   \item{custom_sql_tbl}{Tibble of custom SQL (see `get_custom_sql()`).}
+#'   \item{initial_sql_tbl}{Tibble of initial SQL (see `get_initial_sql()`).}
+#'   \item{published_refs_tbl}{Tibble of published references (see `get_published_refs()`).}
+#'   \item{twbx_manifest_tbl}{Tibble of `.twbx` contents (see `get_twbx_manifest()`).}
+#'   \item{twbx_extracts_tbl}{Tibble of `.twbx` extract entries (see `get_twbx_extracts()`).}
+#'   \item{twbx_images_tbl}{Tibble of `.twbx` image entries (see `get_twbx_images()`).}
+#'   \item{sheet_shelves}{Tibble of shelf placement (see `get_sheet_shelves()`).}
+#'   \item{sheet_filters}{Tibble of worksheet filters (see `get_sheet_filters()`).}
+#'   \item{sheet_axes}{Tibble of axis configuration (see `get_sheet_axes()`).}
+#'   \item{sheet_sorts}{Tibble of sort directives (see `get_sheet_sorts()`).}
+#'   \item{dashboard_sheets}{Tibble of worksheets per dashboard (see `get_dashboard_sheets()`).}
+#'   \item{dashboard_layout}{Tibble of the zone layout tree (see `get_dashboard_layout()`).}
+#'   \item{dashboard_actions}{Tibble of dashboard actions (see `get_dashboard_actions()`).}
+#'   \item{calc_complexity}{Tibble of calculated-field complexity (see `get_calc_complexity()`).}
+#'   \item{field_usage}{Tibble of field usage across worksheets (see `get_field_usage()`).}
+#'   \item{validation}{Last validation result; runs `validate()` first if it has
+#'     never been run.}
+#' }
+#' Properties are cached after first access; most return the same tibbles as
+#' the corresponding `get_*()` methods.
+#'
 #' @section Methods:
 #' \describe{
-#'   \item{new(path)}{Create a parser from `.twb` or `.twbx` file.}
+#'   \item{new(path)}{Create a parser from a `.twb` or `.twbx` file.}
 #'   \item{get_twbx_manifest()}{Return `.twbx` manifest tibble.}
 #'   \item{get_twbx_extracts()}{Return `.twbx` extract entries.}
 #'   \item{get_twbx_images()}{Return `.twbx` image entries.}
-#'   \item{extract_twbx_assets(types, pattern, files, exdir)}{Extract files from `.twbx` archive.}
+#'   \item{extract_twbx_assets(types = NULL, pattern = NULL, files = NULL, exdir = NULL)}{
+#'     Extract files from the `.twbx` archive to disk.}
 #'   \item{get_relations()}{Return relations tibble.}
 #'   \item{get_joins()}{Return joins tibble.}
 #'   \item{get_relationships()}{Return modern relationships tibble.}
@@ -39,12 +88,47 @@
 #'   \item{get_parameters()}{Return parameters tibble.}
 #'   \item{get_datasources_all()}{Return all sources tibble.}
 #'   \item{get_fields()}{Return raw fields tibble.}
-#'   \item{get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L)}{
+#'   \item{get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L, include_parameters = FALSE)}{
 #'     Return calculated fields tibble. When `pretty = TRUE`, includes a
-#'     `formula_pretty` column with line breaks and indentation.
-#'   }
+#'     `formula_pretty` column with line breaks and indentation.}
+#'   \item{get_custom_sql()}{Return custom SQL tibble.}
+#'   \item{get_initial_sql()}{Return initial SQL tibble.}
+#'   \item{get_published_refs()}{Return published-datasource references tibble.}
+#'   \item{get_pages()}{Return workbook pages tibble.}
+#'   \item{get_pages_summary()}{Return page counts by type.}
+#'   \item{get_page_composition(name)}{Return zone/mark composition of one page.}
+#'   \item{get_charts()}{Return chart/mark information per worksheet.}
+#'   \item{get_colors()}{Return color encodings used across worksheets.}
+#'   \item{get_dashboards()}{Return dashboards tibble.}
+#'   \item{get_dashboard_filters(dashboard = NULL)}{Return dashboard filter configurations.}
+#'   \item{get_dashboard_summary()}{Return dashboard summary tibble.}
+#'   \item{get_sheet_shelves(sheet = NULL)}{Fields placed on visual shelves for one or all worksheets.}
+#'   \item{get_sheet_filters(sheet = NULL)}{Detailed filter configuration for one or all worksheets.}
+#'   \item{get_sheet_axes(sheet = NULL)}{Axis configuration for one or all worksheets.}
+#'   \item{get_sheet_sorts(sheet = NULL)}{Sort directives for one or all worksheets.}
+#'   \item{get_dashboard_sheets(dashboard = NULL)}{Worksheets embedded in one or all dashboards.}
+#'   \item{get_dashboard_layout(dashboard = NULL)}{Full zone layout with container hierarchy.}
+#'   \item{get_dashboard_actions(dashboard = NULL)}{Dashboard and workbook actions.}
+#'   \item{get_dashboard_size(dashboard = NULL)}{Dashboard page size and sizing mode.}
+#'   \item{get_formatting(scope = NULL)}{Formatting rules (fonts, colours, number formats, \ldots);
+#'     `scope` is one of `"worksheet"`, `"dashboard"`, or `"workbook"`.}
+#'   \item{get_tooltips(sheet = NULL)}{Plain-text worksheet tooltips.}
+#'   \item{get_calc_complexity(include_parameters = FALSE)}{Calculated field complexity classifications.}
+#'   \item{get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)}{
+#'     Field usage matrix across worksheets.}
+#'   \item{get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))}{
+#'     Full replication brief for the workbook or a single dashboard.}
+#'   \item{get_workbook_report()}{Return the full structured workbook report.}
+#'   \item{get_overview()}{Return the one-row overview tibble.}
 #'   \item{validate(error = FALSE)}{Validate relationships. Stops execution if `error = TRUE`.}
-#'   \item{summary()}{Print a brief summary to console.}
+#' }
+#'
+#' @examples
+#' twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+#' if (nzchar(twb)) {
+#'   parser <- TwbParser$new(twb)
+#'   parser$overview
+#'   parser$get_calculated_fields()
 #' }
 #'
 #' @name TwbParser
@@ -77,9 +161,9 @@ TwbParser <- R6::R6Class(
     published_refs = NULL,
     # publish_info_cache = NULL,
 
-    #' @description
-    #' Initialize the parser from a `.twb` or `.twbx` path.
-    #' @param path Path to a `.twb` or `.twbx` file.
+    # @description
+    # Initialize the parser from a `.twb` or `.twbx` path.
+    # @param path Path to a `.twb` or `.twbx` file.
     initialize = function(path) {
       if (!file.exists(path)) stop("File not found: ", path)
 
@@ -127,12 +211,12 @@ TwbParser <- R6::R6Class(
     },
 
     # --- TWBX helpers ---
-    #' @description Return the TWBX manifest (if available).
+    # @description Return the TWBX manifest (if available).
     get_twbx_manifest = function() {
       self$twbx_manifest %||% tibble::tibble()
     },
 
-    #' @description Return TWBX extract entries.
+    # @description Return TWBX extract entries.
     get_twbx_extracts = function() {
       man <- self$get_twbx_manifest()
       if (nrow(man) == 0) {
@@ -141,7 +225,7 @@ TwbParser <- R6::R6Class(
       dplyr::filter(man, type == "extract")
     },
 
-    #' @description Return TWBX image entries.
+    # @description Return TWBX image entries.
     get_twbx_images = function() {
       man <- self$get_twbx_manifest()
       if (nrow(man) == 0) {
@@ -150,11 +234,11 @@ TwbParser <- R6::R6Class(
       dplyr::filter(man, type == "image")
     },
 
-    #' @description Extract files from the TWBX to disk.
-    #' @param types Optional vector of types (e.g., `"image"`, `"extract"`).
-    #' @param pattern Optional regex to match archive paths.
-    #' @param files Optional explicit archive paths to extract.
-    #' @param exdir Output directory (defaults to parser's twbx dir or tempdir()).
+    # @description Extract files from the TWBX to disk.
+    # @param types Optional vector of types (e.g., `"image"`, `"extract"`).
+    # @param pattern Optional regex to match archive paths.
+    # @param files Optional explicit archive paths to extract.
+    # @param exdir Output directory (defaults to parser's twbx dir or tempdir()).
     extract_twbx_assets = function(types = NULL, pattern = NULL, files = NULL, exdir = NULL) {
       if (is.null(self$twbx_path) || !file.exists(self$twbx_path)) {
         stop("No TWBX path recorded. Re-open from a .twbx or call twbx_extract_files() with an explicit path.")
@@ -214,70 +298,70 @@ TwbParser <- R6::R6Class(
     get_dashboard_summary = function() safe_call(.ins_dashboard_summary(self$xml_doc), tibble::tibble()),
 
     # --- Phase 2/3: sheet & dashboard intelligence ---
-    #' @description Fields placed on visual shelves for one or all worksheets.
-    #' @param sheet Optional worksheet name.
+    # @description Fields placed on visual shelves for one or all worksheets.
+    # @param sheet Optional worksheet name.
     get_sheet_shelves = function(sheet = NULL) {
       safe_call(.ins_sheet_shelves(self$xml_doc, sheet), .empty_shelves())
     },
 
-    #' @description Detailed filter configuration for one or all worksheets.
-    #' @param sheet Optional worksheet name.
+    # @description Detailed filter configuration for one or all worksheets.
+    # @param sheet Optional worksheet name.
     get_sheet_filters = function(sheet = NULL) {
       safe_call(.ins_sheet_filters(self$xml_doc, sheet), .empty_filters())
     },
 
-    #' @description Axis configuration for one or all worksheets.
-    #' @param sheet Optional worksheet name.
+    # @description Axis configuration for one or all worksheets.
+    # @param sheet Optional worksheet name.
     get_sheet_axes = function(sheet = NULL) {
       safe_call(.ins_sheet_axes(self$xml_doc, sheet), .empty_axes())
     },
 
-    #' @description Sort directives for one or all worksheets.
-    #' @param sheet Optional worksheet name.
+    # @description Sort directives for one or all worksheets.
+    # @param sheet Optional worksheet name.
     get_sheet_sorts = function(sheet = NULL) {
       safe_call(.ins_sheet_sorts(self$xml_doc, sheet), .empty_sorts())
     },
 
-    #' @description Worksheets embedded in one or all dashboards.
-    #' @param dashboard Optional dashboard name.
+    # @description Worksheets embedded in one or all dashboards.
+    # @param dashboard Optional dashboard name.
     get_dashboard_sheets = function(dashboard = NULL) {
       safe_call(.ins_dashboard_sheets(self$xml_doc, dashboard), tibble::tibble())
     },
 
-    #' @description Full zone layout with container hierarchy.
-    #' @param dashboard Optional dashboard name.
+    # @description Full zone layout with container hierarchy.
+    # @param dashboard Optional dashboard name.
     get_dashboard_layout = function(dashboard = NULL) {
       safe_call(.ins_dashboard_layout(self$xml_doc, dashboard), .empty_layout())
     },
 
-    #' @description Dashboard and workbook actions.
-    #' @param dashboard Optional dashboard name to filter by.
+    # @description Dashboard and workbook actions.
+    # @param dashboard Optional dashboard name to filter by.
     get_dashboard_actions = function(dashboard = NULL) {
       safe_call(.ins_dashboard_actions(self$xml_doc, dashboard), .empty_actions())
     },
 
-    #' @description Dashboard page size and sizing mode.
-    #' @param dashboard Optional dashboard name to filter by.
+    # @description Dashboard page size and sizing mode.
+    # @param dashboard Optional dashboard name to filter by.
     get_dashboard_size = function(dashboard = NULL) {
       safe_call(.ins_dashboard_size(self$xml_doc, dashboard), .empty_dashboard_size())
     },
 
-    #' @description Formatting rules (fonts, colours, number formats, …).
-    #' @param scope Optional `"worksheet"`, `"dashboard"`, or `"workbook"`.
+    # @description Formatting rules (fonts, colours, number formats, …).
+    # @param scope Optional `"worksheet"`, `"dashboard"`, or `"workbook"`.
     get_formatting = function(scope = NULL) {
       safe_call(.ins_formatting(self$xml_doc, scope), .empty_formatting())
     },
 
-    #' @description Plain-text worksheet tooltips.
-    #' @param sheet Optional worksheet name.
+    # @description Plain-text worksheet tooltips.
+    # @param sheet Optional worksheet name.
     get_tooltips = function(sheet = NULL) {
       safe_call(.ins_tooltips(self$xml_doc, sheet), .empty_tooltips())
     },
 
     # --- Phase 4: analytics ---
 
-    #' @description Calculated field complexity classifications.
-    #' @param include_parameters Logical; include parameter fields. Default `FALSE`.
+    # @description Calculated field complexity classifications.
+    # @param include_parameters Logical; include parameter fields. Default `FALSE`.
     get_calc_complexity = function(include_parameters = FALSE) {
       safe_call(
         twb_calc_complexity(self$xml_doc, include_parameters = include_parameters),
@@ -285,10 +369,10 @@ TwbParser <- R6::R6Class(
       )
     },
 
-    #' @description Field usage matrix across worksheets.
-    #' @param include_filters Include filter appearances. Default `TRUE`.
-    #' @param include_shelves Include shelf appearances. Default `TRUE`.
-    #' @param wide Return wide format (one col per sheet). Default `FALSE`.
+    # @description Field usage matrix across worksheets.
+    # @param include_filters Include filter appearances. Default `TRUE`.
+    # @param include_shelves Include shelf appearances. Default `TRUE`.
+    # @param wide Return wide format (one col per sheet). Default `FALSE`.
     get_field_usage = function(include_filters  = TRUE,
                                include_shelves  = TRUE,
                                wide             = FALSE) {
@@ -301,12 +385,12 @@ TwbParser <- R6::R6Class(
       )
     },
 
-    #' @description Full replication brief for the workbook or a single dashboard.
-    #' @param dashboard Optional dashboard name to scope the brief.
-    #' @param include_sql Include custom SQL blocks. Default `TRUE`.
-    #' @param include_formulas Add `formula_pretty` to calculated fields.
-    #'   Default `TRUE`.
-    #' @param format `"list"` (default) or `"text"`.
+    # @description Full replication brief for the workbook or a single dashboard.
+    # @param dashboard Optional dashboard name to scope the brief.
+    # @param include_sql Include custom SQL blocks. Default `TRUE`.
+    # @param include_formulas Add `formula_pretty` to calculated fields.
+    #   Default `TRUE`.
+    # @param format `"list"` (default) or `"text"`.
     get_replication_brief = function(dashboard        = NULL,
                                      include_sql      = TRUE,
                                      include_formulas = TRUE,
@@ -326,8 +410,8 @@ TwbParser <- R6::R6Class(
     },
 
     # --- validator bridge ---
-    #' @description Validate relationships; optionally stop on failure.
-    #' @param error If `TRUE`, `stop()` when validation fails.
+    # @description Validate relationships; optionally stop on failure.
+    # @param error If `TRUE`, `stop()` when validation fails.
     validate = function(error = FALSE) {
       v <- validate_relationships(self) # lenient by default
       self$last_validation <- v
@@ -338,7 +422,7 @@ TwbParser <- R6::R6Class(
     },
 
     # --- summary ---
-    #' @description Print a concise summary of parsed content.
+    # @description Print a concise summary of parsed content.
     summary = function() {
       report <- self$get_workbook_report()
       print(report)

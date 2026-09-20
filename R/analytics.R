@@ -370,7 +370,6 @@ twb_replication_brief <- function(x,
 
   if (!is.null(dashboard)) {
     stopifnot(is.character(dashboard), length(dashboard) == 1L)
-    dashboard <- gsub("'", "", dashboard, fixed = TRUE)
   }
   stopifnot(
     is.logical(include_sql),      length(include_sql)      == 1L,

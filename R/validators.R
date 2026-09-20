@@ -7,8 +7,6 @@
 #' @param parser A `TwbParser`-like object that exposes:
 #'   `get_relationships()`, `get_datasources()`, `get_fields()`,
 #'   and `get_calculated_fields()`. (S3/R6 both fine.)
-#' @param strict Logical. Reserved for future table-scoped checks that can be
-#'   overly conservative with federated sources. Currently not used.
 #'
 #' @return A list with:
 #' \describe{
@@ -32,7 +30,7 @@
 #'
 #' @export
 #' @importFrom dplyr filter mutate select
-validate_relationships <- function(parser, strict = FALSE) {
+validate_relationships <- function(parser) {
   rels <- parser$get_relationships()
   ds <- parser$get_datasources()
   flds <- parser$get_fields()

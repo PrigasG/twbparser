@@ -50,12 +50,11 @@ twb_dashboard_size <- function(x, dashboard = NULL) {
 #' @keywords internal
 #' @noRd
 .ins_dashboard_size <- function(xml_doc, dashboard = NULL) {
-  d_xpath <- if (is.null(dashboard)) {
-    ".//dashboard"
+  d_nodes <- if (is.null(dashboard)) {
+    xml2::xml_find_all(xml_doc, ".//dashboard")
   } else {
-    paste0(".//dashboard[@name='", gsub("'", "", dashboard, fixed = TRUE), "']")
+    .twb_find_all_named(xml_doc, "dashboard", dashboard)
   }
-  d_nodes <- xml2::xml_find_all(xml_doc, d_xpath)
   if (length(d_nodes) == 0L) return(.empty_dashboard_size())
 
   int_attr <- function(node, a) {
@@ -285,12 +284,11 @@ twb_tooltips <- function(x, sheet = NULL) {
 #' @keywords internal
 #' @noRd
 .ins_tooltips <- function(xml_doc, sheet = NULL) {
-  ws_xpath <- if (is.null(sheet)) {
-    ".//worksheet"
+  ws_nodes <- if (is.null(sheet)) {
+    xml2::xml_find_all(xml_doc, ".//worksheet")
   } else {
-    paste0(".//worksheet[@name='", gsub("'", "", sheet, fixed = TRUE), "']")
+    .twb_find_all_named(xml_doc, "worksheet", sheet)
   }
-  ws_nodes <- xml2::xml_find_all(xml_doc, ws_xpath)
   if (length(ws_nodes) == 0L) return(.empty_tooltips())
 
   out <- purrr::map_dfr(ws_nodes, function(w) {

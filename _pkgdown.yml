@@ -108,10 +108,11 @@ reference:
     contents:
       - run_twbparser_app
 
-  - title: "Server/Cloud (optional)"
+  - title: "Batch export"
+    desc: >
+      Parse a workbook and write a structured report to disk.
     contents:
-      - tbs_publish_info
-      - tbs_custom_sql_graphql
+      - parse_twb
 
 articles:
   - title: "Get Started"

@@ -204,6 +204,20 @@ print(v$issues)
 
 ```
 
+# Batch export
+
+For non-interactive use, `parse_twb()` parses the workbook and writes a
+structured report to disk — a human-readable `report.txt`, one CSV per key
+table, a plain-text replication brief, and the field dependency graph as
+GraphML:
+
+```{r batch-export, eval=exists("parser")}
+out <- parse_twb(parser$path,
+                 output_dir = file.path(tempdir(), "twbparser-vignette"),
+                 overwrite = TRUE, quiet = TRUE)
+list.files(out)
+```
+
 # Summary
 
 This vignette overviewed how to use the `twbparser` package for detailed inspection and extraction of Tableau workbook internals to assist in analysis, replication, or integration workflows.

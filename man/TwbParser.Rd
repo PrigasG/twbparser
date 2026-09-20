@@ -7,86 +7,17 @@
 \format{
 An R6 class generator.
 }
-\arguments{
-\item{path}{Path to a \code{.twb} or \code{.twbx} file.}
-
-\item{types}{Optional vector of types (e.g., \code{"image"}, \code{"extract"}).}
-
-\item{pattern}{Optional regex to match archive paths.}
-
-\item{files}{Optional explicit archive paths to extract.}
-
-\item{exdir}{Output directory (defaults to parser's twbx dir or tempdir()).}
-
-\item{scope}{Optional \code{"worksheet"}, \code{"dashboard"}, or \code{"workbook"}.}
-
-\item{sheet}{Optional worksheet name.}
-
-\item{include_parameters}{Logical; include parameter fields. Default \code{FALSE}.}
-
-\item{include_filters}{Include filter appearances. Default \code{TRUE}.}
-
-\item{include_shelves}{Include shelf appearances. Default \code{TRUE}.}
-
-\item{wide}{Return wide format (one col per sheet). Default \code{FALSE}.}
-
-\item{dashboard}{Optional dashboard name to scope the brief.}
-
-\item{include_sql}{Include custom SQL blocks. Default \code{TRUE}.}
-
-\item{include_formulas}{Add \code{formula_pretty} to calculated fields.
-Default \code{TRUE}.}
-
-\item{format}{\code{"list"} (default) or \code{"text"}.}
-
-\item{error}{If \code{TRUE}, \code{stop()} when validation fails.}
-}
 \description{
-Initialize the parser from a \code{.twb} or \code{.twbx} path.
-
-Return the TWBX manifest (if available).
-
-Return TWBX extract entries.
-
-Return TWBX image entries.
-
-Extract files from the TWBX to disk.
-
-Fields placed on visual shelves for one or all worksheets.
-
-Detailed filter configuration for one or all worksheets.
-
-Axis configuration for one or all worksheets.
-
-Sort directives for one or all worksheets.
-
-Worksheets embedded in one or all dashboards.
-
-Full zone layout with container hierarchy.
-
-Dashboard and workbook actions.
-
-Dashboard page size and sizing mode.
-
-Formatting rules (fonts, colours, number formats, …).
-
-Plain-text worksheet tooltips.
-
-Calculated field complexity classifications.
-
-Field usage matrix across worksheets.
-
-Full replication brief for the workbook or a single dashboard.
-
-Validate relationships; optionally stop on failure.
-
-Print a concise summary of parsed content.
-}
-\details{
 Create a parser for Tableau \code{.twb} / \code{.twbx} files. On initialization, the
 parser reads the XML and precomputes relationships, joins, fields, calculated
 fields, inferred relationships, and datasource details. For \code{.twbx}, it also
 extracts the largest \code{.twb} and records a manifest.
+}
+\details{
+Results are read through \strong{active-binding properties} (no parentheses),
+e.g. \code{parser$summary}, \code{parser$overview}, \code{parser$datasources}. The \code{get_*()}
+methods return the same data and are useful when you need to pass arguments
+(e.g. \code{parser$get_sheet_shelves("My Sheet")}) or want an explicit call.
 }
 \section{Fields}{
 
@@ -103,32 +34,113 @@ extracts the largest \code{.twb} and records a manifest.
 \item{datasource_details}{List containing \code{data_sources}, \code{parameters}, and \code{all_sources}.}
 \item{fields}{Tibble of raw fields with table information.}
 \item{calculated_fields}{Tibble of calculated fields.}
+\item{custom_sql}{Tibble of custom SQL relations from \code{twb_custom_sql()}.}
+\item{initial_sql}{Tibble of initial SQL statements from \code{twb_initial_sql()}.}
+\item{published_refs}{Tibble of published-datasource references from \code{twb_published_refs()}.}
 \item{last_validation}{Result from \code{validate()} as list with \code{ok} and \code{issues} elements.}
 }
+}
+
+\section{Active bindings (read-only properties)}{
+
+\describe{
+\item{summary}{The workbook report (a \code{twbparser_report}); accessing it
+prints the summary. Note: this is a property, not a method — use
+\code{parser$summary}, not \code{parser$summary()}.}
+\item{report}{Same as \code{summary}: the full structured workbook report.}
+\item{overview}{One-row tibble with counts of datasources, parameters,
+relationships, fields, dashboards, and filters.}
+\item{pages}{Tibble of workbook pages (worksheets, dashboards, stories).}
+\item{pages_summary}{Tibble summarizing page counts by type.}
+\item{charts}{Tibble of chart/mark information per worksheet.}
+\item{colors}{Tibble of color encodings used across worksheets.}
+\item{dashboards}{Tibble of dashboards in the workbook.}
+\item{dashboard_summary}{Tibble summarizing dashboards and their filters.}
+\item{dashboard_filters}{Tibble of dashboard filter configurations.}
+\item{datasources}{Tibble of datasource details (see \code{get_datasources()}).}
+\item{parameters_tbl}{Tibble of parameter fields (see \code{get_parameters()}).}
+\item{datasources_all}{Tibble of all sources (see \code{get_datasources_all()}).}
+\item{fields_tbl}{Tibble of raw fields (see \code{get_fields()}).}
+\item{custom_sql_tbl}{Tibble of custom SQL (see \code{get_custom_sql()}).}
+\item{initial_sql_tbl}{Tibble of initial SQL (see \code{get_initial_sql()}).}
+\item{published_refs_tbl}{Tibble of published references (see \code{get_published_refs()}).}
+\item{twbx_manifest_tbl}{Tibble of \code{.twbx} contents (see \code{get_twbx_manifest()}).}
+\item{twbx_extracts_tbl}{Tibble of \code{.twbx} extract entries (see \code{get_twbx_extracts()}).}
+\item{twbx_images_tbl}{Tibble of \code{.twbx} image entries (see \code{get_twbx_images()}).}
+\item{sheet_shelves}{Tibble of shelf placement (see \code{get_sheet_shelves()}).}
+\item{sheet_filters}{Tibble of worksheet filters (see \code{get_sheet_filters()}).}
+\item{sheet_axes}{Tibble of axis configuration (see \code{get_sheet_axes()}).}
+\item{sheet_sorts}{Tibble of sort directives (see \code{get_sheet_sorts()}).}
+\item{dashboard_sheets}{Tibble of worksheets per dashboard (see \code{get_dashboard_sheets()}).}
+\item{dashboard_layout}{Tibble of the zone layout tree (see \code{get_dashboard_layout()}).}
+\item{dashboard_actions}{Tibble of dashboard actions (see \code{get_dashboard_actions()}).}
+\item{calc_complexity}{Tibble of calculated-field complexity (see \code{get_calc_complexity()}).}
+\item{field_usage}{Tibble of field usage across worksheets (see \code{get_field_usage()}).}
+\item{validation}{Last validation result; runs \code{validate()} first if it has
+never been run.}
+}
+Properties are cached after first access; most return the same tibbles as
+the corresponding \code{get_*()} methods.
 }
 
 \section{Methods}{
 
 \describe{
-\item{new(path)}{Create a parser from \code{.twb} or \code{.twbx} file.}
-\item{get_twbx_manifest()}{Return \code{.twbx} manifest tibble.}
-\item{get_twbx_extracts()}{Return \code{.twbx} extract entries.}
-\item{get_twbx_images()}{Return \code{.twbx} image entries.}
-\item{extract_twbx_assets(types, pattern, files, exdir)}{Extract files from \code{.twbx} archive.}
-\item{get_relations()}{Return relations tibble.}
-\item{get_joins()}{Return joins tibble.}
-\item{get_relationships()}{Return modern relationships tibble.}
-\item{get_inferred_relationships()}{Return inferred relationship pairs.}
-\item{get_datasources()}{Return datasource details tibble.}
-\item{get_parameters()}{Return parameters tibble.}
-\item{get_datasources_all()}{Return all sources tibble.}
-\item{get_fields()}{Return raw fields tibble.}
-\item{get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L)}{
+\item{\code{new(path)}}{Create a parser from a \code{.twb} or \code{.twbx} file.}
+\item{\code{get_twbx_manifest()}}{Return \code{.twbx} manifest tibble.}
+\item{\code{get_twbx_extracts()}}{Return \code{.twbx} extract entries.}
+\item{\code{get_twbx_images()}}{Return \code{.twbx} image entries.}
+\item{\code{extract_twbx_assets(types = NULL, pattern = NULL, files = NULL, exdir = NULL)}}{
+Extract files from the \code{.twbx} archive to disk.}
+\item{\code{get_relations()}}{Return relations tibble.}
+\item{\code{get_joins()}}{Return joins tibble.}
+\item{\code{get_relationships()}}{Return modern relationships tibble.}
+\item{\code{get_inferred_relationships()}}{Return inferred relationship pairs.}
+\item{\code{get_datasources()}}{Return datasource details tibble.}
+\item{\code{get_parameters()}}{Return parameters tibble.}
+\item{\code{get_datasources_all()}}{Return all sources tibble.}
+\item{\code{get_fields()}}{Return raw fields tibble.}
+\item{\code{get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L, include_parameters = FALSE)}}{
 Return calculated fields tibble. When \code{pretty = TRUE}, includes a
-\code{formula_pretty} column with line breaks and indentation.
-}
-\item{validate(error = FALSE)}{Validate relationships. Stops execution if \code{error = TRUE}.}
-\item{summary()}{Print a brief summary to console.}
+\code{formula_pretty} column with line breaks and indentation.}
+\item{\code{get_custom_sql()}}{Return custom SQL tibble.}
+\item{\code{get_initial_sql()}}{Return initial SQL tibble.}
+\item{\code{get_published_refs()}}{Return published-datasource references tibble.}
+\item{\code{get_pages()}}{Return workbook pages tibble.}
+\item{\code{get_pages_summary()}}{Return page counts by type.}
+\item{\code{get_page_composition(name)}}{Return zone/mark composition of one page.}
+\item{\code{get_charts()}}{Return chart/mark information per worksheet.}
+\item{\code{get_colors()}}{Return color encodings used across worksheets.}
+\item{\code{get_dashboards()}}{Return dashboards tibble.}
+\item{\code{get_dashboard_filters(dashboard = NULL)}}{Return dashboard filter configurations.}
+\item{\code{get_dashboard_summary()}}{Return dashboard summary tibble.}
+\item{\code{get_sheet_shelves(sheet = NULL)}}{Fields placed on visual shelves for one or all worksheets.}
+\item{\code{get_sheet_filters(sheet = NULL)}}{Detailed filter configuration for one or all worksheets.}
+\item{\code{get_sheet_axes(sheet = NULL)}}{Axis configuration for one or all worksheets.}
+\item{\code{get_sheet_sorts(sheet = NULL)}}{Sort directives for one or all worksheets.}
+\item{\code{get_dashboard_sheets(dashboard = NULL)}}{Worksheets embedded in one or all dashboards.}
+\item{\code{get_dashboard_layout(dashboard = NULL)}}{Full zone layout with container hierarchy.}
+\item{\code{get_dashboard_actions(dashboard = NULL)}}{Dashboard and workbook actions.}
+\item{\code{get_dashboard_size(dashboard = NULL)}}{Dashboard page size and sizing mode.}
+\item{\code{get_formatting(scope = NULL)}}{Formatting rules (fonts, colours, number formats, \ldots);
+\code{scope} is one of \code{"worksheet"}, \code{"dashboard"}, or \code{"workbook"}.}
+\item{\code{get_tooltips(sheet = NULL)}}{Plain-text worksheet tooltips.}
+\item{\code{get_calc_complexity(include_parameters = FALSE)}}{Calculated field complexity classifications.}
+\item{\code{get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)}}{
+Field usage matrix across worksheets.}
+\item{\code{get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))}}{
+Full replication brief for the workbook or a single dashboard.}
+\item{\code{get_workbook_report()}}{Return the full structured workbook report.}
+\item{\code{get_overview()}}{Return the one-row overview tibble.}
+\item{\code{validate(error = FALSE)}}{Validate relationships. Stops execution if \code{error = TRUE}.}
 }
 }
 
+\examples{
+twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
+if (nzchar(twb)) {
+  parser <- TwbParser$new(twb)
+  parser$overview
+  parser$get_calculated_fields()
+}
+}

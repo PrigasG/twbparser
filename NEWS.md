@@ -1,3 +1,48 @@
+# twbparser 0.5.0.9000
+
+## New features
+
+* New `parse_twb()` batch export: parse a `.twb`/`.twbx` workbook and write a
+  structured report to disk — `report.txt`, one CSV per key table, a
+  plain-text replication brief, and the field dependency graph as GraphML.
+  This delivers the `parse_twb()` entry point the README previously documented
+  but which did not exist.
+
+## Breaking changes
+
+* Removed the `tbs_publish_info()` and `tbs_custom_sql_graphql()` stubs. They
+  were exported and documented as querying Tableau Server/Cloud, but never
+  made a network request and always returned empty tibbles. Tableau
+  Server/Cloud integration is planned as a real feature; the premature stubs
+  are gone rather than silently returning no data.
+* `validate_relationships()` loses its unused `strict` argument, which was
+  documented as reserved and never implemented.
+
+## Documentation
+
+* `?TwbParser` rewritten from scratch: it now documents every active-binding
+  property (`parser$summary`, `parser$overview`, `parser$datasources`, ...)
+  as the primary API alongside every `get_*()` method. `summary` is correctly
+  described as a read-only property — the previously documented
+  `parser$summary()` call form never worked at runtime.
+* README Quick Start no longer requires the `fs` package (uses base R), and
+  the lifecycle badge is corrected to experimental while the API is settling.
+
+## Bug fixes
+
+* Sheet/dashboard/story lookup by name no longer interpolates the name into
+  an XPath predicate. Names containing quotes or brackets (e.g. "Bob's
+  Dashboard") now match exactly instead of being mangled or silently missing
+  (new internal `.twb_find_named()` / `.twb_find_all_named()` helpers).
+* Removed dead code: the never-firing "safe getter" rebind block in
+  `twb_install_active_properties()` and the uncalled internal
+  `print_datasource_summary()`.
+
+## Tests
+
+* New tests for the `parse_twb()` batch export and Shiny app smoke tests (the
+  bundled app file parses cleanly and the app object builds headlessly).
+
 # twbparser 0.5.0
 
 ## New features
