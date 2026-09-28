@@ -12,14 +12,14 @@ twb_parameter_usage(x)
 \value{
 A tibble with columns:
 \describe{
-  \item{parameter}{Human-readable parameter name / caption.}
-  \item{datasource}{Datasource the parameter belongs to.}
-  \item{datatype}{Parameter data type.}
-  \item{current_value}{Current value if specified in the workbook.}
-  \item{context}{Where it is used: \code{"formula"}, \code{"shelf:<shelf>"}
-    (e.g. \code{"shelf:rows"}), \code{"filter"}, or \code{"dashboard_filter"}.}
-  \item{location}{Calculated field name, worksheet name, or dashboard
-    name, depending on context.}
+\item{parameter}{Human-readable parameter name / caption.}
+\item{datasource}{Datasource the parameter belongs to.}
+\item{datatype}{Parameter data type.}
+\item{current_value}{Current value if specified in the workbook.}
+\item{context}{Where it is used: \code{"formula"}, \code{"shelf:<shelf>"}
+(e.g. \code{"shelf:rows"}), \code{"filter"}, or \code{"dashboard_filter"}.}
+\item{location}{Calculated field name, worksheet name, or dashboard
+name, depending on context.}
 }
 }
 \description{
@@ -50,5 +50,5 @@ parser$parameter_usage
 }
 \seealso{
 \code{\link[=twb_unused_fields]{twb_unused_fields()}} for parameters nothing references,
-  \code{\link[=extract_parameters]{extract_parameters()}} for parameter definitions.
+\code{\link[=extract_parameters]{extract_parameters()}} for parameter definitions.
 }

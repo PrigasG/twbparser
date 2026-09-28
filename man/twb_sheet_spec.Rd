@@ -22,33 +22,32 @@ worksheet.}
 \code{twb_sheet_spec()} returns a named list (one element per worksheet) of
 class \code{twb_sheet_spec}. Each spec is a list with:
 \describe{
-  \item{\code{sheet}}{Worksheet name.}
-  \item{\code{mark_type}}{Detected mark type, e.g. \code{"bar"}, \code{"line"}, \code{"map"},
-    \code{"text"}. \code{"automatic"} when the workbook leaves it to Tableau.}
-  \item{\code{mark_source}}{\code{"explicit"} when the workbook names the mark type,
-    \code{"inferred"} for \code{"automatic"}.}
-  \item{\code{datasources}}{Character vector of datasources referenced.}
-  \item{\code{rows}, \code{cols}}{Character vectors of clean field names on the rows
-    and columns shelves, in shelf order.}
-  \item{\code{dimensions}, \code{measures}}{Character vectors of the dimension and
-    measure fields used anywhere in the visualization. A pill counts as a
-    measure when it is aggregated; otherwise its declared field role wins.}
-  \item{\code{encodings}}{Tibble with \code{channel}, \code{field}, \code{aggregation},
-    \code{used_as} (\code{"dimension"}/\code{"measure"}) for every marks-card encoding.}
-  \item{\code{shelves}}{Tibble with \code{shelf} (\code{"rows"}/\code{"cols"}), \code{field},
-    \code{aggregation}, \code{used_as} for the row/column pills, in shelf order.}
-  \item{\code{tooltip}}{List with \code{has_tooltip}, \code{customized}, \code{text}, and
-    \code{fields}.}
-  \item{\code{filters}, \code{sorts}, \code{axes}}{Tibbles from \code{\link[=twb_sheet_filters]{twb_sheet_filters()}},
-    \code{\link[=twb_sheet_sorts]{twb_sheet_sorts()}}, and \code{\link[=twb_sheet_axes]{twb_sheet_axes()}}.}
+\item{\code{sheet}}{Worksheet name.}
+\item{\code{mark_type}}{Detected mark type, e.g. \code{"bar"}, \code{"line"}, \code{"map"},
+\code{"text"}. \code{"automatic"} when the workbook leaves it to Tableau.}
+\item{\code{mark_source}}{\code{"explicit"} when the workbook names the mark type,
+\code{"inferred"} for \code{"automatic"}.}
+\item{\code{datasources}}{Character vector of datasources referenced.}
+\item{\code{rows}, \code{cols}}{Character vectors of clean field names on the rows
+and columns shelves, in shelf order.}
+\item{\code{dimensions}, \code{measures}}{Character vectors of the dimension and
+measure fields used anywhere in the visualization. A pill counts as a
+measure when it is aggregated; otherwise its declared field role wins.}
+\item{\code{encodings}}{Tibble with \code{channel}, \code{field}, \code{aggregation},
+\code{used_as} (\code{"dimension"}/\code{"measure"}) for every marks-card encoding.}
+\item{\code{shelves}}{Tibble with \code{shelf} (\code{"rows"}/\code{"cols"}), \code{field},
+\code{aggregation}, \code{used_as} for the row/column pills, in shelf order.}
+\item{\code{tooltip}}{List with \code{has_tooltip}, \code{customized}, \code{text}, and
+\code{fields}.}
+\item{\code{filters}, \code{sorts}, \code{axes}}{Tibbles from \code{\link[=twb_sheet_filters]{twb_sheet_filters()}},
+\code{\link[=twb_sheet_sorts]{twb_sheet_sorts()}}, and \code{\link[=twb_sheet_axes]{twb_sheet_axes()}}.}
 }
 
 \code{twb_dashboard_charts()} returns a tibble with one row per worksheet placed
-on a dashboard: \code{dashboard}, \code{sheet}, \code{mark_type},
-\code{mark_source}, \code{rows}, \code{cols}, \code{dimensions}, \code{measures},
-\code{tooltip_fields} (list-columns), \code{n_tooltip_fields},
-\code{has_tooltip}, \code{n_filters}, \code{datasources}, and the layout
-\code{zone_id}, \code{x}, \code{y}, \code{w}, \code{h}.
+on a dashboard: \code{dashboard}, \code{sheet}, \code{mark_type}, \code{mark_source}, \code{rows},
+\code{cols}, \code{dimensions}, \code{measures}, \code{tooltip_fields} (list-columns),
+\code{n_tooltip_fields}, \code{has_tooltip}, \code{n_filters}, \code{datasources}, and the
+layout \code{zone_id}, \code{x}, \code{y}, \code{w}, \code{h}.
 }
 \description{
 \code{twb_sheet_spec()} reduces a worksheet to everything needed to

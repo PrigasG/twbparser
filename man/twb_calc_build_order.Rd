@@ -12,16 +12,16 @@ twb_calc_build_order(x)
 \value{
 A tibble with columns:
 \describe{
-  \item{build_order}{Integer creation sequence (\code{NA} for cyclic fields).}
-  \item{datasource}{Datasource the field belongs to.}
-  \item{name}{Human-readable field name / caption.}
-  \item{tableau_internal_name}{Bracketed internal Tableau name.}
-  \item{formula}{Raw formula string.}
-  \item{depends_on}{Comma-separated names of the calculated fields this
-    formula directly depends on (\code{NA} when none).}
-  \item{n_calc_deps}{Integer count of direct calc-on-calc dependencies.}
-  \item{is_cyclic}{Logical; \code{TRUE} when the field is part of a dependency
-    cycle and could not be ordered.}
+\item{build_order}{Integer creation sequence (\code{NA} for cyclic fields).}
+\item{datasource}{Datasource the field belongs to.}
+\item{name}{Human-readable field name / caption.}
+\item{tableau_internal_name}{Bracketed internal Tableau name.}
+\item{formula}{Raw formula string.}
+\item{depends_on}{Comma-separated names of the calculated fields this
+formula directly depends on (\code{NA} when none).}
+\item{n_calc_deps}{Integer count of direct calc-on-calc dependencies.}
+\item{is_cyclic}{Logical; \code{TRUE} when the field is part of a dependency
+cycle and could not be ordered.}
 }
 }
 \description{
@@ -34,7 +34,7 @@ Fields caught in a dependency cycle cannot be ordered: they get
 \details{
 A formula token is treated as a calc-on-calc dependency only when it
 matches a calculated field \emph{and not} a raw field or parameter, so
-\code{SUM([Sales])} inside a calc captioned \code{"Sales"} does not create a false
+\verb{SUM([Sales])} inside a calc captioned \code{"Sales"} does not create a false
 self-loop. This is a rebuild-ordering aid, not a duplicate of
 \code{\link[=twb_calc_complexity]{twb_calc_complexity()}}: that function classifies complexity and counts
 dependencies, while this one gives the concrete creation sequence plus the
@@ -55,5 +55,5 @@ parser$calc_build_order
 }
 \seealso{
 \code{\link[=twb_calc_complexity]{twb_calc_complexity()}} for complexity classification,
-  \code{\link[=twb_unused_fields]{twb_unused_fields()}} for calculations nothing references.
+\code{\link[=twb_unused_fields]{twb_unused_fields()}} for calculations nothing references.
 }

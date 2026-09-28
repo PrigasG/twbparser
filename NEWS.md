@@ -2,6 +2,22 @@
 
 ## New features
 
+* Added `audit_tableau_folder()` for portfolio-scale Tableau migration audits.
+  It batch parses `.twb` / `.twbx` files and returns workbook summaries,
+  datasource inventory, calculated-field complexity, field usage, lineage
+  edges, parse issues, optional CSV exports, and migration complexity flags.
+* Added `twb_lineage()` for migration-oriented lineage from datasources and
+  tables through fields, calculated fields, worksheets, and dashboards. Results
+  can be returned as tidy node/edge tables, an `igraph` object, or Mermaid text.
+  `TwbParser` now exposes this as `get_lineage()` and `parser$lineage`.
+* Added migration-assistant helpers: `twb_migration_assessment()`,
+  `twb_compatibility()`, `translate_tableau_calc()`,
+  `export_migration_bundle()`, `render_migration_brief()`,
+  `scaffold_shiny_dashboard()`, and `scaffold_quarto_dashboard()`. These add
+  target-aware readiness scoring, feature compatibility notes, deterministic
+  formula translation candidates, exportable migration bundles, Markdown briefs,
+  and starter rebuild scaffolds.
+
 * New `twb_sheet_spec()`: a full per-worksheet visualization spec — mark type,
   rows/columns shelves in order, dimensions vs. measures, every marks-card
   encoding (color, size, label, detail, shape, tooltip, ...), tooltip
@@ -40,8 +56,8 @@
   made a network request and always returned empty tibbles. Tableau
   Server/Cloud integration is planned as a real feature; the premature stubs
   are gone rather than silently returning no data.
-* `validate_relationships()` loses its unused `strict` argument, which was
-  documented as reserved and never implemented.
+* The unused `strict` argument to `validate_relationships()` is deprecated and
+  ignored, while remaining available for compatibility with 0.5.0 callers.
 
 ## Documentation
 

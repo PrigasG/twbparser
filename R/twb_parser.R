@@ -71,6 +71,10 @@
 #'   \item{unused_fields}{Tibble of defined-but-never-used fields (see `get_unused_fields()`).}
 #'   \item{calc_build_order}{Tibble of calculated fields in rebuild order (see `get_calc_build_order()`).}
 #'   \item{parameter_usage}{Tibble of parameter consumption points (see `get_parameter_usage()`).}
+#'   \item{lineage}{Migration-oriented datasource-to-dashboard lineage (see `get_lineage()`).}
+#'   \item{compatibility}{Target-tool compatibility matrix (see `get_compatibility()`).}
+#'   \item{migration_assessment}{Target-specific migration readiness assessment
+#'     (see `get_migration_assessment()`).}
 #'   \item{validation}{Last validation result; runs `validate()` first if it has
 #'     never been run.}
 #' }
@@ -128,6 +132,12 @@
 #'   \item{get_unused_fields()}{Fields defined but never used anywhere in the workbook.}
 #'   \item{get_calc_build_order()}{Calculated fields topologically sorted for rebuilding.}
 #'   \item{get_parameter_usage()}{Where each parameter is consumed (formulas, shelves, filters).}
+#'   \item{get_lineage(format = c("tables", "igraph", "mermaid"), include_calc_dependencies = TRUE)}{
+#'     Return migration-oriented datasource-to-dashboard lineage.}
+#'   \item{get_migration_assessment(target = c("powerbi", "shiny", "quarto", "looker", "superset"))}{
+#'     Return a target-specific migration readiness assessment.}
+#'   \item{get_compatibility(targets = c("powerbi", "shiny", "quarto", "looker", "superset"))}{
+#'     Return a target-tool compatibility matrix.}
 #'   \item{get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))}{
 #'     Full replication brief for the workbook or a single dashboard.}
 #'   \item{get_workbook_report()}{Return the full structured workbook report.}
@@ -434,6 +444,39 @@ TwbParser <- R6::R6Class(
       safe_call(
         twb_parameter_usage(self$xml_doc),
         .empty_parameter_usage()
+      )
+    },
+
+    # @description Migration-oriented datasource-to-dashboard lineage.
+    # @param format `"tables"` (default), `"igraph"`, or `"mermaid"`.
+    # @param include_calc_dependencies Include formula dependency edges.
+    #   Default `TRUE`.
+    get_lineage = function(format = c("tables", "igraph", "mermaid"),
+                           include_calc_dependencies = TRUE) {
+      safe_call(
+        twb_lineage(self,
+                    format = match.arg(format),
+                    include_calc_dependencies = include_calc_dependencies),
+        list(nodes = tibble::tibble(), edges = tibble::tibble())
+      )
+    },
+
+    # @description Target-specific migration readiness assessment.
+    # @param target Target tool: `"powerbi"`, `"shiny"`, `"quarto"`,
+    #   `"looker"`, or `"superset"`.
+    get_migration_assessment = function(target = c("powerbi", "shiny", "quarto", "looker", "superset")) {
+      safe_call(
+        twb_migration_assessment(self, target = match.arg(target)),
+        list(summary = tibble::tibble(), compatibility = tibble::tibble(), recommendations = character())
+      )
+    },
+
+    # @description Target-tool compatibility matrix.
+    # @param targets Character vector of target tools.
+    get_compatibility = function(targets = c("powerbi", "shiny", "quarto", "looker", "superset")) {
+      safe_call(
+        twb_compatibility(self, targets = targets),
+        tibble::tibble()
       )
     },
 

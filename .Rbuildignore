@@ -22,3 +22,4 @@ cran_examples_sanitizer.R
 ^\.Rd2pdf20656$
 ^\.git$
 ^\.claude$
+^\.twbparser-internal$

@@ -107,6 +107,9 @@ twb_install_active_properties <- function(x, cache = TRUE) {
   rebind("unused_fields",      wrap_cache("unused_fields",      function() x$get_unused_fields()))
   rebind("calc_build_order",   wrap_cache("calc_build_order",   function() x$get_calc_build_order()))
   rebind("parameter_usage",    wrap_cache("parameter_usage",    function() x$get_parameter_usage()))
+  rebind("lineage",            wrap_cache("lineage",            function() x$get_lineage()))
+  rebind("compatibility",      wrap_cache("compatibility",      function() x$get_compatibility()))
+  rebind("migration_assessment", wrap_cache("migration_assessment", function() x$get_migration_assessment()))
 
   ## Validation snapshot (read-only)
   rebind(

@@ -14,8 +14,8 @@ parse_twb(path, output_dir = "results", overwrite = FALSE, quiet = FALSE)
 
 \item{overwrite}{If \code{FALSE} (default), refuse to write into an existing
 non-empty directory instead of mixing outputs. If \code{TRUE}, the previous
-outputs written by parse_twb in the directory are removed first so the export
-reflects the current workbook; unrelated files are left alone.}
+outputs written by parse_twb in the directory are removed first so the
+export reflects the current workbook; unrelated files are left alone.}
 
 \item{quiet}{If \code{TRUE}, suppress progress messages.}
 }
@@ -27,10 +27,9 @@ The normalized \code{output_dir}, invisibly.
 \code{.twb}/\code{.twbx} workbook with \link{TwbParser} and writes a structured set of
 outputs into \code{output_dir} — a human-readable report, one CSV per key table
 (including the rebuild kit: unused fields, calculation build order, and
-parameter usage),
-per-worksheet visualization specs (\code{sheet_specs.txt}), a plain-text
-replication brief, and the field dependency graph as GraphML
-(readable with \code{igraph}/\code{ggraph} or any GraphML tool).
+parameter usage), per-worksheet visualization specs, a plain-text
+replication brief, and the field dependency graph as GraphML (readable with
+\code{igraph}/\code{ggraph} or any GraphML tool).
 }
 \examples{
 twb <- system.file("extdata", "test_for_wenjie.twb", package = "twbparser")
@@ -39,4 +38,5 @@ if (nzchar(twb) && file.exists(twb)) {
                    quiet = TRUE)
   list.files(out)
 }
+
 }

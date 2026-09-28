@@ -86,10 +86,25 @@ reference:
 
   - title: "Lineage & graphs"
     contents:
+      - twb_lineage
       - build_dependency_graph
       - plot_dependency_graph
       - plot_relationship_graph
       - plot_source_join_graph
+
+  - title: "Migration toolkit"
+    desc: >
+      Audit workbook portfolios, assess target compatibility, translate
+      calculations, and generate migration deliverables and starter apps.
+    contents:
+      - audit_tableau_folder
+      - twb_migration_assessment
+      - twb_compatibility
+      - translate_tableau_calc
+      - export_migration_bundle
+      - render_migration_brief
+      - scaffold_shiny_dashboard
+      - scaffold_quarto_dashboard
 
   - title: "Analytics & replication"
     contents:

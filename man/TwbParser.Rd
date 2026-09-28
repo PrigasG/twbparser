@@ -15,7 +15,7 @@ extracts the largest \code{.twb} and records a manifest.
 }
 \details{
 Results are read through \strong{active-binding properties} (no parentheses),
-e.g. \code{parser$summary}, \code{parser$overview}, \code{parser$datasources}. The \code{get_*()}
+e.g. \code{parser$summary}, \code{parser$overview}, \code{parser$datasources}. The \verb{get_*()}
 methods return the same data and are useful when you need to pass arguments
 (e.g. \code{parser$get_sheet_shelves("My Sheet")}) or want an explicit call.
 }
@@ -81,70 +81,80 @@ relationships, fields, dashboards, and filters.}
 \item{unused_fields}{Tibble of defined-but-never-used fields (see \code{get_unused_fields()}).}
 \item{calc_build_order}{Tibble of calculated fields in rebuild order (see \code{get_calc_build_order()}).}
 \item{parameter_usage}{Tibble of parameter consumption points (see \code{get_parameter_usage()}).}
+\item{lineage}{Migration-oriented datasource-to-dashboard lineage (see \code{get_lineage()}).}
+\item{compatibility}{Target-tool compatibility matrix (see \code{get_compatibility()}).}
+\item{migration_assessment}{Target-specific migration readiness assessment
+(see \code{get_migration_assessment()}).}
 \item{validation}{Last validation result; runs \code{validate()} first if it has
 never been run.}
 }
 Properties are cached after first access; most return the same tibbles as
-the corresponding \code{get_*()} methods.
+the corresponding \verb{get_*()} methods.
 }
 
 \section{Methods}{
 
 \describe{
-\item{\code{new(path)}}{Create a parser from a \code{.twb} or \code{.twbx} file.}
-\item{\code{get_twbx_manifest()}}{Return \code{.twbx} manifest tibble.}
-\item{\code{get_twbx_extracts()}}{Return \code{.twbx} extract entries.}
-\item{\code{get_twbx_images()}}{Return \code{.twbx} image entries.}
-\item{\code{extract_twbx_assets(types = NULL, pattern = NULL, files = NULL, exdir = NULL)}}{
+\item{new(path)}{Create a parser from a \code{.twb} or \code{.twbx} file.}
+\item{get_twbx_manifest()}{Return \code{.twbx} manifest tibble.}
+\item{get_twbx_extracts()}{Return \code{.twbx} extract entries.}
+\item{get_twbx_images()}{Return \code{.twbx} image entries.}
+\item{extract_twbx_assets(types = NULL, pattern = NULL, files = NULL, exdir = NULL)}{
 Extract files from the \code{.twbx} archive to disk.}
-\item{\code{get_relations()}}{Return relations tibble.}
-\item{\code{get_joins()}}{Return joins tibble.}
-\item{\code{get_relationships()}}{Return modern relationships tibble.}
-\item{\code{get_inferred_relationships()}}{Return inferred relationship pairs.}
-\item{\code{get_datasources()}}{Return datasource details tibble.}
-\item{\code{get_parameters()}}{Return parameters tibble.}
-\item{\code{get_datasources_all()}}{Return all sources tibble.}
-\item{\code{get_fields()}}{Return raw fields tibble.}
-\item{\code{get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L, include_parameters = FALSE)}}{
+\item{get_relations()}{Return relations tibble.}
+\item{get_joins()}{Return joins tibble.}
+\item{get_relationships()}{Return modern relationships tibble.}
+\item{get_inferred_relationships()}{Return inferred relationship pairs.}
+\item{get_datasources()}{Return datasource details tibble.}
+\item{get_parameters()}{Return parameters tibble.}
+\item{get_datasources_all()}{Return all sources tibble.}
+\item{get_fields()}{Return raw fields tibble.}
+\item{get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L, include_parameters = FALSE)}{
 Return calculated fields tibble. When \code{pretty = TRUE}, includes a
 \code{formula_pretty} column with line breaks and indentation.}
-\item{\code{get_custom_sql()}}{Return custom SQL tibble.}
-\item{\code{get_initial_sql()}}{Return initial SQL tibble.}
-\item{\code{get_published_refs()}}{Return published-datasource references tibble.}
-\item{\code{get_pages()}}{Return workbook pages tibble.}
-\item{\code{get_pages_summary()}}{Return page counts by type.}
-\item{\code{get_page_composition(name)}}{Return zone/mark composition of one page.}
-\item{\code{get_charts()}}{Return chart/mark information per worksheet.}
-\item{\code{get_colors()}}{Return color encodings used across worksheets.}
-\item{\code{get_dashboards()}}{Return dashboards tibble.}
-\item{\code{get_dashboard_filters(dashboard = NULL)}}{Return dashboard filter configurations.}
-\item{\code{get_dashboard_summary()}}{Return dashboard summary tibble.}
-\item{\code{get_sheet_shelves(sheet = NULL)}}{Fields placed on visual shelves for one or all worksheets.}
-\item{\code{get_sheet_filters(sheet = NULL)}}{Detailed filter configuration for one or all worksheets.}
-\item{\code{get_sheet_axes(sheet = NULL)}}{Axis configuration for one or all worksheets.}
-\item{\code{get_sheet_sorts(sheet = NULL)}}{Sort directives for one or all worksheets.}
-\item{\code{get_sheet_spec(sheet = NULL)}}{Full visualization spec for one or all worksheets
+\item{get_custom_sql()}{Return custom SQL tibble.}
+\item{get_initial_sql()}{Return initial SQL tibble.}
+\item{get_published_refs()}{Return published-datasource references tibble.}
+\item{get_pages()}{Return workbook pages tibble.}
+\item{get_pages_summary()}{Return page counts by type.}
+\item{get_page_composition(name)}{Return zone/mark composition of one page.}
+\item{get_charts()}{Return chart/mark information per worksheet.}
+\item{get_colors()}{Return color encodings used across worksheets.}
+\item{get_dashboards()}{Return dashboards tibble.}
+\item{get_dashboard_filters(dashboard = NULL)}{Return dashboard filter configurations.}
+\item{get_dashboard_summary()}{Return dashboard summary tibble.}
+\item{get_sheet_shelves(sheet = NULL)}{Fields placed on visual shelves for one or all worksheets.}
+\item{get_sheet_filters(sheet = NULL)}{Detailed filter configuration for one or all worksheets.}
+\item{get_sheet_axes(sheet = NULL)}{Axis configuration for one or all worksheets.}
+\item{get_sheet_sorts(sheet = NULL)}{Sort directives for one or all worksheets.}
+\item{get_sheet_spec(sheet = NULL)}{Full visualization spec for one or all worksheets
 (mark type, shelves, dimensions/measures, encodings, tooltips, filters, sorts, axes).}
-\item{\code{get_dashboard_sheets(dashboard = NULL)}}{Worksheets embedded in one or all dashboards.}
-\item{\code{get_dashboard_layout(dashboard = NULL)}}{Full zone layout with container hierarchy.}
-\item{\code{get_dashboard_actions(dashboard = NULL)}}{Dashboard and workbook actions.}
-\item{\code{get_dashboard_charts(dashboard = NULL)}}{One row per worksheet placed on a dashboard:
+\item{get_dashboard_sheets(dashboard = NULL)}{Worksheets embedded in one or all dashboards.}
+\item{get_dashboard_layout(dashboard = NULL)}{Full zone layout with container hierarchy.}
+\item{get_dashboard_actions(dashboard = NULL)}{Dashboard and workbook actions.}
+\item{get_dashboard_charts(dashboard = NULL)}{One row per worksheet placed on a dashboard:
 mark type, fields, tooltip summary, and layout position.}
-\item{\code{get_dashboard_size(dashboard = NULL)}}{Dashboard page size and sizing mode.}
-\item{\code{get_formatting(scope = NULL)}}{Formatting rules (fonts, colours, number formats, \ldots);
+\item{get_dashboard_size(dashboard = NULL)}{Dashboard page size and sizing mode.}
+\item{get_formatting(scope = NULL)}{Formatting rules (fonts, colours, number formats, \ldots);
 \code{scope} is one of \code{"worksheet"}, \code{"dashboard"}, or \code{"workbook"}.}
-\item{\code{get_tooltips(sheet = NULL)}}{Plain-text worksheet tooltips.}
-\item{\code{get_calc_complexity(include_parameters = FALSE)}}{Calculated field complexity classifications.}
-\item{\code{get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)}}{
+\item{get_tooltips(sheet = NULL)}{Plain-text worksheet tooltips.}
+\item{get_calc_complexity(include_parameters = FALSE)}{Calculated field complexity classifications.}
+\item{get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)}{
 Field usage matrix across worksheets.}
-\item{\code{get_unused_fields()}}{Fields defined but never used anywhere in the workbook.}
-\item{\code{get_calc_build_order()}}{Calculated fields topologically sorted for rebuilding.}
-\item{\code{get_parameter_usage()}}{Where each parameter is consumed (formulas, shelves, filters).}
-\item{\code{get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))}}{
+\item{get_unused_fields()}{Fields defined but never used anywhere in the workbook.}
+\item{get_calc_build_order()}{Calculated fields topologically sorted for rebuilding.}
+\item{get_parameter_usage()}{Where each parameter is consumed (formulas, shelves, filters).}
+\item{get_lineage(format = c("tables", "igraph", "mermaid"), include_calc_dependencies = TRUE)}{
+Return migration-oriented datasource-to-dashboard lineage.}
+\item{get_migration_assessment(target = c("powerbi", "shiny", "quarto", "looker", "superset"))}{
+Return a target-specific migration readiness assessment.}
+\item{get_compatibility(targets = c("powerbi", "shiny", "quarto", "looker", "superset"))}{
+Return a target-tool compatibility matrix.}
+\item{get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))}{
 Full replication brief for the workbook or a single dashboard.}
-\item{\code{get_workbook_report()}}{Return the full structured workbook report.}
-\item{\code{get_overview()}}{Return the one-row overview tibble.}
-\item{\code{validate(error = FALSE)}}{Validate relationships. Stops execution if \code{error = TRUE}.}
+\item{get_workbook_report()}{Return the full structured workbook report.}
+\item{get_overview()}{Return the one-row overview tibble.}
+\item{validate(error = FALSE)}{Validate relationships. Stops execution if \code{error = TRUE}.}
 }
 }
 
@@ -155,4 +165,5 @@ if (nzchar(twb)) {
   parser$overview
   parser$get_calculated_fields()
 }
+
 }

@@ -2,6 +2,9 @@
 
 ### Changes since 0.5.0
 
+* Added a migration toolkit: portfolio folder audits, datasource-to-dashboard
+  lineage, target compatibility/readiness assessments, calculation translation,
+  exportable migration bundles and briefs, and starter Shiny/Quarto scaffolds.
 * New `twb_sheet_spec()`: a full per-worksheet visualization spec (mark type,
   rows/columns shelves, dimensions vs. measures, marks-card encodings,
   tooltips, filters, sorts, axes) for understanding and rebuilding a

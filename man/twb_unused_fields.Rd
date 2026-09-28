@@ -12,14 +12,14 @@ twb_unused_fields(x)
 \value{
 A tibble with columns:
 \describe{
-  \item{datasource}{Datasource the field belongs to.}
-  \item{field_type}{\code{"raw"}, \code{"calculated"}, or \code{"parameter"}.}
-  \item{name}{Human-readable field name / caption.}
-  \item{tableau_internal_name}{Bracketed internal Tableau name.}
-  \item{datatype}{Field data type.}
-  \item{role}{\code{"measure"} or \code{"dimension"}.}
-  \item{is_hidden}{Whether a raw field is hidden (\code{NA} for calculated
-    fields and parameters).}
+\item{datasource}{Datasource the field belongs to.}
+\item{field_type}{\code{"raw"}, \code{"calculated"}, or \code{"parameter"}.}
+\item{name}{Human-readable field name / caption.}
+\item{tableau_internal_name}{Bracketed internal Tableau name.}
+\item{datatype}{Field data type.}
+\item{role}{\code{"measure"} or \code{"dimension"}.}
+\item{is_hidden}{Whether a raw field is hidden (\code{NA} for calculated
+fields and parameters).}
 }
 }
 \description{
@@ -54,5 +54,5 @@ parser$unused_fields
 }
 \seealso{
 \code{\link[=twb_field_usage]{twb_field_usage()}} for where used fields appear,
-  \code{\link[=twb_calc_build_order]{twb_calc_build_order()}} for rebuilding calculations in dependency order.
+\code{\link[=twb_calc_build_order]{twb_calc_build_order()}} for rebuilding calculations in dependency order.
 }
