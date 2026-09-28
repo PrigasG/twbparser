@@ -66,28 +66,28 @@ Fields caught in a dependency cycle cannot be ordered: they get
     <p>A tibble with columns:</p><dl><dt>build_order</dt>
 <dd><p>Integer creation sequence (<code>NA</code> for cyclic fields).</p></dd>
 
-  <dt>datasource</dt>
+<dt>datasource</dt>
 <dd><p>Datasource the field belongs to.</p></dd>
 
-  <dt>name</dt>
+<dt>name</dt>
 <dd><p>Human-readable field name / caption.</p></dd>
 
-  <dt>tableau_internal_name</dt>
+<dt>tableau_internal_name</dt>
 <dd><p>Bracketed internal Tableau name.</p></dd>
 
-  <dt>formula</dt>
+<dt>formula</dt>
 <dd><p>Raw formula string.</p></dd>
 
-  <dt>depends_on</dt>
+<dt>depends_on</dt>
 <dd><p>Comma-separated names of the calculated fields this
-    formula directly depends on (<code>NA</code> when none).</p></dd>
+formula directly depends on (<code>NA</code> when none).</p></dd>
 
-  <dt>n_calc_deps</dt>
+<dt>n_calc_deps</dt>
 <dd><p>Integer count of direct calc-on-calc dependencies.</p></dd>
 
-  <dt>is_cyclic</dt>
+<dt>is_cyclic</dt>
 <dd><p>Logical; <code>TRUE</code> when the field is part of a dependency
-    cycle and could not be ordered.</p></dd>
+cycle and could not be ordered.</p></dd>
 
 
 </dl></div>
@@ -104,7 +104,7 @@ human-readable dependency list.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="twb_calc_complexity.html">twb_calc_complexity()</a></code> for complexity classification,
-  <code><a href="twb_unused_fields.html">twb_unused_fields()</a></code> for calculations nothing references.</p></div>
+<code><a href="twb_unused_fields.html">twb_unused_fields()</a></code> for calculations nothing references.</p></div>
     </div>
 
     <div class="section level2">

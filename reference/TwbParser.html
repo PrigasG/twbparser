@@ -220,6 +220,16 @@ relationships, fields, dashboards, and filters.</p></dd>
 <dt>parameter_usage</dt>
 <dd><p>Tibble of parameter consumption points (see <code>get_parameter_usage()</code>).</p></dd>
 
+<dt>lineage</dt>
+<dd><p>Migration-oriented datasource-to-dashboard lineage (see <code>get_lineage()</code>).</p></dd>
+
+<dt>compatibility</dt>
+<dd><p>Target-tool compatibility matrix (see <code>get_compatibility()</code>).</p></dd>
+
+<dt>migration_assessment</dt>
+<dd><p>Target-specific migration readiness assessment
+(see <code>get_migration_assessment()</code>).</p></dd>
+
 <dt>validation</dt>
 <dd><p>Last validation result; runs <code>validate()</code> first if it has
 never been run.</p></dd>
@@ -232,146 +242,155 @@ the corresponding <code>get_*()</code> methods.</p>
     <h2 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a></h2>
 
 
-<dl><dt><code>new(path)</code></dt>
+<dl><dt>new(path)</dt>
 <dd><p>Create a parser from a <code>.twb</code> or <code>.twbx</code> file.</p></dd>
 
-<dt><code>get_twbx_manifest()</code></dt>
+<dt>get_twbx_manifest()</dt>
 <dd><p>Return <code>.twbx</code> manifest tibble.</p></dd>
 
-<dt><code>get_twbx_extracts()</code></dt>
+<dt>get_twbx_extracts()</dt>
 <dd><p>Return <code>.twbx</code> extract entries.</p></dd>
 
-<dt><code>get_twbx_images()</code></dt>
+<dt>get_twbx_images()</dt>
 <dd><p>Return <code>.twbx</code> image entries.</p></dd>
 
-<dt><code>extract_twbx_assets(types = NULL, pattern = NULL, files = NULL, exdir = NULL)</code></dt>
+<dt>extract_twbx_assets(types = NULL, pattern = NULL, files = NULL, exdir = NULL)</dt>
 <dd><p>Extract files from the <code>.twbx</code> archive to disk.</p></dd>
 
-<dt><code>get_relations()</code></dt>
+<dt>get_relations()</dt>
 <dd><p>Return relations tibble.</p></dd>
 
-<dt><code>get_joins()</code></dt>
+<dt>get_joins()</dt>
 <dd><p>Return joins tibble.</p></dd>
 
-<dt><code>get_relationships()</code></dt>
+<dt>get_relationships()</dt>
 <dd><p>Return modern relationships tibble.</p></dd>
 
-<dt><code>get_inferred_relationships()</code></dt>
+<dt>get_inferred_relationships()</dt>
 <dd><p>Return inferred relationship pairs.</p></dd>
 
-<dt><code>get_datasources()</code></dt>
+<dt>get_datasources()</dt>
 <dd><p>Return datasource details tibble.</p></dd>
 
-<dt><code>get_parameters()</code></dt>
+<dt>get_parameters()</dt>
 <dd><p>Return parameters tibble.</p></dd>
 
-<dt><code>get_datasources_all()</code></dt>
+<dt>get_datasources_all()</dt>
 <dd><p>Return all sources tibble.</p></dd>
 
-<dt><code>get_fields()</code></dt>
+<dt>get_fields()</dt>
 <dd><p>Return raw fields tibble.</p></dd>
 
-<dt><code>get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L, include_parameters = FALSE)</code></dt>
+<dt>get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L, include_parameters = FALSE)</dt>
 <dd><p>Return calculated fields tibble. When <code>pretty = TRUE</code>, includes a
 <code>formula_pretty</code> column with line breaks and indentation.</p></dd>
 
-<dt><code>get_custom_sql()</code></dt>
+<dt>get_custom_sql()</dt>
 <dd><p>Return custom SQL tibble.</p></dd>
 
-<dt><code>get_initial_sql()</code></dt>
+<dt>get_initial_sql()</dt>
 <dd><p>Return initial SQL tibble.</p></dd>
 
-<dt><code>get_published_refs()</code></dt>
+<dt>get_published_refs()</dt>
 <dd><p>Return published-datasource references tibble.</p></dd>
 
-<dt><code>get_pages()</code></dt>
+<dt>get_pages()</dt>
 <dd><p>Return workbook pages tibble.</p></dd>
 
-<dt><code>get_pages_summary()</code></dt>
+<dt>get_pages_summary()</dt>
 <dd><p>Return page counts by type.</p></dd>
 
-<dt><code>get_page_composition(name)</code></dt>
+<dt>get_page_composition(name)</dt>
 <dd><p>Return zone/mark composition of one page.</p></dd>
 
-<dt><code>get_charts()</code></dt>
+<dt>get_charts()</dt>
 <dd><p>Return chart/mark information per worksheet.</p></dd>
 
-<dt><code>get_colors()</code></dt>
+<dt>get_colors()</dt>
 <dd><p>Return color encodings used across worksheets.</p></dd>
 
-<dt><code>get_dashboards()</code></dt>
+<dt>get_dashboards()</dt>
 <dd><p>Return dashboards tibble.</p></dd>
 
-<dt><code>get_dashboard_filters(dashboard = NULL)</code></dt>
+<dt>get_dashboard_filters(dashboard = NULL)</dt>
 <dd><p>Return dashboard filter configurations.</p></dd>
 
-<dt><code>get_dashboard_summary()</code></dt>
+<dt>get_dashboard_summary()</dt>
 <dd><p>Return dashboard summary tibble.</p></dd>
 
-<dt><code>get_sheet_shelves(sheet = NULL)</code></dt>
+<dt>get_sheet_shelves(sheet = NULL)</dt>
 <dd><p>Fields placed on visual shelves for one or all worksheets.</p></dd>
 
-<dt><code>get_sheet_filters(sheet = NULL)</code></dt>
+<dt>get_sheet_filters(sheet = NULL)</dt>
 <dd><p>Detailed filter configuration for one or all worksheets.</p></dd>
 
-<dt><code>get_sheet_axes(sheet = NULL)</code></dt>
+<dt>get_sheet_axes(sheet = NULL)</dt>
 <dd><p>Axis configuration for one or all worksheets.</p></dd>
 
-<dt><code>get_sheet_sorts(sheet = NULL)</code></dt>
+<dt>get_sheet_sorts(sheet = NULL)</dt>
 <dd><p>Sort directives for one or all worksheets.</p></dd>
 
-<dt><code>get_sheet_spec(sheet = NULL)</code></dt>
+<dt>get_sheet_spec(sheet = NULL)</dt>
 <dd><p>Full visualization spec for one or all worksheets
 (mark type, shelves, dimensions/measures, encodings, tooltips, filters, sorts, axes).</p></dd>
 
-<dt><code>get_dashboard_sheets(dashboard = NULL)</code></dt>
+<dt>get_dashboard_sheets(dashboard = NULL)</dt>
 <dd><p>Worksheets embedded in one or all dashboards.</p></dd>
 
-<dt><code>get_dashboard_layout(dashboard = NULL)</code></dt>
+<dt>get_dashboard_layout(dashboard = NULL)</dt>
 <dd><p>Full zone layout with container hierarchy.</p></dd>
 
-<dt><code>get_dashboard_actions(dashboard = NULL)</code></dt>
+<dt>get_dashboard_actions(dashboard = NULL)</dt>
 <dd><p>Dashboard and workbook actions.</p></dd>
 
-<dt><code>get_dashboard_charts(dashboard = NULL)</code></dt>
+<dt>get_dashboard_charts(dashboard = NULL)</dt>
 <dd><p>One row per worksheet placed on a dashboard:
 mark type, fields, tooltip summary, and layout position.</p></dd>
 
-<dt><code>get_dashboard_size(dashboard = NULL)</code></dt>
+<dt>get_dashboard_size(dashboard = NULL)</dt>
 <dd><p>Dashboard page size and sizing mode.</p></dd>
 
-<dt><code>get_formatting(scope = NULL)</code></dt>
+<dt>get_formatting(scope = NULL)</dt>
 <dd><p>Formatting rules (fonts, colours, number formats, ...);
 <code>scope</code> is one of <code>"worksheet"</code>, <code>"dashboard"</code>, or <code>"workbook"</code>.</p></dd>
 
-<dt><code>get_tooltips(sheet = NULL)</code></dt>
+<dt>get_tooltips(sheet = NULL)</dt>
 <dd><p>Plain-text worksheet tooltips.</p></dd>
 
-<dt><code>get_calc_complexity(include_parameters = FALSE)</code></dt>
+<dt>get_calc_complexity(include_parameters = FALSE)</dt>
 <dd><p>Calculated field complexity classifications.</p></dd>
 
-<dt><code>get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)</code></dt>
+<dt>get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)</dt>
 <dd><p>Field usage matrix across worksheets.</p></dd>
 
-<dt><code>get_unused_fields()</code></dt>
+<dt>get_unused_fields()</dt>
 <dd><p>Fields defined but never used anywhere in the workbook.</p></dd>
 
-<dt><code>get_calc_build_order()</code></dt>
+<dt>get_calc_build_order()</dt>
 <dd><p>Calculated fields topologically sorted for rebuilding.</p></dd>
 
-<dt><code>get_parameter_usage()</code></dt>
+<dt>get_parameter_usage()</dt>
 <dd><p>Where each parameter is consumed (formulas, shelves, filters).</p></dd>
 
-<dt><code>get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))</code></dt>
+<dt>get_lineage(format = c("tables", "igraph", "mermaid"), include_calc_dependencies = TRUE)</dt>
+<dd><p>Return migration-oriented datasource-to-dashboard lineage.</p></dd>
+
+<dt>get_migration_assessment(target = c("powerbi", "shiny", "quarto", "looker", "superset"))</dt>
+<dd><p>Return a target-specific migration readiness assessment.</p></dd>
+
+<dt>get_compatibility(targets = c("powerbi", "shiny", "quarto", "looker", "superset"))</dt>
+<dd><p>Return a target-tool compatibility matrix.</p></dd>
+
+<dt>get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))</dt>
 <dd><p>Full replication brief for the workbook or a single dashboard.</p></dd>
 
-<dt><code>get_workbook_report()</code></dt>
+<dt>get_workbook_report()</dt>
 <dd><p>Return the full structured workbook report.</p></dd>
 
-<dt><code>get_overview()</code></dt>
+<dt>get_overview()</dt>
 <dd><p>Return the one-row overview tibble.</p></dd>
 
-<dt><code>validate(error = FALSE)</code></dt>
+<dt>validate(error = FALSE)</dt>
 <dd><p>Validate relationships. Stops execution if <code>error = TRUE</code>.</p></dd>
 
 
@@ -392,6 +411,7 @@ mark type, fields, tooltip summary, and layout position.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> federated.0grga… no d… [Calculation_2139209… string   dime… <span style="color: #949494;">"</span>if IS… tableau   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 3 more variables: is_table_calc &lt;lgl&gt;, table &lt;chr&gt;, table_clean &lt;chr&gt;</span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

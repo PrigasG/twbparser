@@ -91,49 +91,48 @@ worksheet.</p></dd>
 class <code>twb_sheet_spec</code>. Each spec is a list with:</p><dl><dt><code>sheet</code></dt>
 <dd><p>Worksheet name.</p></dd>
 
-  <dt><code>mark_type</code></dt>
+<dt><code>mark_type</code></dt>
 <dd><p>Detected mark type, e.g. <code>"bar"</code>, <code>"line"</code>, <code>"map"</code>,
-    <code>"text"</code>. <code>"automatic"</code> when the workbook leaves it to Tableau.</p></dd>
+<code>"text"</code>. <code>"automatic"</code> when the workbook leaves it to Tableau.</p></dd>
 
-  <dt><code>mark_source</code></dt>
+<dt><code>mark_source</code></dt>
 <dd><p><code>"explicit"</code> when the workbook names the mark type,
-    <code>"inferred"</code> for <code>"automatic"</code>.</p></dd>
+<code>"inferred"</code> for <code>"automatic"</code>.</p></dd>
 
-  <dt><code>datasources</code></dt>
+<dt><code>datasources</code></dt>
 <dd><p>Character vector of datasources referenced.</p></dd>
 
-  <dt><code>rows</code>, <code>cols</code></dt>
+<dt><code>rows</code>, <code>cols</code></dt>
 <dd><p>Character vectors of clean field names on the rows
-    and columns shelves, in shelf order.</p></dd>
+and columns shelves, in shelf order.</p></dd>
 
-  <dt><code>dimensions</code>, <code>measures</code></dt>
+<dt><code>dimensions</code>, <code>measures</code></dt>
 <dd><p>Character vectors of the dimension and
-    measure fields used anywhere in the visualization. A pill counts as a
-    measure when it is aggregated; otherwise its declared field role wins.</p></dd>
+measure fields used anywhere in the visualization. A pill counts as a
+measure when it is aggregated; otherwise its declared field role wins.</p></dd>
 
-  <dt><code>encodings</code></dt>
+<dt><code>encodings</code></dt>
 <dd><p>Tibble with <code>channel</code>, <code>field</code>, <code>aggregation</code>,
-    <code>used_as</code> (<code>"dimension"</code>/<code>"measure"</code>) for every marks-card encoding.</p></dd>
+<code>used_as</code> (<code>"dimension"</code>/<code>"measure"</code>) for every marks-card encoding.</p></dd>
 
-  <dt><code>shelves</code></dt>
+<dt><code>shelves</code></dt>
 <dd><p>Tibble with <code>shelf</code> (<code>"rows"</code>/<code>"cols"</code>), <code>field</code>,
-    <code>aggregation</code>, <code>used_as</code> for the row/column pills, in shelf order.</p></dd>
+<code>aggregation</code>, <code>used_as</code> for the row/column pills, in shelf order.</p></dd>
 
-  <dt><code>tooltip</code></dt>
+<dt><code>tooltip</code></dt>
 <dd><p>List with <code>has_tooltip</code>, <code>customized</code>, <code>text</code>, and
-    <code>fields</code>.</p></dd>
+<code>fields</code>.</p></dd>
 
-  <dt><code>filters</code>, <code>sorts</code>, <code>axes</code></dt>
+<dt><code>filters</code>, <code>sorts</code>, <code>axes</code></dt>
 <dd><p>Tibbles from <code><a href="twb_sheet_filters.html">twb_sheet_filters()</a></code>,
-    <code><a href="twb_sheet_sorts.html">twb_sheet_sorts()</a></code>, and <code><a href="twb_sheet_axes.html">twb_sheet_axes()</a></code>.</p></dd>
+<code><a href="twb_sheet_sorts.html">twb_sheet_sorts()</a></code>, and <code><a href="twb_sheet_axes.html">twb_sheet_axes()</a></code>.</p></dd>
 
 
 </dl><p><code>twb_dashboard_charts()</code> returns a tibble with one row per worksheet placed
-on a dashboard: <code>dashboard</code>, <code>sheet</code>, <code>mark_type</code>,
-<code>mark_source</code>, <code>rows</code>, <code>cols</code>, <code>dimensions</code>, <code>measures</code>,
-<code>tooltip_fields</code> (list-columns), <code>n_tooltip_fields</code>,
-<code>has_tooltip</code>, <code>n_filters</code>, <code>datasources</code>, and the layout
-<code>zone_id</code>, <code>x</code>, <code>y</code>, <code>w</code>, <code>h</code>.</p>
+on a dashboard: <code>dashboard</code>, <code>sheet</code>, <code>mark_type</code>, <code>mark_source</code>, <code>rows</code>,
+<code>cols</code>, <code>dimensions</code>, <code>measures</code>, <code>tooltip_fields</code> (list-columns),
+<code>n_tooltip_fields</code>, <code>has_tooltip</code>, <code>n_filters</code>, <code>datasources</code>, and the
+layout <code>zone_id</code>, <code>x</code>, <code>y</code>, <code>w</code>, <code>h</code>.</p>
     </div>
 
     <div class="section level2">

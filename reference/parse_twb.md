@@ -6,9 +6,9 @@ parses a `.twb`/`.twbx` workbook with
 and writes a structured set of outputs into `output_dir` — a
 human-readable report, one CSV per key table (including the rebuild kit:
 unused fields, calculation build order, and parameter usage),
-per-worksheet visualization specs (`sheet_specs.txt`), a plain-text
-replication brief, and the field dependency graph as GraphML (readable
-with `igraph`/`ggraph` or any GraphML tool).
+per-worksheet visualization specs, a plain-text replication brief, and
+the field dependency graph as GraphML (readable with `igraph`/`ggraph`
+or any GraphML tool).
 
 ## Usage
 

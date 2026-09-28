@@ -233,6 +233,20 @@ explicit call.
 
   Tibble of parameter consumption points (see `get_parameter_usage()`).
 
+- lineage:
+
+  Migration-oriented datasource-to-dashboard lineage (see
+  `get_lineage()`).
+
+- compatibility:
+
+  Target-tool compatibility matrix (see `get_compatibility()`).
+
+- migration_assessment:
+
+  Target-specific migration readiness assessment (see
+  `get_migration_assessment()`).
+
 - validation:
 
   Last validation result; runs `validate()` first if it has never been
@@ -243,191 +257,210 @@ as the corresponding `get_*()` methods.
 
 ## Methods
 
-- `new(path)`:
+- new(path):
 
   Create a parser from a `.twb` or `.twbx` file.
 
-- `get_twbx_manifest()`:
+- get_twbx_manifest():
 
   Return `.twbx` manifest tibble.
 
-- `get_twbx_extracts()`:
+- get_twbx_extracts():
 
   Return `.twbx` extract entries.
 
-- `get_twbx_images()`:
+- get_twbx_images():
 
   Return `.twbx` image entries.
 
-- `extract_twbx_assets(types = NULL, pattern = NULL, files = NULL, exdir = NULL)`:
+- extract_twbx_assets(types = NULL, pattern = NULL, files = NULL, exdir
+  = NULL):
 
   Extract files from the `.twbx` archive to disk.
 
-- `get_relations()`:
+- get_relations():
 
   Return relations tibble.
 
-- `get_joins()`:
+- get_joins():
 
   Return joins tibble.
 
-- `get_relationships()`:
+- get_relationships():
 
   Return modern relationships tibble.
 
-- `get_inferred_relationships()`:
+- get_inferred_relationships():
 
   Return inferred relationship pairs.
 
-- `get_datasources()`:
+- get_datasources():
 
   Return datasource details tibble.
 
-- `get_parameters()`:
+- get_parameters():
 
   Return parameters tibble.
 
-- `get_datasources_all()`:
+- get_datasources_all():
 
   Return all sources tibble.
 
-- `get_fields()`:
+- get_fields():
 
   Return raw fields tibble.
 
-- `get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap = 100L, include_parameters = FALSE)`:
+- get_calculated_fields(pretty = FALSE, strip_brackets = FALSE, wrap =
+  100L, include_parameters = FALSE):
 
   Return calculated fields tibble. When `pretty = TRUE`, includes a
   `formula_pretty` column with line breaks and indentation.
 
-- `get_custom_sql()`:
+- get_custom_sql():
 
   Return custom SQL tibble.
 
-- `get_initial_sql()`:
+- get_initial_sql():
 
   Return initial SQL tibble.
 
-- `get_published_refs()`:
+- get_published_refs():
 
   Return published-datasource references tibble.
 
-- `get_pages()`:
+- get_pages():
 
   Return workbook pages tibble.
 
-- `get_pages_summary()`:
+- get_pages_summary():
 
   Return page counts by type.
 
-- `get_page_composition(name)`:
+- get_page_composition(name):
 
   Return zone/mark composition of one page.
 
-- `get_charts()`:
+- get_charts():
 
   Return chart/mark information per worksheet.
 
-- `get_colors()`:
+- get_colors():
 
   Return color encodings used across worksheets.
 
-- `get_dashboards()`:
+- get_dashboards():
 
   Return dashboards tibble.
 
-- `get_dashboard_filters(dashboard = NULL)`:
+- get_dashboard_filters(dashboard = NULL):
 
   Return dashboard filter configurations.
 
-- `get_dashboard_summary()`:
+- get_dashboard_summary():
 
   Return dashboard summary tibble.
 
-- `get_sheet_shelves(sheet = NULL)`:
+- get_sheet_shelves(sheet = NULL):
 
   Fields placed on visual shelves for one or all worksheets.
 
-- `get_sheet_filters(sheet = NULL)`:
+- get_sheet_filters(sheet = NULL):
 
   Detailed filter configuration for one or all worksheets.
 
-- `get_sheet_axes(sheet = NULL)`:
+- get_sheet_axes(sheet = NULL):
 
   Axis configuration for one or all worksheets.
 
-- `get_sheet_sorts(sheet = NULL)`:
+- get_sheet_sorts(sheet = NULL):
 
   Sort directives for one or all worksheets.
 
-- `get_sheet_spec(sheet = NULL)`:
+- get_sheet_spec(sheet = NULL):
 
   Full visualization spec for one or all worksheets (mark type, shelves,
   dimensions/measures, encodings, tooltips, filters, sorts, axes).
 
-- `get_dashboard_sheets(dashboard = NULL)`:
+- get_dashboard_sheets(dashboard = NULL):
 
   Worksheets embedded in one or all dashboards.
 
-- `get_dashboard_layout(dashboard = NULL)`:
+- get_dashboard_layout(dashboard = NULL):
 
   Full zone layout with container hierarchy.
 
-- `get_dashboard_actions(dashboard = NULL)`:
+- get_dashboard_actions(dashboard = NULL):
 
   Dashboard and workbook actions.
 
-- `get_dashboard_charts(dashboard = NULL)`:
+- get_dashboard_charts(dashboard = NULL):
 
   One row per worksheet placed on a dashboard: mark type, fields,
   tooltip summary, and layout position.
 
-- `get_dashboard_size(dashboard = NULL)`:
+- get_dashboard_size(dashboard = NULL):
 
   Dashboard page size and sizing mode.
 
-- `get_formatting(scope = NULL)`:
+- get_formatting(scope = NULL):
 
   Formatting rules (fonts, colours, number formats, ...); `scope` is one
   of `"worksheet"`, `"dashboard"`, or `"workbook"`.
 
-- `get_tooltips(sheet = NULL)`:
+- get_tooltips(sheet = NULL):
 
   Plain-text worksheet tooltips.
 
-- `get_calc_complexity(include_parameters = FALSE)`:
+- get_calc_complexity(include_parameters = FALSE):
 
   Calculated field complexity classifications.
 
-- `get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide = FALSE)`:
+- get_field_usage(include_filters = TRUE, include_shelves = TRUE, wide =
+  FALSE):
 
   Field usage matrix across worksheets.
 
-- `get_unused_fields()`:
+- get_unused_fields():
 
   Fields defined but never used anywhere in the workbook.
 
-- `get_calc_build_order()`:
+- get_calc_build_order():
 
   Calculated fields topologically sorted for rebuilding.
 
-- `get_parameter_usage()`:
+- get_parameter_usage():
 
   Where each parameter is consumed (formulas, shelves, filters).
 
-- `get_replication_brief(dashboard = NULL, include_sql = TRUE, include_formulas = TRUE, format = c("list", "text"))`:
+- get_lineage(format = c("tables", "igraph", "mermaid"),
+  include_calc_dependencies = TRUE):
+
+  Return migration-oriented datasource-to-dashboard lineage.
+
+- get_migration_assessment(target = c("powerbi", "shiny", "quarto",
+  "looker", "superset")):
+
+  Return a target-specific migration readiness assessment.
+
+- get_compatibility(targets = c("powerbi", "shiny", "quarto", "looker",
+  "superset")):
+
+  Return a target-tool compatibility matrix.
+
+- get_replication_brief(dashboard = NULL, include_sql = TRUE,
+  include_formulas = TRUE, format = c("list", "text")):
 
   Full replication brief for the workbook or a single dashboard.
 
-- `get_workbook_report()`:
+- get_workbook_report():
 
   Return the full structured workbook report.
 
-- `get_overview()`:
+- get_overview():
 
   Return the one-row overview tibble.
 
-- `validate(error = FALSE)`:
+- validate(error = FALSE):
 
   Validate relationships. Stops execution if `error = TRUE`.
 

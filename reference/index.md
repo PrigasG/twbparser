@@ -124,6 +124,8 @@ Per-dashboard zone layout, sheet positions, and actions.
 
 ## Lineage & graphs
 
+- [`twb_lineage()`](https://prigasg.github.io/twbparser/reference/twb_lineage.md)
+  : Build workbook lineage for migration analysis
 - [`build_dependency_graph()`](https://prigasg.github.io/twbparser/reference/build_dependency_graph.md)
   : Build a field dependency graph from calculated fields
 - [`plot_dependency_graph()`](https://prigasg.github.io/twbparser/reference/plot_dependency_graph.md)
@@ -132,6 +134,28 @@ Per-dashboard zone layout, sheet positions, and actions.
   : Plot a field-level relationship DAG (legacy)
 - [`plot_source_join_graph()`](https://prigasg.github.io/twbparser/reference/plot_source_join_graph.md)
   : Plot a source join graph
+
+## Migration toolkit
+
+Audit workbook portfolios, assess target compatibility, translate
+calculations, and generate migration deliverables and starter apps.
+
+- [`audit_tableau_folder()`](https://prigasg.github.io/twbparser/reference/audit_tableau_folder.md)
+  : Audit a folder of Tableau workbooks
+- [`twb_migration_assessment()`](https://prigasg.github.io/twbparser/reference/twb_migration_assessment.md)
+  : Assess Tableau workbook migration readiness
+- [`twb_compatibility()`](https://prigasg.github.io/twbparser/reference/twb_compatibility.md)
+  : Report feature compatibility for migration targets
+- [`translate_tableau_calc()`](https://prigasg.github.io/twbparser/reference/translate_tableau_calc.md)
+  : Translate simple Tableau calculated fields
+- [`export_migration_bundle()`](https://prigasg.github.io/twbparser/reference/export_migration_bundle.md)
+  : Export a Tableau migration bundle
+- [`render_migration_brief()`](https://prigasg.github.io/twbparser/reference/render_migration_brief.md)
+  : Render a migration brief
+- [`scaffold_shiny_dashboard()`](https://prigasg.github.io/twbparser/reference/scaffold_shiny_dashboard.md)
+  : Scaffold a Shiny dashboard rebuild
+- [`scaffold_quarto_dashboard()`](https://prigasg.github.io/twbparser/reference/scaffold_quarto_dashboard.md)
+  : Scaffold a Quarto dashboard rebuild
 
 ## Analytics & replication
 

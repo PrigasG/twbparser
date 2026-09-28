@@ -4,6 +4,34 @@
 
 ### New features
 
+- Added
+  [`audit_tableau_folder()`](https://prigasg.github.io/twbparser/reference/audit_tableau_folder.md)
+  for portfolio-scale Tableau migration audits. It batch parses `.twb` /
+  `.twbx` files and returns workbook summaries, datasource inventory,
+  calculated-field complexity, field usage, lineage edges, parse issues,
+  optional CSV exports, and migration complexity flags.
+
+- Added
+  [`twb_lineage()`](https://prigasg.github.io/twbparser/reference/twb_lineage.md)
+  for migration-oriented lineage from datasources and tables through
+  fields, calculated fields, worksheets, and dashboards. Results can be
+  returned as tidy node/edge tables, an `igraph` object, or Mermaid
+  text. `TwbParser` now exposes this as `get_lineage()` and
+  `parser$lineage`.
+
+- Added migration-assistant helpers:
+  [`twb_migration_assessment()`](https://prigasg.github.io/twbparser/reference/twb_migration_assessment.md),
+  [`twb_compatibility()`](https://prigasg.github.io/twbparser/reference/twb_compatibility.md),
+  [`translate_tableau_calc()`](https://prigasg.github.io/twbparser/reference/translate_tableau_calc.md),
+  [`export_migration_bundle()`](https://prigasg.github.io/twbparser/reference/export_migration_bundle.md),
+  [`render_migration_brief()`](https://prigasg.github.io/twbparser/reference/render_migration_brief.md),
+  [`scaffold_shiny_dashboard()`](https://prigasg.github.io/twbparser/reference/scaffold_shiny_dashboard.md),
+  and
+  [`scaffold_quarto_dashboard()`](https://prigasg.github.io/twbparser/reference/scaffold_quarto_dashboard.md).
+  These add target-aware readiness scoring, feature compatibility notes,
+  deterministic formula translation candidates, exportable migration
+  bundles, Markdown briefs, and starter rebuild scaffolds.
+
 - New
   [`twb_sheet_spec()`](https://prigasg.github.io/twbparser/reference/twb_sheet_spec.md):
   a full per-worksheet visualization spec — mark type, rows/columns
@@ -13,12 +41,14 @@
   worksheet to everything needed to understand and rebuild its
   visualization in another tool (also available as `parser$sheet_spec` /
   `parser$get_sheet_spec()`).
+
 - New
   [`twb_dashboard_charts()`](https://prigasg.github.io/twbparser/reference/twb_sheet_spec.md):
   one row per worksheet placed on each dashboard — mark type, fields,
   tooltip summary, and layout position — so you can see at a glance what
   graphs a dashboard page uses (also available as
   `parser$dashboard_charts` / `parser$get_dashboard_charts()`).
+
 - New rebuild kit for the “what do I need to recreate?” questions:
   [`twb_unused_fields()`](https://prigasg.github.io/twbparser/reference/twb_unused_fields.md)
   lists every raw field, calculated field, and parameter that is defined
@@ -36,6 +66,7 @@
   by
   [`parse_twb()`](https://prigasg.github.io/twbparser/reference/parse_twb.md),
   and are exercised by the new `inst/extdata/rebuild_kit.twb` fixture.
+
 - New
   [`parse_twb()`](https://prigasg.github.io/twbparser/reference/parse_twb.md)
   batch export: parse a `.twb`/`.twbx` workbook and write a structured
@@ -52,9 +83,10 @@
   but never made a network request and always returned empty tibbles.
   Tableau Server/Cloud integration is planned as a real feature; the
   premature stubs are gone rather than silently returning no data.
-- [`validate_relationships()`](https://prigasg.github.io/twbparser/reference/validate_relationships.md)
-  loses its unused `strict` argument, which was documented as reserved
-  and never implemented.
+- The unused `strict` argument to
+  [`validate_relationships()`](https://prigasg.github.io/twbparser/reference/validate_relationships.md)
+  is deprecated and ignored, while remaining available for compatibility
+  with 0.5.0 callers.
 
 ### Documentation
 

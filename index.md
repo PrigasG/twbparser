@@ -222,6 +222,21 @@ twb_parameter_usage(parser)
 # or: parser$get_parameter_usage()
 ```
 
+Migration toolkit (new in 0.5.1)
+
+``` r
+
+# Audit every workbook in a folder and collect migration inventory tables
+audit <- audit_tableau_folder("path/to/tableau-workbooks")
+
+# Trace dependencies from datasources and fields through dashboards
+lineage <- twb_lineage(parser)
+
+# Assess a target platform and produce migration deliverables
+assessment <- twb_migration_assessment(parser, target = "powerbi")
+bundle <- export_migration_bundle(parser, output_dir = "migration-bundle")
+```
+
 Relationships/Joins
 
 ``` r
